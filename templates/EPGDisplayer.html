@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EPGenius EPG Displayer</title>
+    <script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --color-bg-dark-start: #1e1e1e;
+            --color-bg-dark-end: #2b2b2b;
+            --color-bg-light-start: #f4f4f4;
+            --color-bg-light-end: #e6e6e6;
+            --color-primary: #00e5ff;
+            --color-primary-hover: #00bcd4;
+            --color-text-dark: #fff;
+            --color-text-light: #000;
+            --color-text-muted-dark: #ccc;
+            --color-text-muted-light: #333;
+            --color-bg-input-dark: #444;
+            --color-border-input-dark: #777;
+            --color-bg-controls-dark: #2e2e2e;
+            --color-bg-controls-light: #ddd;
+            --color-bg-card-dark: #1a1a1a;
+            --color-bg-card-light: #fff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--color-text-dark);
+            background: linear-gradient(180deg, var(--color-bg-dark-start), var(--color-bg-dark-end));
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--color-primary);
+            margin-bottom: 20px;
+        }
+
+        #dateFilter {
+            width: auto;
+            min-width: 110px;
+            max-width: 140px;
+            padding: 6px 8px;
+            font-size: 0.95em;
+            box-sizing: border-box;
+        }
+
+        #hourFilter {
+            width: auto;
+            min-width: 90px;
+            max-width: 120px;
+            padding: 6px 8px;
+            font-size: 0.85em;
+            box-sizing: border-box;
+        }
+
+        #resetFiltersBtn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            padding: 0;
+            font-size: 1.2em;
+            line-height: 36px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background-color: var(--color-primary);
+            color: #000;
+            transition: background-color 0.3s;
+            margin-left: 6px;
+        }
+
+        #resetFiltersBtn:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+
+        #controls {
+            margin-bottom: 25px;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            /* background: var(--color-bg-controls-dark); */
+            /* box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); */
+        }
+
+        input[type="text"],
+        select {
+            padding: 10px;
+            margin: 8px;
+            border-radius: 6px;
+            border: 1px solid var(--color-border-input-dark);
+            background-color: var(--color-bg-input-dark);
+            color: var(--color-text-dark);
+            font-size: 0.95em;
+            cursor: text;
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        button {
+            font-size: 1em;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--color-primary);
+            color: #000;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        button:disabled {
+            background-color: #666;
+            cursor: not-allowed;
+        }
+
+        #result-count {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 0.95em;
+            color: var(--color-text-muted-dark);
+        }
+
+        label {
+            font-size: 0.95em;
+            color: #ddd;
+        }
+
+        .pagination-btn {
+            margin: 10px 5px;
+        }
+
+        #data-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .program-card {
+            background-color: var(--color-bg-card-dark);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 229, 255, 0.3);
+            display: flex;
+            flex-direction: column;
+            color: var(--color-text-dark);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .program-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 229, 255, 0.6);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: nowrap;
+            margin-bottom: 12px;
+        }
+
+        .card-info {
+            display: flex;
+            gap: 10px;
+            align-items: baseline;
+            color: var(--color-text-muted-dark);
+            font-size: 0.9em;
+            flex-wrap: wrap;
+        }
+
+        .card-date {
+            display: block;
+            font-weight: bold;
+            color: var(--color-primary);
+            font-size: 1.0em;
+        }
+
+        .card-time {
+            display: block;
+            color: var(--color-text-dark);
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .card-time .duration {
+            font-size: 0.8em;
+            color: var(--color-text-muted-dark);
+            margin-left: 5px;
+        }
+
+        .card-channel {
+            display: flex;
+            align-items: center;
+            min-width: 120px;
+            flex-direction: row;
+        }
+
+        .card-channel img {
+            margin-right: 2px;
+            height: 32px;
+            width: auto;
+            max-width: 60px;
+            object-fit: contain;
+            border-radius: 1px;
+            margin: 5;
+            padding: 0;
+        }
+
+        .channel-name {
+            font-size: 0.65em;
+            color: var(--color-text-muted-dark);
+            margin-right: 1px;
+        }
+
+        .card-body {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .card-images {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .card-images img {
+            width: 90px;
+            border-radius: 6px;
+            object-fit: contain;
+        }
+
+        .card-text {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .card-text .title {
+            font-weight: bold;
+            font-size: 1em;
+            margin-bottom: 5px;
+            color: var(--color-text-dark);
+        }
+
+        .card-text .description {
+            font-size: 0.85em;
+            color: var(--color-text-muted-dark);
+            white-space: pre-wrap;
+        }
+
+        #top-buttons {
+            display: inline-flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: nowrap;
+            /* que no se envuelvan */
+        }
+
+        input[type="text"],
+        select,
+        input[type="date"],
+        input[type="number"] {
+            padding: 10px;
+            margin: 8px;
+            border-radius: 6px;
+            border: 1px solid var(--color-border-input-dark);
+            background-color: var(--color-bg-input-dark);
+            color: var(--color-text-dark);
+            font-size: 0.95em;
+            cursor: text;
+        }
+
+        #date-hour-filters {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        #date-hour-filters input,
+        #date-hour-filters select {
+            flex: 1;
+            min-width: 150px;
+        }
+
+
+        /* Loader spinner styles moved to CSS */
+        #loader-spinner {
+            display: inline-block;
+            border: 4px solid var(--color-primary);
+            border-top: 4px solid transparent;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Light mode overrides */
+        body.light-mode {
+            background: linear-gradient(180deg, var(--color-bg-light-start), var(--color-bg-light-end));
+            color: var(--color-text-light);
+        }
+
+        body.light-mode .program-card {
+            background-color: var(--color-bg-card-light);
+            color: var(--color-text-light);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            /* Sombra más suave para modo claro */
+        }
+
+        body.light-mode .program-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            /* Sombra más suave al pasar el ratón */
+        }
+
+        body.light-mode .card-date,
+        body.light-mode .card-time,
+        body.light-mode .card-text .title {
+            color: var(--color-text-light);
+        }
+
+        body.light-mode .card-text .description,
+        body.light-mode .channel-name,
+        body.light-mode #result-count {
+            color: var(--color-text-muted-light);
+        }
+
+        body.light-mode button {
+            background-color: var(--color-primary-hover);
+            color: var(--color-text-light);
+            /* Asegura texto oscuro en botones claros */
+        }
+
+        /* Light mode overrides */
+        body.light-mode {
+            background: linear-gradient(180deg, var(--color-bg-light-start), var(--color-bg-light-end));
+            color: var(--color-text-light);
+            /* Texto principal oscuro */
+        }
+
+        body.light-mode .program-card {
+            background-color: var(--color-bg-card-light);
+            /* Fondo de la tarjeta blanca */
+            color: var(--color-text-light);
+            /* Texto de la tarjeta oscuro */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            /* Sombra más suave para modo claro */
+        }
+
+        body.light-mode .program-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            /* Sombra más suave al pasar el ratón */
+        }
+
+        body.light-mode .card-date,
+        body.light-mode .card-time,
+        body.light-mode .card-text .title {
+            color: var(--color-text-light);
+            /* Asegura que la fecha, hora y título sean oscuros */
+        }
+
+        body.light-mode .card-text .description,
+        body.light-mode .channel-name,
+        body.light-mode #result-count {
+            color: var(--color-text-muted-light);
+            /* Texto muteado más oscuro */
+        }
+
+        body.light-mode button {
+            background-color: var(--color-primary-hover);
+            /* Fondo del botón primario claro */
+            color: var(--color-text-light);
+            /* Texto oscuro en botones claros */
+        }
+
+        /* --- Estilos para los Controles (filtros) en modo claro --- */
+        body.light-mode input[type="text"],
+        body.light-mode select,
+        body.light-mode input[type="date"],
+        body.light-mode input[type="number"] {
+            background-color: var(--color-bg-controls-light);
+            /* Fondo más claro para inputs/selects */
+            border-color: var(--color-border-input-dark);
+            /* Borde que contraste */
+            color: var(--color-text-light);
+            /* Texto oscuro en inputs */
+        }
+
+        body.light-mode input[type="text"]:focus,
+        body.light-mode select:focus,
+        body.light-mode input[type="date"]:focus,
+        body.light-mode input[type="number"]:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            /* Borde al enfocar, usando el color primario */
+        }
+
+        body.light-mode #controls {
+            background: var(--color-bg-controls-light);
+            /* Fondo para la sección de controles */
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+            /* Sombra suave para controles */
+        }
+
+        body.light-mode label {
+            /* Asegura el color del texto de la etiqueta en modo claro */
+            color: var(--color-text-muted-light);
+        }
+
+        body.light-mode #resetFiltersBtn {
+            background-color: var(--color-primary);
+            /* Color del botón de reset */
+            color: #000;
+            /* Texto negro */
+        }
+
+        body.light-mode #resetFiltersBtn:hover {
+            background-color: var(--color-primary-hover);
+            /* Hover para el botón de reset */
+        }
+
+        /* --- Estilos de la Grilla en modo claro --- */
+        body.light-mode #grid-container table {
+            border: 1px solid var(--color-border-input-dark);
+            /* Borde exterior de la tabla */
+        }
+
+        body.light-mode #grid-container th {
+            background-color: var(--color-bg-controls-light);
+            /* Fondo de los encabezados de la tabla */
+            color: var(--color-text-light);
+            /* Texto de los encabezados */
+            border: 1px solid var(--color-border-input-dark);
+        }
+
+        body.light-mode #grid-container td {
+            border: 1px solid var(--color-border-input-dark);
+            /* Borde de las celdas de la grilla */
+            color: var(--color-text-light);
+            background-color: #ffffff;
+            /* Las celdas VACÍAS por defecto serán BLANCAS */
+        }
+
+        body.light-mode #grid-container td[style*="background: rgb(51, 51, 51)"] {
+            /* Celda con PROGRAMA (en modo oscuro tenía #333) */
+            background-color: #f0f0f0 !important;
+            /* Fondo GRIS CLARO para las celdas con CONTENIDO de programa */
+            color: var(--color-text-light);
+        }
+
+        body.light-mode #grid-container td[style*="background: rgb(34, 34, 34)"] {
+            /* Celda del CANAL (en modo oscuro tenía #222) */
+            background-color: #e0e0e0 !important;
+            /* Fondo GRIS MEDIO para el nombre del canal */
+            color: var(--color-text-light);
+        }
+
+        body.light-mode #grid-container td>div {
+            /* Título del programa en grilla */
+            color: var(--color-text-light);
+        }
+
+        body.light-mode #grid-container td>div:last-child {
+            /* Hora del programa en grilla */
+            color: var(--color-text-light) !important;
+            /* <--- ¡AÑADIDO !important! */
+        }
+
+        /* --- Estilos del Loader en modo claro --- */
+        body.light-mode #loader-spinner {
+            border-color: var(--color-primary-hover);
+            /* Color del spinner */
+            border-top-color: transparent;
+        }
+
+        body.light-mode #loader p {
+            color: var(--color-text-muted-light) !important;
+            /* Texto del loader */
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            body.light-mode .card-date {
+                color: var(--color-text-muted-light) !important;
+                /* Asegura el color en la vista de lista */
+            }
+
+            .card-body {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .card-images {
+                flex-direction: row;
+                gap: 10px;
+            }
+
+            .card-images img {
+                width: 70px;
+                height: 90px;
+                max-width: auto;
+                width: auto;
+                border-radius: 6px;
+                object-fit: cover;
+            }
+
+            .card-channel {
+                flex-direction: column-reverse;
+                align-items: center;
+            }
+
+            input[type="text"],
+            select,
+            button {
+                width: 90%;
+                margin: 5px auto;
+                display: block;
+            }
+
+            #controls {
+                padding: 10px;
+            }
+
+            .card-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .card-time {
+                margin-top: 4px;
+            }
+
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>EPGenius EPG Displayer</h1>
+
+    <div id="top-buttons" style="text-align: center; margin-bottom: 20px; display: flex; justify-content: center; gap: 15px; flex-wrap: nowrap;">
+        <button onclick="toggleDarkMode()" id="themeToggleBtn" title="Cambiar tema">🌙</button>
+        <button onclick="fetchXML()" id="reloadBtn" title="Recargar EPG">🔃</button>
+    </div>
+
+    <div id="controls">
+        <select id="categoryDropdown">
+        </select>
+        <input type="text" id="channelFilter" placeholder="Filter by channel" />
+        <input type="text" id="titleFilter" placeholder="Filter by title" />
+        <input type="text" id="descriptionFilter" placeholder="Filter by description" />
+        <div id="dateHourGroup" style="display: inline-flex; gap: 8px; align-items: center;">
+            <input type="date" id="dateFilter" />
+            <button id="resetFiltersBtn" title="Resetear filtros">✖️️</button>
+        </div>
+
+    </div>
+
+    <div id="loader" style="display: none; text-align:center; margin-top:20px;">
+        <span id="loader-spinner"></span>
+        <p style="color:#ccc;">Loading EPG...</p>
+    </div>
+
+    <div id="grid-container" style="margin-top: 30px;"></div>
+
+
+    
+
+    <div id="data-list"></div>
+    <div id="result-count"></div>
+
+    <script>
+        let epgData = [];
+        let channelsList = [];
+        let channelsOrder = [];
+        let filteredData = [];
+        let pageSize = 30;
+        let renderedItems = 0;
+        categoriesList = [];
+        const seenCategories = new Set();
+
+        // Función para obtener la fecha actual en formato YYYY-MM-DD
+        function getCurrentDateFormatted() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // Los meses son de 0-11
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // Función para establecer la fecha actual en el input de fecha
+        function setDateToCurrent() {
+            document.getElementById('dateFilter').value = getCurrentDateFormatted();
+        }
+
+        const TVState = {
+            channelCategories: {},   // tvg-id -> categoria (group-title)
+            categoriesList: [],      // llistat de categories (ordre d'aparició a M3U)
+            channelsOrder: [],       // ordre dels canals segons M3U (array de ids)
+            channelInfoMap: {},      // id -> { name, category, iconSrc } (merge M3U + XML)
+            channelsList: [],        // llista final de canals segons ordre M3U (inclou canals sense EPG)
+            epgData: []              // array de programes
+        };
+
+        /* -------------------------
+           parseM3U (ara pura)
+           - Retorna un objecte amb totes les estructures obtingudes.
+           - No escriu globals directament.
+           ------------------------- */
+        function parseM3U(m3uText) {
+            const mapping = {};
+            const categoriesList = [];
+            const seenCategories = new Set();
+            const channelInfoMap = {};
+            const channelsList = [];
+            const channelsOrder = [];
+
+            if (!m3uText) {
+                return { mapping, categoriesList, channelsList, channelInfoMap, channelsOrder };
+            }
+
+            const lines = m3uText.split(/\r?\n/);
+            let noIdCounter = 0;
+
+            for (let rawLine of lines) {
+                const line = rawLine.trim();
+                if (!line.startsWith('#EXTINF')) continue;
+
+                const tvgIdMatch = line.match(/tvg-id="([^"]*)"/i);
+                const groupMatch = line.match(/group-title="([^"]*)"/i);
+                const logoMatch = line.match(/tvg-logo="([^"]*)"/i);
+
+                const nameMatch = line.split(',').pop().trim();
+
+                let id;
+                if (tvgIdMatch && tvgIdMatch[1]) {
+                    id = tvgIdMatch[1];
+                } else {
+                    // Genera un ID únic per canals sense tvg-id
+                    id = `no-id-${noIdCounter++}`;
+                }
+
+                const grp = groupMatch ? groupMatch[1] : '';
+                const logo = logoMatch ? logoMatch[1] : '';
+                const name = nameMatch || id;
+
+                mapping[id] = grp;
+
+                channelInfoMap[id] = {
+                    name,
+                    category: grp,
+                    iconSrc: logo
+                };
+
+                channelsList.push({
+                    id,
+                    name,
+                    category: grp,
+                    iconSrc: logo
+                });
+
+                channelsOrder.push(id);
+
+                if (grp && !seenCategories.has(grp)) {
+                    seenCategories.add(grp);
+                    categoriesList.push(grp);
+                }
+            }
+
+            return { mapping, categoriesList, channelsList, channelInfoMap, channelsOrder };
+        }
+
+        /* ============================
+           Helpers per dates / durada
+           ============================ */
+
+        function parseXMLTVDate(xmltvDate) {
+            if (!xmltvDate) return null;
+
+            // Exemple de xmltvDate: "20250815123000 +0200"
+            const match = xmltvDate.match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2}) ?([+-]\d{4})?$/);
+            if (!match) return null;
+
+            const [_, year, month, day, hour, minute, second, tz] = match;
+
+            // Construir ISO string: "YYYY-MM-DDTHH:MM:SS+02:00"
+            let iso = `${year}-${month}-${day}T${hour}:${minute}:${second}`;
+            if (tz) {
+                // Convertir "+0200" en "+02:00"
+                iso += tz.slice(0,3) + ":" + tz.slice(3);
+            } else {
+                iso += "Z"; // UTC per defecte
+            }
+
+            const date = new Date(iso);
+            return isNaN(date.getTime()) ? null : date;
+        }
+
+        const userTZ    = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const offsetMin = new Date().getTimezoneOffset();
+
+        function parseXMLTVDateTimeToDate(time) {
+          if (!time) return null;
+          const m = time.match(
+              /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})?\s?([+\-]\d{4})?$/
+            );
+          if (!m) return null;
+
+          const [, y, mo, d, hh, mm, ss = '00', tz] = m;
+
+          // Si no hi ha offset al XMLTV
+          if (!tz) {
+            // Date local directe
+            return new Date(+y, +mo - 1, +d, +hh, +mm, +ss);
+          }
+
+          // Parsegem offset ±HHMM del XMLTV
+          const sign       = tz[0] === '-' ? -1 : 1;
+          const offHours   = parseInt(tz.slice(1, 3), 10);
+          const offMinutes = parseInt(tz.slice(3, 5), 10);
+          const tvOffsetMin= sign * (offHours * 60 + offMinutes);
+
+          // Timestamp UTC pur
+          const utcTs      = Date.UTC(+y, +mo - 1, +d, +hh, +mm, +ss);
+          // Ajustem segons offset XMLTV → obtenim timestamps reals en UTC
+          const realUtc    = utcTs - tvOffsetMin * 60000;
+          // Ajust local de l’usuari: UTC→Local
+          const localTs    = realUtc - offsetMin * 60000;
+
+          return new Date(localTs);
+        }
+
+        function formatXMLTVDate(xmltvDate) {
+            if (!xmltvDate) return '';
+            // Exemple: 20250812073000 +0000
+            const match = xmltvDate.match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})\s?([+\-]\d{4})?$/);
+            if (!match) return '';
+
+            const [_, year, month, day, hour, minute, second, offset] = match;
+
+            // Crear data amb offset UTC correcte
+            const dateObj = new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}${offset || '+0000'}`);
+
+            // Retornar format dd/mm/yyyy segons usuari
+            return dateObj.toLocaleDateString(undefined, {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
+
+        function formatXMLTVTime(xmltvDate) {
+            if (!xmltvDate) return '';
+            const match = xmltvDate.match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})\s?([+\-]\d{4})?$/);
+            if (!match) return '';
+
+            const [_, year, month, day, hour, minute, second, offset] = match;
+            const dateObj = new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}${offset || '+0000'}`);
+
+            // Retornar hora local segons usuari
+            return dateObj.toLocaleTimeString(undefined, {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function calculateDuration(start, stop) {
+          if (!start || !stop) return '';
+          const s = parseXMLTVDateTimeToDate(start);
+          const e = parseXMLTVDateTimeToDate(stop);
+          if (!s || !e) return '';
+          const diffMin = Math.round((e - s) / 60000);
+          if (isNaN(diffMin) || diffMin <= 0) return '';
+          return `${Math.floor(diffMin / 60)} h ${diffMin % 60} min`;
+        }
+
+        function ensureProgressUI() {
+          let bar = document.getElementById('epg-progress');
+          if (bar) return;
+          const container = document.createElement('div');
+          container.id = 'epg-progress';
+          container.style.position = 'fixed';
+          container.style.left = '20px';
+          container.style.right = '20px';
+          container.style.bottom = '20px';
+          container.style.height = '12px';
+          container.style.background = '#222';
+          container.style.border = '1px solid #444';
+          container.style.borderRadius = '6px';
+          container.style.zIndex = '9999';
+          container.style.boxShadow = '0 2px 10px rgba(0,0,0,0.4)';
+
+          const fill = document.createElement('div');
+          fill.id = 'epg-progress-fill';
+          fill.style.height = '100%';
+          fill.style.width = '0%';
+          fill.style.borderRadius = '6px';
+          fill.style.transition = 'width .15s linear';
+          fill.style.background = 'linear-gradient(90deg, #4caf50, #81c784)';
+          container.appendChild(fill);
+
+          const label = document.createElement('div');
+          label.id = 'epg-progress-label';
+          label.style.position = 'absolute';
+          label.style.top = '-22px';
+          label.style.left = '0';
+          label.style.right = '0';
+          label.style.textAlign = 'center';
+          label.style.font = '12px system-ui, sans-serif';
+          label.style.color = '#ddd';
+          label.textContent = 'Loading EPG…';
+          container.appendChild(label);
+
+          document.body.appendChild(container);
+        }
+
+        function updateProgressUI(pct, text) {
+          const fill = document.getElementById('epg-progress-fill');
+          const label = document.getElementById('epg-progress-label');
+          if (fill) fill.style.width = `${Math.max(0, Math.min(100, pct))}%`;
+          if (label) label.textContent = text || `Loading EPG… ${pct}%`;
+        }
+
+        function hideProgressUI() {
+          const bar = document.getElementById('epg-progress');
+          if (bar) bar.remove();
+        }
+        /* ============================
+           parseXML (merge M3U + XML)
+           - Rep l'XML descomprimit com a text
+           - Combina la informació de canals del XML amb la del M3U (pròpia)
+           - Omple TVState.channelInfoMap, TVState.channelsList i TVState.epgData
+           ============================ */
+
+        function parseXML(xmlOrJson) {
+    let channelElements = [];
+    let programmes = [];
+
+    if (typeof xmlOrJson === 'string') {
+        // 🔹 Cas XML
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlOrJson, 'application/xml');
+        const parserError = xmlDoc.querySelector('parsererror');
+        if (parserError) {
+            console.error("Error XML:", parserError.textContent);
+            throw new Error("XML errors.");
+        }
+        channelElements = Array.from(xmlDoc.getElementsByTagName('channel'));
+        programmes = Array.from(xmlDoc.getElementsByTagName('programme'));
+    } else {
+        // 🔹 Cas JSON del worker
+        channelElements = xmlOrJson.channels || [];
+        programmes = xmlOrJson.programmes || [];
+    }
+
+    // 1) Canals
+    const xmlChannelInfoMap = {};
+    if (typeof xmlOrJson === 'string') {
+        channelElements.forEach(channel => {
+            const channelId = channel.getAttribute('id');
+            if (!channelId) return;
+            const displayName = channel.querySelector('display-name')?.textContent?.trim() || '';
+            const iconSrc = channel.querySelector('icon')?.getAttribute('src') || '';
+            xmlChannelInfoMap[channelId] = { name: displayName, iconSrc };
+        });
+    } else {
+        channelElements.forEach(ch => {
+            xmlChannelInfoMap[ch.id] = { name: ch.name, iconSrc: ch.iconSrc };
+        });
+    }
+
+    TVState.channelsList = TVState.channelsList.map(ch => {
+        const xmlInfo = xmlChannelInfoMap[ch.id] || {};
+        return {
+            ...ch,
+            name: ch.name || xmlInfo.name || '',
+            iconSrc: ch.iconSrc || xmlInfo.iconSrc || ''
+        };
+    });
+
+    // mostrem canals + placeholders mentre processem EPG
+    ensureProgressUI();
+    updateProgressUI(0, 'Loading EPG…');
+    TVState.isEPGLoading = true;
+                    TVState.epgData.sort((a, b) => {
+    return TVState.channelsOrder.indexOf(a.channel) - TVState.channelsOrder.indexOf(b.channel);
+});
+                renderTable(false, 200, true);
+
+    // 🔹 Map per ordre canals
+    const channelsOrder = new Map();
+    TVState.channelsList.forEach((ch, idx) => channelsOrder.set(ch.id, idx));
+
+    // 2) Programes en batches
+    TVState.epgData = [];
+    let index = 0;
+    const batchSize = 50000;
+
+    function processBatch() {
+        const limit = Math.min(index + batchSize, programmes.length);
+        for (; index < limit; index++) {
+            const prog = programmes[index];
+            const channelId = prog.channel || prog.getAttribute?.('channel') || '';
+            const startAttr = prog.start || prog.getAttribute?.('start') || '';
+            const stopAttr = prog.stop || prog.getAttribute?.('stop') || '';
+            const title = prog.title || prog.getElementsByTagName?.('title')[0]?.textContent || '';
+            const description = prog.description || prog.getElementsByTagName?.('desc')[0]?.textContent || '';
+            const iconSrcProg = prog.iconSrc || prog.getElementsByTagName?.('icon')[0]?.getAttribute('src') || '';
+            const iconSrc2 = prog.iconSrc2 || prog.getElementsByTagName?.('icon2')[0]?.getAttribute('src') || '';
+            const channelIcon = TVState.channelsList.find(c => c.id === channelId)?.iconSrc || '';
+            const category = TVState.channelCategories[channelId] || TVState.channelsList.find(c => c.id === channelId)?.category || '';
+
+            const startDate = parseXMLTVDate(prog.start);
+            const endDate = parseXMLTVDate(prog.stop);
+
+            // Si stop < start → acaba l'endemà
+            if (endDate <= startDate) {
+                endDate.setDate(endDate.getDate() + 1);
+            }
+            TVState.epgData.push({
+                channel: channelId,
+                channelIcon,
+                category,
+                date: `${startDate.getDate().toString().padStart(2,'0')}/${(startDate.getMonth()+1).toString().padStart(2,'0')}/${startDate.getFullYear()}`,
+                start: `${startDate.getHours().toString().padStart(2,'0')}:${startDate.getMinutes().toString().padStart(2,'0')}`,
+                stop: `${endDate.getHours().toString().padStart(2,'0')}:${endDate.getMinutes().toString().padStart(2,'0')}`,
+                duration: (endDate - startDate)/60000,
+                iconSrc: iconSrcProg,
+                iconSrc2,
+                title,
+                description
+            });
+        }
+
+// Mantenim placeholders pels canals encara sense programes
+                        TVState.epgData.sort((a, b) => {
+    return TVState.channelsOrder.indexOf(a.channel) - TVState.channelsOrder.indexOf(b.channel);
+});
+                renderTable(false, 200, true);
+        const pct = Math.round((index / Math.max(1, programmes.length)) * 100);
+        updateProgressUI(pct, `Loading EPG… ${index}/${programmes.length}`);
+
+        if (index < programmes.length) {
+            setTimeout(processBatch, 0);
+        } else {
+            // última passada: ja sense placeholders
+
+            renderTable(false, 200, false);
+            TVState.isEPGLoading = false;
+            updateProgressUI(100, 'EPG Loaded');
+            hideProgressUI();
+            const loader = document.getElementById('loader');
+            const reloadBtn = document.querySelector('button[onclick="fetchXML()"]');
+            if (loader) loader.style.display = 'none';
+            if (reloadBtn) reloadBtn.disabled = false;
+        }
+    }
+
+    processBatch();
+}
+
+        /* ============================
+           fetchXML (manté la interfície pública)
+           - Ara integra parseM3U retornant objectes i després parseXML
+           ============================ */
+        function getQueryParams() {
+          const params = new URLSearchParams(window.location.search);
+          return {
+            m3uUrl: params.get('m3u') || '',
+            epgUrl: params.get('epg') || ''
+          };
+        }
+
+async function fetchXML(m3uUrl = '', epgUrl = '') {
+    if (!m3uUrl || !epgUrl) {
+        const queryParams = getQueryParams();
+        m3uUrl = m3uUrl || queryParams.m3uUrl;
+        epgUrl = epgUrl || queryParams.epgUrl;
+    }
+
+    if (!epgUrl.startsWith(window.location.origin)) {
+        epgUrl = `/epg_proxy?url=${encodeURIComponent(epgUrl)}`;
+    }
+
+    const loader = document.getElementById('loader');
+    const reloadBtn = document.querySelector('button[onclick="fetchXML()"]');
+    if (reloadBtn) reloadBtn.disabled = true;
+    if (loader) loader.style.display = 'block';
+
+    try {
+        const m3uInputVal = document.getElementById('m3uUrl')?.value;
+        const epgInputVal = document.getElementById('epgUrl')?.value;
+        if (!m3uUrl && m3uInputVal) m3uUrl = m3uInputVal;
+        if (!epgUrl && epgInputVal) epgUrl = epgInputVal;
+
+        // 🔹 1) Carregar M3U i parsejar
+        if (m3uUrl) {
+            try {
+                ensureProgressUI();
+                updateProgressUI(0, 'Loading M3U…');
+                TVState.isM3ULoading = true;
+                const m3uResp = await fetch(m3uUrl);
+                if (!m3uResp.ok) {
+                    console.warn("M3U error:", m3uUrl);
+                } else {
+                    const m3uText = await m3uResp.text();
+                    const m3uResult = parseM3U(m3uText);
+
+                    TVState.channelCategories = m3uResult.mapping;
+                    TVState.categoriesList = m3uResult.categoriesList;
+                    TVState.channelsOrder = m3uResult.channelsOrder;
+                    TVState.channelInfoMap = m3uResult.channelInfoMap;
+                    TVState.channelsList = m3uResult.channelsList;
+                    TVState.channelsOrderMap = new Map(
+                        TVState.channelsOrder.map((id, idx) => [id, idx])
+                    );
+
+                    populateCategoryDropdown();
+                    const categoryDropdown = document.getElementById('categoryDropdown');
+                    if (categoryDropdown && categoryDropdown.options.length > 0) {
+                        categoryDropdown.selectedIndex = 0;
+                    }
+                    renderTable(true, 200, true);
+                }
+            } catch (e) {
+                console.error("M3U error:", e);
+            }
+        }
+
+        // 🔸 2) Carregar EPG amb Worker
+        const worker = new Worker('/static/epgWorker.js'); // Assegura't que aquest path és correcte
+
+        worker.postMessage({ epgUrl });
+
+        worker.onmessage = (e) => {
+            const { type, data, message } = e.data;
+
+            if (type === 'channels') {
+                TVState.epgChannels = data;
+            }
+
+            if (type === 'programmes') {
+                if (!TVState.epgProgrammes) TVState.epgProgrammes = [];
+                TVState.epgProgrammes.push(...data);
+            }
+
+            if (type === 'done') {
+                    parseXML({
+                        channels: TVState.epgChannels,   // <-- canals
+                        programmes: TVState.epgProgrammes // <-- programes
+                    });
+                 // Si parseXML espera xmlText, pots adaptar-la per usar TVState.epgProgrammes
+            }
+
+            if (type === 'error') {
+                alert('Error: ' + message);
+                console.error(message);
+                if (loader) loader.style.display = 'none';
+                if (reloadBtn) reloadBtn.disabled = false;
+            }
+        };
+
+        worker.onerror = (err) => {
+            alert('Worker Error: ' + err.message);
+            console.error(err);
+            if (loader) loader.style.display = 'none';
+            if (reloadBtn) reloadBtn.disabled = false;
+        };
+
+    } catch (err) {
+        alert('Error: ' + err.message);
+        console.error(err);
+        if (loader) loader.style.display = 'none';
+        if (reloadBtn) reloadBtn.disabled = false;
+    }
+}
+
+        /* ============================
+           UI: dropdown categories
+           - ara usa TVState.categoriesList
+           ============================ */
+
+        function populateCategoryDropdown() {
+            const dropdown = document.getElementById('categoryDropdown');
+            if (!dropdown) return;
+
+            TVState.categoriesList.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                dropdown.appendChild(option);
+            });
+        }
+
+        /* ============================
+           DOM ready
+           ============================ */
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropdown = document.getElementById('categoryDropdown');
+            if (!dropdown) {
+                console.error('categoryDropdown not found');
+                return;
+            }
+
+            dropdown.addEventListener('change', () => {
+
+                                TVState.epgData.sort((a, b) => {
+    return TVState.channelsOrder.indexOf(a.channel) - TVState.channelsOrder.indexOf(b.channel);
+});
+                renderTable(false, 200, true);
+            });
+        });
+
+        function normalizeText(input) {
+            if (typeof input === 'string') return input;
+            if (input && typeof input === 'object') {
+                if (input['#text']) return input['#text']; // cas EPG
+                if (input.textContent) return input.textContent;
+            }
+            return String(input ?? '');
+        }
+
+        function processColoredText(text) {
+            if (!text) return ''; // Manejar el caso de texto vacío o nulo
+
+            // Expresión regular para encontrar [COLOR X]...[/COLOR]
+            // Captura el nombre del color (grupo 1) y el contenido (grupo 2)
+            const regex = /\[COLOR\s*(\w+)\](.*?)\[\/COLOR\]/g;
+            const safeText = normalizeText(text);
+            return safeText.replace(regex, (match, colorName, content) => {
+                return `<span style="color: ${colorName};">${content}</span>`;
+            });
+        }
+
+function renderTable(clear = false, pageSize = 200, allowEmpty = true) {
+    // clear UI state if asked (no innerHTML massiu, només reset estat)
+    if (clear) {
+        const dataList = document.getElementById('data-list');
+        if (dataList) dataList.innerHTML = '';
+        renderedItems = 0;
+    }
+
+    // read filters
+    const categoryFilter = document.getElementById('categoryDropdown').value.toLowerCase().trim();
+    const channelFilter = document.getElementById('channelFilter').value.toLowerCase().trim();
+    const titleFilter = document.getElementById('titleFilter').value.toLowerCase().trim();
+    const descriptionFilter = document.getElementById('descriptionFilter').value.toLowerCase().trim();
+    const dateFilter = document.getElementById('dateFilter').value; // YYYY-MM-DD or empty
+
+    // 🟢 Calcula dayStart i dayEnd un cop, en local
+    let dayStart = null, dayEnd = null;
+    if (dateFilter) {
+        const [Y, M, D] = dateFilter.split('-').map(Number);
+        dayStart = new Date(Y, M - 1, D, 0, 0, 0, 0);      // 00:00 locals
+        dayEnd   = new Date(Y, M - 1, D + 1, 0, 0, 0, 0);  // +1 dia, 00:00 locals
+    }
+
+    // utilitat: construeix Date local des de "dd/mm/yyyy" + minuts dins del dia
+    const buildLocalFromDMYAndMinutes = (dmy, mins) => {
+        const [d, m, y] = dmy.split('/').map(Number);
+        const dt = new Date(y, m - 1, d, 0, 0, 0, 0);
+        dt.setMinutes(mins); // pot saltar a l’endemà
+        return dt;
+    };
+
+    // Build grouped filteredData: [{ channel, programs: [...] }]
+    const channelMap = new Map(); // id -> channel object
+    TVState.channelsList.forEach(ch => channelMap.set(ch.id, ch));
+
+    // First filter channels (by category / channel name)
+    let candidateChannels = TVState.channelsList.filter(ch => {
+        if (categoryFilter && !(ch.category || '').toLowerCase().includes(categoryFilter)) return false;
+        if (channelFilter && !(ch.name || '').toLowerCase().includes(channelFilter)) return false;
+        return true;
+    });
+
+    // Now for each channel collect and filter programs
+    const grouped = [];
+    for (const ch of candidateChannels) {
+        // get all programs for this channel
+        const programsForChannel = TVState.epgData.filter(p => p.channel === ch.id);
+
+        // filter programs for this channel according to title/description/date
+        const programsFiltered = [];
+        for (const item of programsForChannel) {
+            if (!item || !item.date) continue;
+
+            const startMins = parseTimeToMinutes(item.start);
+            const stopMins  = parseTimeToMinutes(item.stop);
+            if (startMins == null || stopMins == null) continue;
+
+            // Build startDate and endDate Date objects
+            const startDateObj = buildLocalFromDMYAndMinutes(item.date, startMins);
+            let endDateObj     = buildLocalFromDMYAndMinutes(item.date, stopMins);
+
+            // si el programa acaba l'endemà → suma 1 dia
+            if (stopMins <= startMins) {
+                endDateObj.setDate(endDateObj.getDate() + 1);
+            }
+
+            // Per coherència, mantenim endMins com a durada total en minuts
+            let endMins = stopMins;
+            if (stopMins <= startMins) {
+                endMins = stopMins + 24 * 60; // permet calcular amplada al grid
+            }
+
+            // Check date filter (solapament amb el rang del dia)
+            let matchesDate = true;
+            if (dayStart && dayEnd) {
+                matchesDate = (endDateObj > dayStart && startDateObj < dayEnd);
+            }
+
+            // title/description filter
+            const matchesTitle = !titleFilter || (item.title || '').toLowerCase().includes(titleFilter);
+            const matchesDesc  = !descriptionFilter || (item.description || '').toLowerCase().includes(descriptionFilter);
+
+            if (matchesDate && matchesTitle && matchesDesc) {
+                programsFiltered.push({
+                    ...item,
+                    __startMins: startMins,
+                    __endMins: endMins,
+                    __startDateObj: startDateObj,
+                    __endDateObj: endDateObj,
+                });
+            }
+        }
+
+        if (programsFiltered.length || allowEmpty) {
+            grouped.push({
+                channel: ch,
+                programs: programsFiltered.length ? programsFiltered : [{
+                    title: 'Loading EPG...',
+                    start: '00:00',
+                    stop: '24:00',
+                    __startMins: 0,
+                    __endMins: 24 * 60,
+                    __placeholder: true
+                }]
+            });
+        }
+    }
+
+    // set global filteredData so renderGridView can use it
+    filteredData = grouped;
+
+    // update counter text (initial)
+    const totalPrograms = filteredData.reduce(
+        (acc, ch) => acc + ch.programs.filter(p => !p.__placeholder).length, 0
+    );
+    document.getElementById('result-count').textContent = `Showing 0 of ${totalPrograms} programs`;
+
+    // call grid renderer which performs batched painting
+    renderGridView();
+}
+
+
+
+
+function parseEPGTime(timeStr) {
+    if (!timeStr) return null;
+    const match = timeStr.match(/^(\d{2}):(\d{2})$/);
+    if (!match) return null;
+    const [_, hour, minute] = match;
+    
+    const now = new Date(); // data base
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute, 0);
+}
+
+function parseDateFromDDMMYYYY(str) {
+    if (!str) return null;
+    const parts = str.split('/');
+    if (parts.length !== 3) return null;
+    const d = Number(parts[0]), m = Number(parts[1]) - 1, y = Number(parts[2]);
+    const dt = new Date(y, m, d);
+    return isNaN(dt.getTime()) ? null : dt;
+}
+
+function parseTimeToMinutes(timeStr) {
+    if (!timeStr) return null;
+    const m = timeStr.split(':').map(Number);
+    if (m.length < 2 || isNaN(m[0]) || isNaN(m[1])) return null;
+    return m[0] * 60 + m[1];
+}
+
+function dateObjMatches(dateObj, filterObj) {
+    if (!dateObj || !filterObj) return false;
+    return dateObj.toDateString() === filterObj.toDateString();
+}
+
+function renderGridView() {
+    const container = document.getElementById('grid-container');
+    if (!container) return;
+
+    // Build everything off-DOM to avoid flicker/duplicats
+
+    const selectedCategory = document.getElementById('categoryDropdown').value.toLowerCase().trim();
+    const COLUMN_WIDTH = 215;
+    const HEADER_COLUMN_WIDTH = 215;
+    const ROW_HEIGHT = 80;
+    const DAY_MINUTES = 24 * 60;
+    const MIN_PROGRAM_WIDTH = 4;
+
+    const displayedData = filteredData.filter(({ channel }) => {
+        const chCategory = channel.category ? channel.category.toLowerCase().trim() : "";
+        return !selectedCategory || chCategory === selectedCategory || chCategory === "";
+    });
+
+    // Create top-level containers off-DOM
+    const mainContainer = document.createElement('div');
+    mainContainer.className = 'epg-main-container';
+    mainContainer.style.width = '100%';
+    mainContainer.style.height = 'calc(100vh - 100px)';
+    mainContainer.style.display = 'flex';
+    mainContainer.style.flexDirection = 'column';
+
+    const scrollBarContainer = document.createElement('div');
+    scrollBarContainer.style.height = '10px';
+    scrollBarContainer.style.background = '#f0f0f0';
+    scrollBarContainer.style.borderBottom = '1px solid #ddd';
+    scrollBarContainer.style.position = 'relative';
+
+    const scrollThumb = document.createElement('div');
+    scrollThumb.className = 'epg-scroll-thumb';
+    scrollThumb.style.height = '100%';
+    scrollThumb.style.background = '#888';
+    scrollThumb.style.borderRadius = '5px';
+    scrollThumb.style.position = 'absolute';
+    scrollThumb.style.cursor = 'grab';
+    scrollThumb.style.width = '100px';
+    scrollBarContainer.appendChild(scrollThumb);
+    mainContainer.appendChild(scrollBarContainer);
+
+    const tableContainer = document.createElement('div');
+    tableContainer.className = 'epg-table-container';
+    tableContainer.style.flexGrow = '1';
+    tableContainer.style.overflow = 'auto';
+    tableContainer.style.position = 'relative';
+    mainContainer.appendChild(tableContainer);
+
+    const grid = document.createElement('div');
+    grid.style.display = 'flex';
+    grid.style.flexDirection = 'column';
+    grid.style.width = `${25 * COLUMN_WIDTH}px`;
+    grid.style.position = 'absolute';
+
+    // Header
+    const header = document.createElement('div');
+    header.style.display = 'flex';
+    header.style.height = '50px';
+    header.style.position = 'sticky';
+    header.style.top = '0';
+    header.style.background = 'linear-gradient(#333, #222)';
+    header.style.zIndex = '100';
+
+    const headerCell = document.createElement('div');
+    headerCell.style.width = `${HEADER_COLUMN_WIDTH}px`;
+    headerCell.style.maxWidth = `${HEADER_COLUMN_WIDTH}px`;
+    headerCell.style.display = 'flex';
+    headerCell.style.alignItems = 'center';
+    headerCell.style.justifyContent = 'center';
+    headerCell.style.color = '#fff';
+    headerCell.style.fontWeight = 'bold';
+    headerCell.style.borderRight = '1px solid #444';
+    headerCell.textContent = 'Channels';
+    header.appendChild(headerCell);
+
+    for (let h = 0; h < 24; h++) {
+        const hourCell = document.createElement('div');
+        hourCell.style.width = `${COLUMN_WIDTH}px`;
+        hourCell.style.maxWidth = `${COLUMN_WIDTH}px`;
+        hourCell.style.display = 'flex';
+        hourCell.style.alignItems = 'center';
+        hourCell.style.justifyContent = 'center';
+        hourCell.style.borderRight = '1px solid #444';
+        hourCell.style.color = '#fff';
+        hourCell.textContent = `${String(h).padStart(2, '0')}:00`;
+        header.appendChild(hourCell);
+    }
+    grid.appendChild(header);
+
+    // We'll build rows in memory and append to grid in batches.
+    let channelIndex = 0;
+    const totalChannels = displayedData.length;
+    const loader = document.getElementById('loader');
+    if (loader) loader.style.display = 'block';
+
+    // We'll collect rows into this frag per batch then append to grid (still off-DOM).
+    function renderNextChannelBatch(batchSize = 1) {
+        const frag = document.createDocumentFragment();
+        const end = Math.min(channelIndex + batchSize, totalChannels);
+
+        for (; channelIndex < end; channelIndex++) {
+            const { channel, programs } = displayedData[channelIndex];
+
+            const row = document.createElement('div');
+            row.style.display = 'flex';
+            row.style.height = `${ROW_HEIGHT}px`;
+            row.style.position = 'relative';
+            row.style.borderBottom = '1px solid #444';
+            row.style.background = 'linear-gradient(#1a1a1a, #111)';
+
+            // Channel cell
+            const channelCell = document.createElement('div');
+            channelCell.style.width = `${COLUMN_WIDTH}px`;
+            channelCell.style.maxWidth = `${COLUMN_WIDTH}px`;
+            channelCell.style.background = '#222';
+            channelCell.style.color = '#fff';
+            channelCell.style.display = 'flex';
+            channelCell.style.flexDirection = 'column';
+            channelCell.style.justifyContent = 'center';
+            channelCell.style.alignItems = 'center';
+            channelCell.style.padding = '5px';
+            channelCell.style.position = 'sticky';
+            channelCell.style.left = '0';
+            channelCell.style.zIndex = '50';
+            channelCell.style.borderRight = '1px solid #444';
+            channelCell.style.whiteSpace = 'normal';
+            channelCell.style.wordBreak = 'break-word';
+
+            if (channel.iconSrc) {
+                const img = document.createElement('img');
+                img.src = channel.iconSrc;
+                img.alt = channel.name;
+                img.style.height = '32px';
+                img.style.maxWidth = '60px';
+                img.style.display = 'block';
+                img.style.margin = '0 auto 2px auto';
+                img.style.borderRadius = '3px';
+                channelCell.appendChild(img);
+            }
+
+            const nameDiv = document.createElement('div');
+            nameDiv.textContent = channel.name;
+            nameDiv.style.fontSize = '0.8em';
+            nameDiv.style.textAlign = 'center';
+            nameDiv.style.whiteSpace = 'normal';
+            nameDiv.style.wordBreak = 'break-word';
+            nameDiv.style.maxWidth = '100%';
+            channelCell.appendChild(nameDiv);
+            row.appendChild(channelCell);
+
+            // Programs container
+            const programsContainer = document.createElement('div');
+            programsContainer.style.position = 'relative';
+            programsContainer.style.flexGrow = '1';
+            programsContainer.style.width = `${24 * COLUMN_WIDTH}px`;
+            programsContainer.style.minWidth = `${24 * COLUMN_WIDTH}px`;
+            programsContainer.style.height = '100%';
+
+            // vertical hour lines
+            for (let h = 0; h <= 24; h++) {
+                const hourLine = document.createElement('div');
+                hourLine.style.position = 'absolute';
+                hourLine.style.left = `${(h * COLUMN_WIDTH)}px`;
+                hourLine.style.top = '0';
+                hourLine.style.bottom = '0';
+                hourLine.style.width = '1px';
+                hourLine.style.background = '#333';
+                hourLine.style.zIndex = '1';
+                programsContainer.appendChild(hourLine);
+            }
+
+            // Build program elements for this channel (synchronously but off-DOM)
+            const progFrag = document.createDocumentFragment();
+            for (let i = 0; i < programs.length; i++) {
+                const program = programs[i];
+
+                // compute clipped start/end for display within 0..DAY_MINUTES
+                let startMins = program.__startMins;
+                let endMins = program.__endMins;
+
+                // Clip to visible day
+                const clippedStart = Math.max(0, Math.min(DAY_MINUTES, startMins));
+                const clippedEnd = Math.max(0, Math.min(DAY_MINUTES, endMins));
+
+                const duration = clippedEnd - clippedStart;
+                if (duration <= 0) continue;
+
+                const left = (clippedStart / 60) * COLUMN_WIDTH;
+                let width = (duration / 60) * COLUMN_WIDTH;
+                if (width < MIN_PROGRAM_WIDTH) width = MIN_PROGRAM_WIDTH;
+
+                const programElement = document.createElement('div');
+                programElement.className = 'program';
+                programElement.style.position = 'absolute';
+                programElement.style.left = `${left}px`;
+                programElement.style.width = `${width}px`;
+                programElement.style.top = '5px';
+                programElement.style.bottom = '5px';
+                programElement.style.background = 'linear-gradient(#3a4a5a, #2a3a4a)';
+                programElement.style.border = '1px solid #4a5a6a';
+                programElement.style.borderRadius = '4px';
+                programElement.style.color = '#fff';
+                programElement.style.padding = '8px';
+                programElement.style.boxSizing = 'border-box';
+                programElement.style.overflow = 'hidden';
+                programElement.style.zIndex = '10';
+                programElement.style.display = 'flex';
+                programElement.style.flexDirection = 'column';
+                programElement.style.justifyContent = 'center';
+                programElement.style.transition = 'all 0.2s ease';
+
+                // Title
+                const titleDiv = document.createElement('div');
+                titleDiv.innerHTML = processColoredText(program.title || '');
+                titleDiv.style.fontWeight = 'bold';
+                titleDiv.style.fontSize = '0.9em';
+                titleDiv.style.whiteSpace = 'nowrap';
+                titleDiv.style.overflow = 'hidden';
+                titleDiv.style.textOverflow = 'ellipsis';
+                programElement.appendChild(titleDiv);
+
+                // time line
+                const timeDiv = document.createElement('div');
+                timeDiv.textContent = `${program.start} - ${program.stop}`;
+                timeDiv.style.fontSize = '0.8em';
+                timeDiv.style.color = '#aab';
+                timeDiv.style.marginTop = '3px';
+                timeDiv.style.whiteSpace = 'nowrap';
+                timeDiv.style.overflow = 'hidden';
+                timeDiv.style.textOverflow = 'ellipsis';
+                programElement.appendChild(timeDiv);
+
+                // hover effect
+                programElement.addEventListener('mouseenter', function () {
+                    const requiredWidth = Math.max(titleDiv.scrollWidth + 30, timeDiv.scrollWidth + 30);
+                    const maxPossibleWidth = (24 * COLUMN_WIDTH) - left;
+                    const newWidth = Math.min(requiredWidth, maxPossibleWidth);
+                    programElement.style.width = `${newWidth}px`;
+                    programElement.style.zIndex = '100';
+                    programElement.style.boxShadow = '0 0 15px rgba(0,0,0,0.5)';
+                    if (left + newWidth > (24 * COLUMN_WIDTH)) {
+                        programElement.style.left = `${(24 * COLUMN_WIDTH) - newWidth}px`;
+                    }
+                });
+                programElement.addEventListener('mouseleave', function () {
+                    programElement.style.width = `${width}px`;
+                    programElement.style.left = `${left}px`;
+                    programElement.style.zIndex = '10';
+                    programElement.style.boxShadow = 'none';
+                });
+
+                progFrag.appendChild(programElement);
+            } // end progs loop
+
+            programsContainer.appendChild(progFrag);
+            row.appendChild(programsContainer);
+            frag.appendChild(row);
+        } // end channel batch loop
+
+        // Append the batch of rows to grid (off-DOM append)
+        grid.appendChild(frag);
+
+        // Update displayed count (we can compute based on built program elements)
+        const shownCount = grid.querySelectorAll('.program').length;
+        const totalCount = displayedData.reduce((acc, ch) => acc + ch.programs.length, 0);
+        document.getElementById('result-count').textContent = `${Math.min(shownCount, totalCount)} of ${totalCount} programs`;
+
+        // if not finished, schedule next batch so browser can breathe
+        if (channelIndex < totalChannels) {
+            if (TVState.isM3ULoading && channelIndex % 100 === 0) {
+                const pct = Math.floor((channelIndex / totalChannels) * 100);
+                // Això farà que només vegis increments d’aprox. 10% en 10%
+                const roundedPct = Math.min(100, Math.floor(pct / 10) * 10);
+                updateProgressUI(roundedPct, `Loading M3U… ${channelIndex}/${totalChannels}`);
+            }
+
+            requestAnimationFrame(() => renderNextChannelBatch(1)); // tune batch size here
+        } else {
+            // finished: attach assembled DOM to visible container in ONE operation
+            tableContainer.appendChild(grid);
+            // replace existing children with the new main container
+            container.replaceChildren(mainContainer);
+            mainContainer.appendChild(scrollBarContainer);
+            mainContainer.appendChild(tableContainer);
+
+            TVState.isM3ULoading = false;
+            updateProgressUI(100, 'M3U Loaded');
+            hideProgressUI();
+
+            // hide loader next frame
+            requestAnimationFrame(() => {
+                const loaderEl = document.getElementById('loader');
+                if (loaderEl) loaderEl.style.display = 'none';
+            });
+
+            // setup scroll after mounted
+            setTimeout(setupCustomScroll, 50);
+        }
+    } // end renderNextChannelBatch
+
+    // Start rendering batches (off-DOM)
+    renderNextChannelBatch(1);
+
+    // Custom scroll function (attached after mount)
+    function setupCustomScroll() {
+        const tableWidth = grid.offsetWidth;
+        const containerWidth = tableContainer.offsetWidth;
+        const maxScroll = Math.max(1, tableWidth - containerWidth);
+
+        function updateThumbPosition() {
+            const scrollLeft = tableContainer.scrollLeft;
+            const thumbPosition = (scrollLeft / maxScroll) * Math.max(0, (containerWidth - scrollThumb.offsetWidth));
+            scrollThumb.style.left = `${thumbPosition}px`;
+            const thumbWidth = Math.max(50, (containerWidth / tableWidth) * containerWidth);
+            scrollThumb.style.width = `${thumbWidth}px`;
+        }
+
+        // simple drag handlers (no duplicates because scrollThumb is fresh)
+        let isDragging = false;
+        let startX = 0;
+        let startLeft = 0;
+
+        scrollThumb.onmousedown = (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            startLeft = parseFloat(scrollThumb.style.left || '0');
+            scrollThumb.style.cursor = 'grabbing';
+            e.preventDefault();
+        };
+
+        document.onmousemove = (e) => {
+            if (!isDragging) return;
+            const dx = e.clientX - startX;
+            const maxLeft = Math.max(0, containerWidth - scrollThumb.offsetWidth);
+            let newLeft = startLeft + dx;
+            newLeft = Math.max(0, Math.min(maxLeft, newLeft));
+            const scrollLeft = (newLeft / Math.max(1, maxLeft)) * Math.max(0, (tableWidth - containerWidth));
+            tableContainer.scrollLeft = scrollLeft;
+        };
+
+        document.onmouseup = () => {
+            isDragging = false;
+            scrollThumb.style.cursor = 'grab';
+        };
+
+        tableContainer.addEventListener('scroll', updateThumbPosition);
+        updateThumbPosition();
+    }
+}
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            document.getElementById('themeToggleBtn').textContent = isLight ? '☀️' : '🌙';
+        }
+
+        // Filtros
+        const debounce2 = (fn, wait = 120) => {
+          let t;
+          return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
+        };
+
+
+        document.getElementById('resetFiltersBtn').addEventListener('click', () => {
+            // Limpiar todos los filtros
+            document.getElementById('channelFilter').value = '';
+            document.getElementById('titleFilter').value = '';
+            document.getElementById('descriptionFilter').value = '';
+            // Establecer la fecha al día actual
+            setDateToCurrent();
+                            TVState.epgData.sort((a, b) => {
+    return TVState.channelsOrder.indexOf(a.channel) - TVState.channelsOrder.indexOf(b.channel);
+});
+                renderTable(false, 200, true);
+        });
+
+        let gridView = false;
+        // Evitar renderizados excesivos con debounce
+        function debounce(func, delay = 300) {
+            let timer;
+            return function(...args) {
+                clearTimeout(timer);
+                timer = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
+        // Aplica debounce a los filtros de texto
+        ['channelFilter', 'titleFilter', 'descriptionFilter', 'dateFilter'].forEach(id => {
+            document.getElementById(id).addEventListener('input', debounce(() => {
+                                TVState.epgData.sort((a, b) => {
+    return TVState.channelsOrder.indexOf(a.channel) - TVState.channelsOrder.indexOf(b.channel);
+});
+                renderTable(false, 200, true);
+            }));
+        });
+
+        // IMPORTANTE: Modifica tu listener de scroll ligeramente si decides renderizar todo en el filtro inicial
+       /*
+        window.addEventListener('scroll', () => {
+            // Solo aplica el scroll infinito si estamos en la vista de lista Y no todos los elementos filtrados están renderizados
+            if (!gridView && (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 200) && renderedItems < filteredData.length) {
+                renderTable(true); // Cargamos más si estamos en la vista de lista y no se muestran todos los elementos
+            }
+        });*/
+
+        // Llama a setDateToCurrent al cargar la página para establecer la fecha inicial
+        document.addEventListener('DOMContentLoaded', setDateToCurrent);
+
+        fetchXML();
+    </script>
+</body>
+
+</html>

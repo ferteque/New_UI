@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPGenius - A Curated Lists and EPG Repository</title>
+    <link href="EPGenius.css" rel="stylesheet">
+<!--
+
+EPGenius
+
+https://repo-server.site/
+
+-->
+</head>
+<body id="top">
+    <!-- Enhanced Background Elements -->
+    <div class="cyber-bg">
+        <div class="cyber-gradient"></div>
+        <div class="matrix-rain" id="matrixRain"></div>
+    </div>
+    
+    <div class="particles" id="particlesContainer"></div>
+    
+    <div class="data-streams" id="dataStreams"></div>
+    
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+    
+    <div class="grid-overlay">
+        <div class="grid-lines"></div>
+        <div class="grid-glow"></div>
+    </div>
+    
+    <div class="scanlines"></div>
+    <div class="noise-overlay"></div>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#top" class="logo"><img src ="EPGCube.gif" width="50px" height="50px"></a>
+            <ul class="nav-links">
+                <li><a href="#" data-tab="playlists" class="nav-tab active">Choose a Playlist</a></li>
+                <li><a href="#" data-tab="creators" class="nav-tab">Share Your Playlist</a></li>
+                <li><a href="#" data-tab="credentials" class="nav-tab">Edit Your Credentials</a></li>
+                <li><a href="#" data-tab="howto" class="nav-tab">How-To Guide</a></li>
+            </ul>
+            <div class="nav-bottom">
+                <a href="https://discord.gg/pZwcncweFc" class="cyber-button"target="_blank">Discord</a>
+            </div>
+            <button class="mobile-menu-button" id="mobileMenuBtn">
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <a href="#top" class="mobile-menu-logo">EPGenius</a>
+            <button class="mobile-menu-close" id="mobileMenuClose">✕</button>
+        </div>
+        <div class="mobile-menu-cta">
+            <a href="https://discord.gg/pZwcncweFc" class="cyber-button"target="_blank">Discord</a>
+        </div>
+        <nav class="mobile-menu-nav">
+            <ul>
+                <li><a href="#" data-tab="playlists" class="nav-tab active">Choose a Playlist</a></li>
+                <li><a href="#" data-tab="creators" class="nav-tab">Share Your Playlist</a></li>
+                <li><a href="#" data-tab="credentials" class="nav-tab">Edit Your Credentials</a></li>
+                <li><a href="#" data-tab="howto" class="nav-tab">How-To Guide</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <h1 class="hero-title">
+                <span class="hero-ep">EP</span><span class="hero-genius">Genius</span>
+            </h1>
+            <p class="hero-subtitle">CURATED PLAYLISTS MADE EASY</p>	
+    
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number"></span>
+                    <span class="stat-label">Playlists</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">6</span>
+                    <span class="stat-label">Providers Covered</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number"></span>
+                    <span class="stat-label">Downloads</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">27</span>
+                    <span class="stat-label">Countries</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Playlists Section -->
+    <section class="tab-content active" id="playlists">
+        <div class="playlists-container">
+            <div class="section-header">
+                <h2 class="section-title">Choose a Playlist</h2>
+                <p class="section-subtitle">PICK A LIST THAT MATCHES YOUR PROVIDER</p>
+                <div id="orderWrapper">
+                    <span id="SpanOrderBY">ORDER LISTS BY</span>
+                    <div class="custom-select" id="customSelect">
+                        <div class="select-selected">Number</div>
+                        <div class="select-items select-hide">
+                            <div data-value="ID">Number</div>
+                            <div data-value="Downloads">Downloads</div>
+                            <div data-value="LastModified">Last Updated</div>
+                            <div data-value="Service">Provider</div>
+                            <div data-value="ListOwner">Playlist Owner</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="playlists-grid" id="tileContainer">
+            <!-- Cards will be injected here dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Disclaimer Agreement Modal -->
+    <div id="disclaimerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Terms & Disclaimer</h3>
+                <button class="mobile-close-btn" onclick="event.stopPropagation(); event.preventDefault(); this.closest('.modal').style.display='none'; unlockScroll();">✕</button>
+            </div>
+            <div class="modal-body">
+                <p class="disclaimer-text">
+                    EPGenius provides pre-configured M3U templates for personal use only. 
+                    We do not store, provide, or enable access to copyrighted content.<br><br>
+                    By using this service, you confirm you are authorized to access the content associated with your credentials.
+                    Playlists are non-functional without user-provided credentials from a legitimate provider.
+                </p>
+                <div class="button-container">
+                    <button class="modal-button" id="agreeBtn">I Agree</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	
+    <!-- Playlist Modal structure -->
+    <div id="playlistModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Playlist Options</h3>
+                <button class="mobile-close-btn" onclick="event.stopPropagation(); event.preventDefault(); this.closest('.modal').style.display='none'; unlockScroll();">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="playlist-description">
+                <h4>Google Drive</h4>
+                <p>
+                    This is the recommended way to use an EPGenius playlist. The playlist will be automatically uploaded to your Google Drive, allowing you to recieve automatic updates!
+                </p>
+
+                <h4>Manual</h4>
+                <p>
+                    The manual method allows you to download the M3U template and edit the file yourself. We cannot provide any updates or support if you choose to use the manual method.
+                </p>
+
+                <h4>Donate to <span id="playlistOwnerName"></span></h4>
+                <p>
+                    To say thank you to the playlist creator, you can donate directly to them here and become a supporter!
+                </p>
+
+                <h4>Preview Playlist</h4>
+                <p>
+                    Select this option to see a preview of the playlist as it would appear in your player.
+                </p>
+
+                <h4>Supporter Update Categories</h4>
+                <p>
+                    For supporters, the categories listed here will automatically update their channel names 6 times a day to keep sports, PPV, and other live events in sync in your EPG.
+                </p>
+            </div>
+
+            <div class="button-container">
+                <button class="modal-button" id="googleBtn">Google Drive</button>
+                <button class="modal-button" id="manualBtn">Manual</button>
+                <button class="modal-button" id="donateBtn"></button>
+                <button class="modal-button" id="previewBtn">Preview Playlist</button>
+                <button class="modal-button" id="categoriesBtn" >Supporter Update Categories</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Supporter Updates Modal -->
+    <div id="categoriesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h3>Supporter Update Categories</h3>
+            <button class="mobile-close-btn" onclick="event.stopPropagation(); event.preventDefault(); this.closest('.modal').style.display='none'; unlockScroll();">✕</button>
+            </div>
+            <div id="categoriesContainer"></div>
+            <div class="button-container">
+                <button id="closeCategoriesBtn" class="modal-button">Go Back</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manual Modal -->
+    <div id="manualModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h3>Manual Setup</h3>
+            <button class="mobile-close-btn" onclick="event.stopPropagation(); event.preventDefault(); this.closest('.modal').style.display='none'; unlockScroll();">✕</button>
+            </div>
+            <div class="manual-section">
+                <h3>Download M3U</h3>
+                <button id="downloadM3uBtn" class="download-btn">Download M3U</button>
+            </div>
+
+            <div class="manual-section">
+                <h3>EPG URL</h3>
+                <div class="link-container">
+                    <input type="text" id="manualEpgLink" readonly>
+                    <button class="copy-btn" id="copyEpgBtn">Copy</button>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button id="closeManualBtn" class="modal-button">Go Back</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google Drive Modal -->
+    <div id="googleDriveModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Upload to Google Drive</h3>
+                <button class="mobile-close-btn" onclick="event.stopPropagation(); event.preventDefault(); this.closest('.modal').style.display='none'; unlockScroll();">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="format-group">
+                    <input type="hidden" id="driveMode" value="m3u">
+                    <div class="format-section" id="m3u-section">
+                        <label>M3U LINK</label>
+                        <input type="url" id="m3u" placeholder="http://example.com/get.php?username=Username&password=Password&type=m3u_plus&output=ts">
+                    </div>
+
+                    <div class="divider">OR</div>
+
+                    <div class="format-section" id="xtream-section">
+                        <label>XTREAM CREDENTIALS</label>
+                        <input type="text" id="dns" placeholder="DNS | http://example.com" required>
+                        <input type="text" id="username" placeholder="Username" required>
+                            <div class="password-wrapper">
+                            <input type="password" id="password" name="Password" placeholder="Password" required>
+                                <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                                    <svg class="eye eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M12 5C5 5 1 12 1 12s4 7 11 7 11-7 11-7-4-7-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
+                                    </svg>
+                                    <svg class="eye eye-closed" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M2 3l19 19-1.5 1.5L16.7 20C15.3 20.6 13.7 21 12 21 5 21 1 12 1 12c1.3-2.3 3.1-4.2 5.2-5.6L.5 4.5 2 3zm10 5a4 4 0 0 0-3.9 3.2l5.7 5.7A4 4 0 0 0 12 8zm9.8 4c-.7 1.3-1.6 2.5-2.7 3.5l-3.3-3.3A4 4 0 0 0 12 8c-.4 0-.7 0-1 .1L8.4 5.5C9.5 5.2 10.7 5 12 5c7 0 11 7 11 7z"/>
+                                    </svg>
+                                </button>  
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-container">
+                    <button class="modal-button" id="uploadDriveBtn">Upload to Google Drive</button>
+                    <button class="modal-button secondary" id="cancelDriveBtn">Go Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Playlist Creators Section -->
+    <section class="tab-content" id="creators">
+        <div class="creators-container">
+            <div class="section-header">
+                <h2 class="section-title">Share/Update Your Playlist</h2>
+                <p class="section-subtitle">SELECT AN OPTION <br>PLAYLIST CREATORS ONLY</p>
+            </div>
+            
+            <div class="creators-grid">
+                <div class="creators-card">
+                    <a class="btn-secondary" id="sharePlaylistBtn">SHARE A NEW PLAYLIST</a>
+                </div>
+                <div class="creators-card">
+                    <a class="btn-secondary" id="updatePlaylistBtn">UPDATE AN EXISTING PLAYLIST</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Edit Credentials Section -->
+    <section class="tab-content" id="credentials">
+        <div class="creators-container">
+            <div class="section-header">
+                <h2 class="section-title">Edit Your Credentials</h2>
+                <p class="section-subtitle">CLICK BELOW TO UPDATE YOUR DNS, USERNAME, AND/OR PASSWORD</p>
+            </div>
+            
+            <div class="creators-grid">
+                <div class="creators-card">
+                    <a class="btn-secondary" id="editCredentialsBtn">EDIT CREDENTIALS</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Edit Credentials Modal -->
+    <div id="editCredsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Your Credentials</h3>
+                <button class="mobile-close-btn" onclick="event.stopPropagation(); event.preventDefault(); this.closest('.modal').style.display='none'; unlockScroll();">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-warning">
+                    Use this to update the DNS, username, and/or password of an existing Google Drive playlist.
+                </div>
+                
+                <form id="editCredsForm">
+                    <div class="format-group">
+                        <div class="format-section">
+                            <label>DNS</label>
+                            <input type="url" id="DNS" name="DNS" placeholder="http://example.com" required>
+                        </div>
+                        
+                        <div class="format-section">
+                            <label>Username</label>
+                            <input type="text" id="Username" name="Username" placeholder="Username" required>
+                        </div>
+
+                        <div class="format-section">
+                            <label for="Password">Password</label>
+                            <div class="password-wrapper">
+                            <input type="password" id="Password" name="Password" placeholder="Password" required>
+                                <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                                    <svg class="eye eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M12 5C5 5 1 12 1 12s4 7 11 7 11-7 11-7-4-7-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
+                                    </svg>
+                                    <svg class="eye eye-closed" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M2 3l19 19-1.5 1.5L16.7 20C15.3 20.6 13.7 21 12 21 5 21 1 12 1 12c1.3-2.3 3.1-4.2 5.2-5.6L.5 4.5 2 3zm10 5a4 4 0 0 0-3.9 3.2l5.7 5.7A4 4 0 0 0 12 8zm9.8 4c-.7 1.3-1.6 2.5-2.7 3.5l-3.3-3.3A4 4 0 0 0 12 8c-.4 0-.7 0-1 .1L8.4 5.5C9.5 5.2 10.7 5 12 5c7 0 11 7 11 7z"/>
+                                    </svg>
+                                </button>
+                            </div>   
+                        </div>
+                        
+                        <div class="format-section">
+                            <label>Google Drive URL or File ID</label>
+                            <input type="text" id="File_ID" name="File_ID" placeholder="https://drive.google.com/uc?export=download&id=1AbCdEfGhIjKlMnOpQrStUvWxYz" required>
+                        </div>
+                    </div>
+                    
+                    <div class="button-container">
+                        <button type="submit" class="modal-button" id="submitEditCreds">Update Credentials</button>
+                        <button type="button" class="modal-button secondary" id="cancelEditCreds">Go Back</button>
+                    </div>
+                </form>
+                
+                <h3 id="Wait6" style="display: none;">Updating Credentials...</h3>
+                <div id="editCredsStatus" style="display: none; padding: 1rem; border-radius: 5px; margin-top: 1rem; text-align: center;"></div>
+                <div class="button-container" id="successButtons" style="display: none; margin-top: 1rem;">
+                <button type="button" class="modal-button" id="closeSuccessBtn">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Playlist Modal -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Share Your Playlist</h3>
+                <button class="mobile-close-btn" onclick="event.stopPropagation(); event.preventDefault(); this.closest('.modal').style.display='none'; unlockScroll();">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-warning">
+                    This section is for playlist creators only.
+                </div>
+                
+                <form id="submitPlaylistForm">
+                    <div class="format-group">
+                        <div class="format-section">
+                            <label>Provider</label>
+                            <div class="custom-select" id="providerSelect">
+                                <div class="select-selected">Provider</div>
+                                <div class="select-items select-hide"></div>
+                            </div>
+                            <input type="hidden" id="service_name" name="service_name">
+                        </div>
+                        <div class="format-section">
+                            <label>Countries</label>
+                            <div class="multi-select" id="countriesSelectShare">
+                                <div class="multi-selected">Countries</div>
+                                <div class="multi-items select-hide"></div>
+                            </div>
+                            <input type="hidden" id="countriesShare" name="countries">
+                        </div>
+                        <div class="format-section">
+                            <label>Discord Username</label>
+                            <input type="text" id="reddit_username" name="reddit_username" placeholder="Discord Username" required>
+                        </div>
+                        
+                        <div class="format-section">
+                            <label>Main Categories</label>
+                            <input type="text" id="main_categories" name="main_categories" placeholder="Live TV, Movies, Sports, etc..." required>
+                        </div>
+                        
+                        <div class="format-section">
+                            <label>EPG URL</label>
+                            <input type="url" id="epgForm" name="epg" placeholder="http://example.com/epg.xml" required>
+                        </div>
+                        
+                        <div class="format-section">
+                            <label>Donation URL</label>
+                            <input type="url" id="donation_link" name="donation_link" placeholder="https://example.com/donations">
+                        </div>
+                        
+                        <div class="format-section">
+                            <label for="list_password">Playlist Password</label>
+                            <div class="password-wrapper">
+                            <input type="password" id="list_password" name="list_password" placeholder="Used to update your playlist later" required>
+                                <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                                    <svg class="eye eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M12 5C5 5 1 12 1 12s4 7 11 7 11-7 11-7-4-7-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
+                                    </svg>
+                                    <svg class="eye eye-closed" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M2 3l19 19-1.5 1.5L16.7 20C15.3 20.6 13.7 21 12 21 5 21 1 12 1 12c1.3-2.3 3.1-4.2 5.2-5.6L.5 4.5 2 3zm10 5a4 4 0 0 0-3.9 3.2l5.7 5.7A4 4 0 0 0 12 8zm9.8 4c-.7 1.3-1.6 2.5-2.7 3.5l-3.3-3.3A4 4 0 0 0 12 8c-.4 0-.7 0-1 .1L8.4 5.5C9.5 5.2 10.7 5 12 5c7 0 11 7 11 7z"/>
+                                    </svg>
+                                </button>
+                            </div>   
+                        </div>
+                        
+                        <div class="format-section">
+                            <label>Upload M3U</label>
+                            <input type="file" id="m3u_fileForm" name="m3u_file" accept=".m3u" required>
+                        </div>
+                    </div>
+                    
+                    <div class="button-container">
+                        <button type="submit" class="modal-button" id="submitPlaylist">Submit Playlist</button>
+                        <button type="button" class="modal-button secondary" id="cancelShareBtn">Go Back</button>
+                    </div>
+                </form>
+                
+                <h3 id="Wait4" style="display: none;">Uploading Playlist...</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Categories Modal -->
+    <div id="shareCategoriesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Select Categories</h3>
+                <button class="mobile-close-btn" onclick="event.stopPropagation(); event.preventDefault(); this.closest('.modal').style.display='none'; unlockScroll();">✕</button>
+            </div>
+            <div class="modal-body">
+                <p id="shareSelect_categories" style="display: none">
+                    Please select all categories that need to be auto-updated every 4 hours.
+                </p>
+                <div id="shareGroupList"></div>
+                <button class="modal-button" id="shareSubmitGroups" style="display: none;">
+                    Submit
+                </button>
+                <div id="shareSuccessMsg" style="display: none; padding: 1rem; border-radius: 5px; margin-top: 1rem; text-align: center;"></div>
+                <div class="button-container" id="shareSuccessButtons" style="display: none; margin-top: 1rem;">
+                <button type="button" class="modal-button" id="closeShareSuccessBtn">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Playlist Modal -->
+    <div id="updateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Update Your Playlist</h3>
+                <button class="mobile-close-btn" onclick="event.stopPropagation(); event.preventDefault(); this.closest('.modal').style.display='none'; unlockScroll();">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-warning">
+                    This section is for playlist creators only.
+                </div>
+                
+                <form id="updatePlaylistForm">
+                    <div class="format-group">
+                        <div class="format-section">
+                            <label>Playlist Number</label>
+                            <input type="text" id="playlist_id" name="id" placeholder="1, 2, etc..." required>
+                        </div>
+                        
+                        <div class="format-section">
+                            <label for="list_password">Playlist Password</label>
+                            <div class="password-wrapper">
+                            <input type="password" id="list_password" name="list_password" placeholder="The password you set when sharing your playlist" required>
+                                <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                                    <svg class="eye eye-open" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M12 5C5 5 1 12 1 12s4 7 11 7 11-7 11-7-4-7-11-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
+                                    </svg>
+                                    <svg class="eye eye-closed" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M2 3l19 19-1.5 1.5L16.7 20C15.3 20.6 13.7 21 12 21 5 21 1 12 1 12c1.3-2.3 3.1-4.2 5.2-5.6L.5 4.5 2 3zm10 5a4 4 0 0 0-3.9 3.2l5.7 5.7A4 4 0 0 0 12 8zm9.8 4c-.7 1.3-1.6 2.5-2.7 3.5l-3.3-3.3A4 4 0 0 0 12 8c-.4 0-.7 0-1 .1L8.4 5.5C9.5 5.2 10.7 5 12 5c7 0 11 7 11 7z"/>
+                                    </svg>
+                                </button>
+                            </div>   
+                        </div>
+                        
+                        <div class="format-section">
+                            <label>Countries</label>
+                            <div class="multi-select" id="countriesSelectUpdate">
+                                <div class="multi-selected">Countries</div>
+                                <div class="multi-items select-hide"></div>
+                            </div>
+                            <input type="hidden" id="countriesUpdate" name="countries">
+                        </div>
+                        
+                        <div class="format-section">
+                            <label>Main Categories</label>
+                            <input type="text" id="new_categories" name="main_categories" placeholder="Leave blank to keep current. This will overwrite all current categories">
+                        </div>
+                        
+                        <div class="format-section">
+                            <label>EPG URL</label>
+                            <input type="url" id="new_epgForm" name="epg_url" placeholder="Leave blank to keep current">
+                        </div>
+                        
+                        <div class="format-section">
+                            <label>Donation URL</label>
+                            <input type="url" id="new_donation_link" name="donation_info" placeholder="Leave blank to keep current">
+                        </div>
+                        
+                        <div class="format-section">
+                            <label>Upload M3U</label>
+                            <input type="file" id="update_m3u_fileForm" name="m3u_file" accept=".m3u" required>
+                        </div>
+                    </div>
+                    
+                    <div class="button-container">
+                        <button type="submit" class="modal-button" id="updatePlaylistBtn">Update Playlist</button>
+                        <button type="button" class="modal-button secondary" id="cancelUpdateBtn">Go Back</button>
+                    </div>
+                </form>
+                
+                <h3 id="Wait5" style="display: none;">Updating Playlist...</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- How-To Section -->
+    <section class="tab-content" id="howto">
+        <div class="creators-container">
+            <div class="section-header">
+                <h2 class="section-title">How-To Guide</h2>
+                <p class="section-subtitle">FOLLOW THE GUIDE BELOW TO SET UP YOUR PLAYLIST</p>
+            </div>
+        </div>
+        <div class="howto-container">
+            <!-- Introduction -->
+            <div class="howto-intro">
+                <div class="warning-box" style="margin-top: 2rem; text-align: left;">
+                    <strong>Important Prerequisites:</strong>
+                    <p>You must have your own credentials for the service your chosen playlist uses. EPGenius does not provide credentials.</p>
+                </div>
+            </div>
+
+            <!-- Step 1 -->
+            <div class="howto-step">
+                <div class="step-header">
+                    <div class="step-number-badge">1</div>
+                    <h3 class="step-title">Choose Your Playlist</h3>
+                </div>
+                <p>Start by browsing the available playlists. If you're new to this, we recommend sorting by service to find a playlist matching your current service.</p>
+                
+                <div class="info-box">
+                    <strong>Pro Tip:</strong>
+                    <p>Click <b>"Preview Playlist"</b> to see what categories and channels each playlist contains before committing.</p>
+                </div>
+                
+                <div class="step-images">
+                    <img src="1a.png" alt="Sorting playlists" class="step-thumb" onclick="openHowtoModal('1a.png')"/>
+                    <img src="1b.png" alt="Playlist preview button" class="step-thumb" onclick="openHowtoModal('1b.png')"/>
+                    <img src="1c.png" alt="Preview site" class="step-thumb" onclick="openHowtoModal('1c.png')"/>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="howto-step">
+                <div class="step-header">
+                    <div class="step-number-badge">2</div>
+                    <h3 class="step-title">Select Configuration Method</h3>
+                </div>
+                <p>When you're ready, click <b>"Google Drive"</b> to begin the setup process.</p>
+                
+                <div class="step-images">
+                    <img src="2.png" alt="Select automatic" class="step-thumb" onclick="openHowtoModal('2.png')"/>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="howto-step">
+                <div class="step-header">
+                    <div class="step-number-badge">3</div>
+                    <h3 class="step-title">Enter Your Credentials</h3>
+                </div>
+                <p>Choose the option that matches what your seller gave you:</p>
+                
+                <div class="option-grid">
+                    <div class="option-card">
+                        <h4>Option A: M3U</h4>
+                        <p>If you were provided an M3U link:</p>
+                        <ul>
+                            <li>Enter your M3U link</li>
+                            <li>Click <b>"Upload to Google Drive"</b></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="option-card">
+                        <h4>Option B: Xtream</h4>
+                        <p>If you were provided Xtream credentials:</p>
+                        <ul>
+                            <li>Enter DNS</li>
+                            <li>Enter Username</li>
+                            <li>Enter Password</li>
+                            <li>Click <b>"Upload to Google Drive"</b></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <strong>Which Option to Choose:</strong>
+                    <p>If you received both an M3U link and Xtream credentials, use <b>Option B: Xtream</b> as it's generally more reliable and less prone to transcription errors.</p>
+                </div>
+                
+                <div class="step-images">
+                    <img src="3a.png" alt="M3U option" class="step-thumb" onclick="openHowtoModal('3a.png')"/>
+                    <img src="3b.png" alt="Xtream option" class="step-thumb" onclick="openHowtoModal('3b.png')"/>
+                </div>
+            </div>
+
+            <!-- Step 4
+            <div class="howto-step">
+                <div class="step-header">
+                    <div class="step-number-badge">4</div>
+                    <h3 class="step-title">Upload to Google Drive</h3>
+                </div>
+                <p>Click the <b>"Upload to Google Drive"</b> button.</p>
+                
+                <div class="step-images">
+                    <img src="4.png" alt="Upload button" class="step-thumb" onclick="openHowtoModal('4.png')"/>
+                </div>
+            </div> -->
+
+            <!-- Step 4 -->
+            <div class="howto-step">
+                <div class="step-header">
+                    <div class="step-number-badge">4</div>
+                    <h3 class="step-title">Sign In to Google</h3>
+                </div>
+                <p>Log into your Google Account when prompted. This allows EPGenius to save your customized playlist to your personal Google Drive so that you automatically receive new playlist updates.</p>
+                
+                <div class="step-images">
+                    <img src="5.png" alt="Google login" class="step-thumb" onclick="openHowtoModal('5.png')"/>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="howto-step">
+                <div class="step-header">
+                    <div class="step-number-badge">5</div>
+                    <h3 class="step-title">Copy Your Links</h3>
+                </div>
+                <p>You'll now see two important links:</p>
+                <ul>
+                    <li><strong>Playlist URL</strong> - Your new M3U playlist link</li>
+                    <li><strong>EPG URL</strong> - Your EPG link</li>
+                </ul>
+                <p>Use these links when adding a new playlist to the player of your choice.</p>
+                
+                <div class="warning-box">
+                    <strong>Critical:</strong>
+                    <p>Enter these links <b>exactly</b> as they appear. We recommend copying and pasting them directly into your player.</p>
+                </div>
+
+                <p style="margin-top: 1.5rem;"><strong>Recommended apps for entering links:</strong></p>
+                <ul>
+                    <li>Android/Google TV: Use the Google TV app</li>
+                    <li>Amazon Fire TV: Use the Fire TV app</li>
+                    <li>Apple TV: Use the built-in iOS Apple Remote</li>
+                </ul>
+                
+                <div class="step-images">
+                    <img src="6.png" alt="Copy links" class="step-thumb" onclick="openHowtoModal('6.png')"/>
+                </div>
+            </div>
+
+            <div class="yellow-box">
+                <strong>Almost Done!</strong>
+                <p>Your EPGenius playlist is <i>technically</i> ready to go. <b>However, to take advantage of EPGenius's best feature, automatic playlist updates, you must follow the steps below to register your playlist!</b></p>
+            </div>
+
+            <!-- Step 6 -->
+            <div class="howto-step">
+                <div class="step-header">
+                    <div class="step-number-badge">6</div>
+                    <h3 class="step-title">Join the Discord Community</h3>
+                </div>
+                <p>We highly encourage joining the EPGenius Discord server for:</p>
+                <ul>
+                    <li><b>Automatic updates via playlist registration (step 7)</b></li>
+                    <li>Access to FAQs and troubleshooting guides</li>
+                    <li>Direct support from the community and playlist owners</li>
+                    <li>Ability to provide feedback to improve playlists</li>
+                    <li>Playlist recovery (retrieve your links anytime)</li>
+                </ul>
+                <a href="https://discord.gg/pZwcncweFc" target="_blank" class="howto-button">Join Discord Server</a>
+            </div>
+
+            <!-- Step 7 -->
+            <div class="howto-step">
+                <div class="step-header">
+                    <div class="step-number-badge">7</div>
+                    <h3 class="step-title">Register Your Playlist</h3>
+                </div>
+                <p>Once you've joined the Discord, head over to the channel <a href="https://discord.com/channels/1382432361840509039/1383563895913844786" target="_blank" style="color: var(--primary-purple); font-weight: 600;">#🚑•help</a> to register your playlist by sending the message below and entering your Playlist URL from step 6 when prompted.</p>
+                <ul>
+                    <li><code>/register</code></li>
+                </ul>
+                <p style="margin-top: 1rem;">Once that's done, you can run the command <code>/info</code> in any channel in the EPGenius Discord to:</p>
+                <ul>
+                    <li>Retrieve your playlist and EPG links</li>
+                    <li>Access helpful playlist information, like your playlist statuses, latest updates, and more!</li>
+                </ul>
+                
+                <div class="step-images">
+                    <img src="playlistregister_1.png" alt="Register command" class="step-thumb" onclick="openHowtoModal('playlistregister_1.png')"/>
+                    <img src="playlistregister_2.png" alt="Registration confirmation" class="step-thumb" onclick="openHowtoModal('playlistregister_2.png')"/>
+                    <img src="playlistinfo.png" alt="Playlist info command" class="step-thumb" onclick="openHowtoModal('playlistinfo.png')"/>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <strong>Congratulations!</strong>
+                <p>Your EPGenius playlist is now set up and ready to use. Enjoy your new, expertly curated playlist! Don't forget to check out the next steps below to make your experience even better.</p>
+            </div>
+
+            <div class="howto-section-break"></div>
+
+            <!-- Next Steps Section -->
+            <div class="section-header" style="margin-bottom: 3rem;">
+                <h2 class="section-title">Next Steps</h2>
+                <p class="section-subtitle">ENHANCE YOUR EXPERIENCE</p>
+            </div>
+
+            <!-- Step 8 -->
+            <div class="howto-step">
+                <div class="step-header">
+                    <div class="step-number-badge">8</div>
+                    <h3 class="step-title">Consider Supporting the Playlist Creator</h3>
+                </div>
+                <p>If you're loving your playlist, consider donating to the playlist creator. Benefits include:</p>
+                <ul>
+                    <li>100% of donations go directly to the creator</li>
+                    <li>Priority free updates</li>
+                    <li><strong>Supporter Updates:</strong> Keep your TV guide synced with live events, sports, and PPV</li>
+                </ul>
+                
+                <div class="info-box">
+                    <strong>Support:</strong>
+                    <p>The donation link can be found in the playlist selection box from step 2. Thanks for showing your love for their work!</p>
+                </div>
+                
+                <div class="step-images">
+                    <img src="donations.png" alt="Donations" class="step-thumb" onclick="openHowtoModal('donations.png')"/>
+                </div>
+            </div>
+
+            <div class="howto-section-break"></div>
+
+            <!-- FAQ Section -->
+            <div class="section-header" style="margin-bottom: 3rem;">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-subtitle">COMMON QUESTIONS AND ANSWERS</p>
+            </div>
+
+            <div class="howto-step">
+                <div class="step-header">
+                    <h3 class="step-title">What if my playlist isn't working?</h3>
+                </div>
+                <p>Check these common issues:</p>
+                <ul>
+                    <li>Verify the playlist link was copied exactly</li>
+                    <li>Ensure your credentials are active and valid</li>
+                    <li>Make sure you were sold the correct service. Some sellers advertise one service, but provide credentials for a completely different one</li>
+                    <li>Join the Discord server for more troubleshooting steps and help</li>
+                </ul>
+            </div>
+
+            <div class="howto-step">
+                <div class="step-header">
+                    <h3 class="step-title">Can I use multiple playlists?</h3>
+                </div>
+                <p>Yes! You can set up multiple playlists. Just remember, you can only view as many concurrent streams as your credentials allow.</p>
+            </div>
+
+            <div class="howto-step">
+                <div class="step-header">
+                    <h3 class="step-title">How often do playlists update?</h3>
+                </div>
+                <p>Free updates happen as often as the playlist owner makes updates. Supporter updates happen every 4 hours to keep your playlist and EPG in sync with live events, sports, and PPV.</p>
+            </div>
+        </div>
+
+        <!-- Image Modal -->
+        <div id="howtoImageModal" class="howto-modal" onclick="closeHowtoModal()">
+            <span class="howto-modal-close" onclick="closeHowtoModal()">&times;</span>
+            <img class="howto-modal-content" id="howtoModalImage" />
+        </div>
+    </section>
+
+    <!-- Disclaimer Section -->
+    <section class="disclaimer" id="disclaimer">
+        <div class="section-divider"></div>
+        <div class="disclaimer-container">
+            <p class="disclaimer-text">
+            EPGenius provides pre-configured M3U templates for personal use only. 
+            We do not store, provide, or enable access to copyrighted content. 
+            By using this service, you confirm you are authorized to access the content associated with your credentials.
+            Playlists are non-functional without user-provided credentials from a legitimate provider.
+            </p>
+        </div>
+    </section> 
+
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
+    <script src="EPGeniusScripts.js"></script>
+</body>
+
+</html>

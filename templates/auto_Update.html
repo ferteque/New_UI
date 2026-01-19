@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> 
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+  <meta charset="UTF-8">
+</head>
+<body>
+<div id="shareModal" class="modal2" style="display: block;">
+  <div class="modal-content2">
+    <span class="close" id="closeShareModal">&times;</span>
+    <div class="modal-warning">
+      ⚠️ <strong>Important:</strong> This is the <u>Enable Auto-Update section</u>.
+    </div>
+    
+    <form id="updateFileForm">
+      <div class="form-group">
+        <label for="file_id">File ID</label>
+        <input type="text" id="file_id" name="file_id" class="dynamic-input" required>
+      </div>
+
+      <div class="form-group">
+        <label for="file_owner">File Owner</label>
+        <input type="text" id="file_owner" name="file_owner" class="dynamic-input" required>
+      </div>
+
+      <label for="valid" class="custom-checkbox-label" style="margin-left:350px; display:flex;">
+          <input type="checkbox" id="valid" name="valid" class="custom-checkbox" checked>
+          <span class="checkbox-text">Valid</span>
+      </label>
+
+      <label for="provider_updates" class="custom-checkbox-label" style="margin-left:350px; display:flex;">
+          <input type="checkbox" id="provider_updates" name="provider_updates" class="custom-checkbox" checked>
+          <span class="checkbox-text">provider_updates</span>
+      </label>
+
+      <button type="submit" class="btn btn-primary mt-2" id="submitUpdate">Update File</button>
+    </form>
+
+    <h3 id="waitMsg" style="display:none;">PLEASE WAIT</h3>
+    <div class="spinner" id="spinner" style="display:none;"></div>
+
+    <pre id="resultBox" style="margin-top:1em; display:none;"></pre>
+  </div>
+</div>
+
+<script>
+document.getElementById("updateFileForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const file_id = document.getElementById("file_id").value;
+    const file_owner = document.getElementById("file_owner").value;
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
+    const valid = document.getElementById("valid").checked ? 1 : 0;
+    const provider_updates = document.getElementById("provider_updates").checked ? 1 : 0;
+
+
+    // Mostrar spinner
+    document.getElementById("waitMsg").style.display = "block";
+    document.getElementById("spinner").style.display = "block";
+    document.getElementById("resultBox").style.display = "none";
+
+
+    try {
+        const response = await fetch("/api/enable_auto_update", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ file_id, file_owner, valid, provider_updates, token })
+        });
+
+        const result = await response.json();
+
+        document.getElementById("waitMsg").style.display = "none";
+        document.getElementById("spinner").style.display = "none";
+        document.getElementById("resultBox").style.display = "block";
+        document.getElementById("resultBox").textContent = JSON.stringify(result, null, 2);
+    } catch (err) {
+        document.getElementById("waitMsg").style.display = "none";
+        document.getElementById("spinner").style.display = "none";
+        document.getElementById("resultBox").style.display = "block";
+        document.getElementById("resultBox").textContent = "❌ Error: " + err;
+    }
+});
+</script>
+</body>

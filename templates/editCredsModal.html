@@ -1,0 +1,40 @@
+<div id="editCreds" class="modal2" style="display:none;">
+          <div class="modal-content2">
+            <span class="close" id="closeEditCreds">&times;</span>
+            <div class="modal-warning">
+              ⚠️ <strong>Heads up:</strong> This section is <u>not</u> for getting your M3U file.
+              It's meant for users who <strong>already have a Google Drive file generated</strong> and wish to update the credentials in it.
+            </div>
+              
+            <ol>
+                <form id="editCredsForm">
+                  <div class="form-group">
+                    <label>DNS or Server or URL:</label>
+                    <input type="url" id="DNS" name="DNS"  class="dynamic-input" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="Username" name="Username" class="dynamic-input" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="Password" name="Password" class="dynamic-input" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Google Drive File ID</label>
+                    <input type="text" id="File_ID" name="File_ID" class="dynamic-input" required>
+                  </div>
+
+                  <button type="submit" class="btn btn-primary mt-2" id="submitEditCreds">Submit</button>
+                </form>
+            </ol>
+            
+                <h3 id="Wait5" style="display: none;">PLEASE WAIT</h3>
+                <div class="spinner" id="spinner5" style="display: none;"></div>
+                <div id="editCredsStatus" aria-live="polite" style="display:none;"></div>
+
+          </div>
+          </div>
