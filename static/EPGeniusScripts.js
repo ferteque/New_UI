@@ -545,93 +545,100 @@ style.textContent = `
 document.head.appendChild(style);
 
 async function showDonateModal() {
-  // Show loading modal immediately
-  const modal = document.createElement('div');
-  modal.id = 'donateLinksModal';
-  modal.className = 'modal';
-  modal.style.display = 'block';
-  
-  modal.innerHTML = `
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Donation Links</h3>
-      </div>
-      <div class="modal-body">
-        <p style="text-align: center;">Loading donation links...</p>
-      </div>
-    </div>
-  `;
-  
-  document.body.appendChild(modal);
-  lockScroll();
-
-  try {
-    const response = await fetch('/playlists');
-    const playlists = await response.json();
+    const modal = document.createElement('div');
+    modal.id = 'donateLinksModal';
+    modal.className = 'modal';
+    modal.style.display = 'block';
     
-    // Filter out empty donation_info, dedupe by user, and sort alphabetically
-    const donations = playlists
-      .filter(p => p.donation_info && p.donation_info !== '')
-      .reduce((acc, curr) => {
-        if (!acc.find(d => d.user === curr.reddit_user)) {
-          acc.push({
-            user: curr.reddit_user,
-            url: curr.donation_info
-          });
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Donation Links</h3>
+            </div>
+            <div class="modal-body">
+                <p style="text-align: center;">Loading donation links...</p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    lockScroll();
+    
+    try {
+        const response = await fetch('/playlists');
+        const playlists = await response.json();
+        
+        const donations = playlists
+            .filter(p => p.donationinfo && p.donationinfo !== '!')
+            .reduce((acc, curr) => {
+                if (!acc.find(d => d.user === curr.reddituser)) {
+                    acc.push({ user: curr.reddituser, url: curr.donationinfo });
+                }
+                return acc;
+            }, [])
+            .sort((a, b) => a.user.localeCompare(b.user));
+        
+        const donationButtons = donations
+            .map(d => `<button class="donate-link-btn" data-url="${d.url}">Donate to ${d.user}</button>`)
+            .join('');
+        
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Donation Links</h3>
+                </div>
+                <div class="modal-body">
+                    <h3 style="color: var(--primary-cyan); text-align: center; margin: 0 0 1rem 0; font-size: 1.3rem;">Support EPGenius</h3>
+                    <button class="donate-link-btn epgenius-donate" data-url="https://cwallet.com/tZK4DRBG5" style="width: 100%;">Donate to Ferteque</button>
+                    <button class="donate-link-btn epgenius-donate" data-url="https://ko-fi.com/greenspeedracer" style="width: 100%; margin-bottom: 2rem;">Donate to greenspeedracer</button>
+                    
+                    <h3 style="color: var(--primary-cyan); text-align: center; margin: 0 0 1rem 0; font-size: 1.3rem;">Support Playlist Creators</h3>
+                    ${donationButtons || '<p style="text-align: center;">No donation links available at this time.</p>'}
+                </div>
+                <div class="button-container" style="justify-content: center;">
+                    <button class="modal-button" id="closeDonateModalBtn">Go Back</button>
+                </div>
+            </div>
+        `;
+        
+        modal.querySelectorAll('.donate-link-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                window.open(btn.dataset.url, '_blank', 'noopener,noreferrer');
+            });
+        });
+        
+        const closeBtn = modal.querySelector('#closeDonateModalBtn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeDonateModal);
         }
-        return acc;
-      }, [])
-      .sort((a, b) => a.user.localeCompare(b.user));
-    
-    // Build donation buttons HTML
-    const donationButtons = donations
-      .map(d => `<button class="donate-link-btn" onclick="window.open('${d.url}', '_blank', 'noopener,noreferrer')">Donate to ${d.user}</button>`)
-      .join('');
-    
-    // UPDATE the existing modal (don't create a new one)
-    modal.innerHTML = `
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Donation Links</h3>
-        </div>
-        <div class="modal-body">
-          <h3 style="color: var(--primary-cyan); text-align: center; margin: 0 0 1rem 0; font-size: 1.3rem;">Support EPGenius</h3>
-          <button class="donate-link-btn" style="width: 100%" onclick="window.open('https://cwallet.com/t/ZK4DRBG5', '_blank', 'noopener,noreferrer')">Donate to Ferteque</button>
-          <button class="donate-link-btn" style="width: 100%; margin-bottom: 2rem;" onclick="window.open('https://ko-fi.com/greenspeedracer', '_blank', 'noopener,noreferrer')">Donate to greenspeedracer</button>
-          
-          <h3 style="color: var(--primary-cyan); text-align: center; margin: 0 0 1rem 0; font-size: 1.3rem;">Support Playlist Creators</h3>
-          
-          ${donationButtons || '<p style="text-align: center;">No donation links available at this time.</p>'}
-        </div>
-        <div class="button-container" style="justify-content: center;">
-          <button class="modal-button" onclick="closeDonateModal()">Go Back</button>
-        </div>
-      </div>
-    `;
-    
-    // Re-attach click handler after updating innerHTML
-    modal.onclick = function(event) {
-      if (event.target === modal) {
-        closeDonateModal();
-      }
-    };
-    
-  } catch (error) {
-    console.error('Error fetching donation links:', error);
-    modal.innerHTML = `
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Donation Links</h3>
-        </div>
-        <div class="modal-body">
-          <p style="text-align: center; color: var(--primary-orange);">Failed to load donation links. Please try again later.</p>
-        </div>
-        <div class="button-container" style="justify-content: center;">
-          <button class="modal-button" onclick="closeDonateModal()">Go Back</button>
-        </div>
-      </div>
-    `;
-  }
+        
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                closeDonateModal();
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error fetching donation links:', error);
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Donation Links</h3>
+                </div>
+                <div class="modal-body">
+                    <p style="text-align: center; color: var(--primary-orange);">Failed to load donation links. Please try again later.</p>
+                </div>
+                <div class="button-container" style="justify-content: center;">
+                    <button class="modal-button" id="closeDonateModalBtn">Go Back</button>
+                </div>
+            </div>
+        `;
+        
+        const closeBtn = modal.querySelector('#closeDonateModalBtn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeDonateModal);
+        }
+    }
 }
 
 function closeDonateModal() {
