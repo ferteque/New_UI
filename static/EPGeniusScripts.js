@@ -1126,20 +1126,30 @@ const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 let tokenClient;
 let storedAccessToken = null;
 
-// Initialize this ONCE when the page loads (e.g., inside DOMContentLoaded)
 function initGoogleAuth() {
-    tokenClient = google.accounts.oauth2.initTokenClient({
-        client_id: CLIENT_ID,
-        scope: SCOPES,
-        callback: (response) => {
-            if (response.error) {
-                console.error(response);
-                return;
+    if (typeof google === 'undefined' || !google.accounts) {
+        console.log("Google script not ready, retrying...");
+        setTimeout(initGoogleAuth, 200);
+        return;
+    }
+
+    try {
+        tokenClient = google.accounts.oauth2.initTokenClient({
+            client_id: CLIENT_ID,
+            scope: SCOPES,
+            callback: (response) => {
+                if (response.error) {
+                    alert("Auth Error: " + JSON.stringify(response));
+                    return;
+                }
+                storedAccessToken = response.access_token;
+                handleDriveProcess();
             }
-            storedAccessToken = response.access_token;
-            handleDriveProcess();
-        }
-    });
+        });
+        console.log("Google Auth Initialized!");
+    } catch (err) {
+        alert("Google Init Failed: " + err.message);
+    }
 }
 
 // This function handles the entire flow: Fetch Blob -> Upload to Drive
@@ -1288,13 +1298,30 @@ function hideDriveLoading() {
 }
 
 // Click Upload to Google Drive
-document.getElementById('uploadDriveBtn').addEventListener('click', function () {
-    if (!storedAccessToken) {
-        tokenClient.requestAccessToken({ prompt: 'consent' });
-    } else {
-        handleDriveProcess();
-    }
-});
+const uploadBtn = document.getElementById('uploadDriveBtn');
+if (uploadBtn) {
+    uploadBtn.addEventListener('click', function (e) {
+        e.preventDefault(); 
+        
+        console.log("Upload button tapped"); 
+
+        if (!tokenClient) {
+            alert("Google services aren't ready yet. Please wait 1 second and tap again.");
+            initGoogleAuth(); 
+            return;
+        }
+
+        if (!storedAccessToken) {
+            try {
+                tokenClient.requestAccessToken({ prompt: 'consent' });
+            } catch (err) {
+                alert("Popup Error: " + err.message);
+            }
+        } else {
+            handleDriveProcess();
+        }
+    });
+}
 
 function submitPlaylist(formData) {
     console.log('submitPlaylist called');
