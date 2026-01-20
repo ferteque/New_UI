@@ -596,7 +596,7 @@ async function showDonateModal() {
         </div>
         <div class="modal-body">
           <h3 style="color: var(--primary-cyan); text-align: center; margin: 0 0 1rem 0; font-size: 1.3rem;">Support EPGenius</h3>
-          <button class="donate-link-btn" style="width: 100%; margin-bottom: 2rem;" onclick="window.open('https://cwallet.com/t/ZK4DRBG5', '_blank', 'noopener,noreferrer')">Donate to Ferteque</button>
+          <button class="donate-link-btn" style="width: 100%" onclick="window.open('https://cwallet.com/t/ZK4DRBG5', '_blank', 'noopener,noreferrer')">Donate to Ferteque</button>
           <button class="donate-link-btn" style="width: 100%; margin-bottom: 2rem;" onclick="window.open('https://ko-fi.com/greenspeedracer', '_blank', 'noopener,noreferrer')">Donate to greenspeedracer</button>
           
           <h3 style="color: var(--primary-cyan); text-align: center; margin: 0 0 1rem 0; font-size: 1.3rem;">Support Playlist Creators</h3>
