@@ -754,6 +754,28 @@ nav .cyber-button {
     box-shadow: 0 0 30px rgba(232, 212, 191, 0.5);
 }
 
+/* Donation link buttons */
+.donate-link-btn {
+    width: 100%;
+    margin: 0.4rem 0;
+    padding: 0.6rem 1rem;
+    background: rgba(150, 150, 150, 0.2);
+    border: 1px solid rgba(150, 150, 150, 0.4);
+    border-radius: 5px;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.donate-link-btn:hover {
+    background: rgba(150, 150, 150, 0.3);
+    border-color: rgba(150, 150, 150, 0.6);
+}
+
 /* Animation keyframes for mobile menu */
 @keyframes slideInLeft {
     from {

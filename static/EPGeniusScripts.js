@@ -553,7 +553,6 @@ async function showDonateModal() {
     const donations = playlists
       .filter(p => p.donation_info && p.donation_info !== '')
       .reduce((acc, curr) => {
-        // Dedupe by reddit_user - only keep first occurrence
         if (!acc.find(d => d.user === curr.reddit_user)) {
           acc.push({
             user: curr.reddit_user,
@@ -564,9 +563,9 @@ async function showDonateModal() {
       }, [])
       .sort((a, b) => a.user.localeCompare(b.user));
     
-    // Build links HTML
-    const linksHTML = donations
-      .map(d => `<p style="margin: 0.5rem 0;"><a href="${d.url}" target="_blank" rel="noopener noreferrer" style="color: var(--primary-cyan); text-decoration: none; font-weight: 600; transition: all 0.3s ease;">Donate to ${d.user}</a></p>`)
+    // Build donation buttons HTML
+    const donationButtons = donations
+      .map(d => `<button class="donate-link-btn" onclick="window.open('${d.url}', '_blank', 'noopener,noreferrer')">Donate to ${d.user}</button>`)
       .join('');
     
     // Create and show modal
@@ -576,17 +575,22 @@ async function showDonateModal() {
     modal.style.display = 'block';
     
     modal.innerHTML = `
-      <div class="modal-content">
+    <div class="modal-content">
         <div class="modal-header">
-          <h3>Donation Links</h3>
+        <h3>Donation Links</h3>
         </div>
         <div class="modal-body">
-          ${linksHTML || '<p>No donation links available at this time.</p>'}
+        <h3 style="color: var(--primary-cyan); text-align: center; margin: 0 0 1rem 0; font-size: 1.3rem;">Support EPGenius</h3>
+        <button class="donate-link-btn" style="width: 100%; margin-bottom: 2rem;" onclick="window.open('https://cwallet.com/t/ZK4DRBG5', '_blank', 'noopener,noreferrer')">Donate to Ferteque</button>
+        
+        <h3 style="color: var(--primary-cyan); text-align: center; margin: 2rem 0 1rem 0; font-size: 1.3rem;">Support Playlist Creators</h3>
+        
+        ${donationButtons || '<p style="text-align: center;">No donation links available at this time.</p>'}
         </div>
-        <div class="button-container">
-          <button class="modal-button" onclick="closeDonateModal()">Close</button>
+        <div class="button-container" style="justify-content: center;">
+        <button class="modal-button" onclick="closeDonateModal()">Go Back</button>
         </div>
-      </div>
+    </div>
     `;
     
     document.body.appendChild(modal);
@@ -609,8 +613,8 @@ function closeDonateModal() {
   const modal = document.getElementById('donateLinksModal');
   if (modal) {
     modal.remove();
-    unlockScroll();
   }
+  document.getElementById('playlistModal').style.display = 'block';
 }
 
 // Close modals when clicking outside
