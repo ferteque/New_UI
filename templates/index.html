@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EPGenius - A Curated Lists and EPG Repository</title>
-    <link href="EPGenius.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='EPGenius.css') }}"> 
+    <script type="module" src="{{ url_for('static', filename='EPGeniusScripts.js') }}" ></script>
 <!--
 
 EPGenius
 
-https://epgenius.org/
+https://repo-server.site/
 
 -->
 </head>
@@ -39,7 +40,7 @@ https://epgenius.org/
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
-            <a href="#top" class="logo"><img src ="EPGCube.gif" width="50px" height="50px"></a>
+            <a href="#top" class="logo"><img src ="{{ url_for('static', filename='EPGCube.gif') }}" width="50px" height="50px"></a>
             <ul class="nav-links">
                 <li><a href="#" data-tab="playlists" class="nav-tab active">Choose a Playlist</a></li>
                 <li><a href="#" data-tab="creators" class="nav-tab">Share Your Playlist</a></li>
@@ -177,9 +178,9 @@ https://epgenius.org/
                     The manual method allows you to download the M3U template and edit the file yourself. We cannot provide any updates or support if you choose to use the manual method.
                 </p>
 
-                <h4>Support Us</h4>
+                <h4>Donate to <span id="playlistOwnerName"></span></h4>
                 <p>
-                    To help support EPGenius, you can donate here and become a supporter!
+                    To say thank you to the playlist creator, you can donate directly to them here and become a supporter!
                 </p>
 
                 <h4>Preview Playlist</h4>
@@ -196,7 +197,7 @@ https://epgenius.org/
             <div class="button-container">
                 <button class="modal-button" id="googleBtn">Google Drive</button>
                 <button class="modal-button" id="manualBtn">Manual</button>
-                <button class="modal-button" id="donateBtn">Support Us</button>
+                <button class="modal-button" id="donateBtn"></button>
                 <button class="modal-button" id="previewBtn">Preview Playlist</button>
                 <button class="modal-button" id="categoriesBtn" >Supporter Update Categories</button>
             </div>
@@ -227,14 +228,14 @@ https://epgenius.org/
             </div>
             <div class="manual-section">
                 <h3>Download M3U</h3>
-                <button id="downloadM3uBtn" class="donate-link-btn">Download M3U</button>
+                <button id="downloadM3uBtn" class="download-btn">Download M3U</button>
             </div>
 
             <div class="manual-section">
                 <h3>EPG URL</h3>
                 <div class="link-container">
                     <input type="text" id="manualEpgLink" readonly>
-                    <button class="donate-link-btn" id="copyEpgBtn">Copy</button>
+                    <button class="copy-btn" id="copyEpgBtn">Copy</button>
                 </div>
             </div>
 
@@ -292,8 +293,7 @@ https://epgenius.org/
         <div class="creators-container">
             <div class="section-header">
                 <h2 class="section-title">Share/Update Your Playlist</h2>
-                <p class="section-subtitle">SELECT AN OPTION</p>
-                <div class="creators-warning">THIS SECTION IS FOR PLAYLIST CREATORS ONLY</div>
+                <p class="section-subtitle">SELECT AN OPTION <br>PLAYLIST CREATORS ONLY</p>
             </div>
             
             <div class="creators-grid">
@@ -574,7 +574,7 @@ https://epgenius.org/
         <div class="howto-container">
             <!-- Introduction -->
             <div class="howto-intro">
-                <div class="warning-box" style="text-align: left;">
+                <div class="warning-box" style="margin-top: 2rem; text-align: left;">
                     <strong>Important Prerequisites:</strong>
                     <p>You must have your own credentials for the service your chosen playlist uses. EPGenius does not provide credentials.</p>
                 </div>
@@ -594,9 +594,9 @@ https://epgenius.org/
                 </div>
                 
                 <div class="step-images">
-                    <img src="1a.png" alt="Sorting playlists" class="step-thumb" onclick="openHowtoModal('1a.png')"/>
-                    <img src="1b.png" alt="Playlist preview button" class="step-thumb" onclick="openHowtoModal('1b.png')"/>
-                    <img src="1c.png" alt="Preview site" class="step-thumb" onclick="openHowtoModal('1c.png')"/>
+                    <img src= {{ url_for('static', filename='1a.png') }} alt="Sorting playlists" class="step-thumb" />
+                    <img src= {{ url_for('static', filename='1b.png') }} alt="Playlist preview button" class="step-thumb" />
+                    <img src= {{ url_for('static', filename='1c.png') }} alt="Preview site" class="step-thumb" />
                 </div>
             </div>
 
@@ -609,7 +609,7 @@ https://epgenius.org/
                 <p>When you're ready, click <b>"Google Drive"</b> to begin the setup process.</p>
                 
                 <div class="step-images">
-                    <img src="2.png" alt="Select automatic" class="step-thumb" onclick="openHowtoModal('2.png')"/>
+                    <img src= {{ url_for('static', filename='2.png') }} alt="Select automatic" class="step-thumb" />
                 </div>
             </div>
 
@@ -649,8 +649,8 @@ https://epgenius.org/
                 </div>
                 
                 <div class="step-images">
-                    <img src="3a.png" alt="M3U option" class="step-thumb" onclick="openHowtoModal('3a.png')"/>
-                    <img src="3b.png" alt="Xtream option" class="step-thumb" onclick="openHowtoModal('3b.png')"/>
+                    <img src= {{ url_for('static', filename='3a.png') }} alt="M3U option" class="step-thumb" />
+                    <img src= {{ url_for('static', filename='3b.png') }} alt="Xtream option" class="step-thumb" />
                 </div>
             </div>
 
@@ -671,12 +671,12 @@ https://epgenius.org/
             <div class="howto-step">
                 <div class="step-header">
                     <div class="step-number-badge">4</div>
-                    <h3 class="step-title">Sign in to Google</h3>
+                    <h3 class="step-title">Sign In to Google</h3>
                 </div>
-                <p>Sign in to your Google Account when prompted. This allows EPGenius to save your customized playlist to your personal Google Drive so that you automatically receive new playlist updates.</p>
+                <p>Log into your Google Account when prompted. This allows EPGenius to save your customized playlist to your personal Google Drive so that you automatically receive new playlist updates.</p>
                 
                 <div class="step-images">
-                    <img src="4.png" alt="Google login" class="step-thumb" onclick="openHowtoModal('5.png')"/>
+                    <img src= {{ url_for('static', filename='5.png') }} alt="Google login" class="step-thumb" />
                 </div>
             </div>
 
@@ -691,7 +691,7 @@ https://epgenius.org/
                     <li><strong>Playlist URL</strong> - Your new M3U playlist link</li>
                     <li><strong>EPG URL</strong> - Your EPG link</li>
                 </ul>
-                <p>Use these links when adding a new M3U playlist to the player of your choice. You must use the M3U option within your player, not the Xtream option.</p>
+                <p>Use these links when adding a new playlist to the player of your choice.</p>
                 
                 <div class="warning-box">
                     <strong>Critical:</strong>
@@ -706,7 +706,7 @@ https://epgenius.org/
                 </ul>
                 
                 <div class="step-images">
-                    <img src="6.png" alt="Copy links" class="step-thumb" onclick="openHowtoModal('6.png')"/>
+                    <img src= {{ url_for('static', filename='6.png') }} alt="Copy links" class="step-thumb" />
                 </div>
             </div>
 
@@ -749,9 +749,9 @@ https://epgenius.org/
                 </ul>
                 
                 <div class="step-images">
-                    <img src="register_1.png" alt="Register command" class="step-thumb" onclick="openHowtoModal('register_1.png')"/>
-                    <img src="register_2.png" alt="Registration confirmation" class="step-thumb" onclick="openHowtoModal('register_2.png')"/>
-                    <img src="info.png" alt="Playlist info command" class="step-thumb" onclick="openHowtoModal('info.png')"/>
+                    <img src= {{ url_for('static', filename='playlistregister_1.png') }} alt="Register command" class="step-thumb" />
+                    <img src= {{ url_for('static', filename='playlistregister_2.png') }} alt="Registration confirmation" class="step-thumb"/>
+                    <img src= {{ url_for('static', filename='playlistinfo.png') }} alt="Playlist info command" class="step-thumb" />
                 </div>
             </div>
 
@@ -772,12 +772,12 @@ https://epgenius.org/
             <div class="howto-step">
                 <div class="step-header">
                     <div class="step-number-badge">8</div>
-                    <h3 class="step-title">Consider Supporting Us</h3>
+                    <h3 class="step-title">Consider Supporting the Playlist Creator</h3>
                 </div>
-                <p>If you're loving your playlist, consider donating to support us. Benefits include:</p>
+                <p>If you're loving your playlist, consider donating to the playlist creator. Benefits include:</p>
                 <ul>
+                    <li>100% of donations go directly to the creator</li>
                     <li>Priority free updates</li>
-                    <li>Increased EPG updates</li>
                     <li><strong>Supporter Updates:</strong> Keep your TV guide synced with live events, sports, and PPV</li>
                 </ul>
                 
@@ -787,7 +787,7 @@ https://epgenius.org/
                 </div>
                 
                 <div class="step-images">
-                    <img src="donations.png" alt="Donations" class="step-thumb" onclick="openHowtoModal('donations.png')"/>
+                    <img src= {{ url_for('static', filename='donations.png') }} alt="Donations" class="step-thumb" />
                 </div>
             </div>
 
@@ -828,8 +828,8 @@ https://epgenius.org/
         </div>
 
         <!-- Image Modal -->
-        <div id="howtoImageModal" class="howto-modal" onclick="closeHowtoModal()">
-            <span class="howto-modal-close" onclick="closeHowtoModal()">&times;</span>
+        <div id="howtoImageModal" class="howto-modal" >
+		<span class="howto-modal-close" >&times;</span>
             <img class="howto-modal-content" id="howtoModalImage" />
         </div>
     </section>
@@ -849,9 +849,7 @@ https://epgenius.org/
 
     <script src="https://apis.google.com/js/api.js"></script>
     <script src="https://accounts.google.com/gsi/client"></script>
-    <script src="EPGeniusScripts.js"></script>
+
 </body>
 
 </html>
-
-
