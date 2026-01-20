@@ -781,12 +781,12 @@ nav .cyber-button {
     background: rgba(220, 38, 38, 0.1);
     border: 2px solid var(--primary-purple);
     border-radius: 8px;
-    padding: 1rem;
-    margin: 1rem auto;
+    padding: .5rem;
+    margin: .5rem auto;
     max-width: 600px;
     color: var(--text-primary);
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 900;
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 1px;
