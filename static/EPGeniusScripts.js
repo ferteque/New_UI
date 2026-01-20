@@ -1123,97 +1123,89 @@ document.querySelector('#playlistModal .button-container button:first-child').ad
 const CLIENT_ID = '385455010248-stgruhhb6geh32kontlgi7g929tmfgqa.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
-async function uploadToGoogleDrive(blob, filename, list_ID) {
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    
-  return new Promise((resolve, reject) => {
-    gapi.load('client', async () => {
-      try {
-        await gapi.client.init({ /* … */ });
-
+async function uploadToGoogleDrive(blob, filename, listID) {
+    return new Promise((resolve, reject) => {
         const tokenClient = google.accounts.oauth2.initTokenClient({
-          client_id: CLIENT_ID,
-          scope: SCOPES,
-          ux_mode: isMobile ? 'redirect' : 'popup',
-          callback: async (tokenResponse) => {
-            const accessToken = tokenResponse.access_token;
-
-            const metadata = {
-              name: filename,
-              mimeType: 'application/octet-stream'
-            };
-            const form = new FormData();
-            form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-            form.append('file', blob);
-
-            const uploadRes = await fetch(
-              'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',
-              {
-                method: 'POST',
-                headers: { 'Authorization': 'Bearer ' + accessToken },
-                body: form
-              }
-            );
-            const { id: fileId } = await uploadRes.json();
-
-            await fetch(
-              `https://www.googleapis.com/drive/v3/files/${fileId}/permissions`,
-              {
-                method: 'POST',
-                headers: {
-                  'Authorization': 'Bearer ' + accessToken,
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                  role: 'writer',
-                  type: 'user',
-                  emailAddress: 'ferteque@repository-456118.iam.gserviceaccount.com'
-                })
-              }
-            );
-
-            await fetch(
-              `https://www.googleapis.com/drive/v3/files/${fileId}/permissions`,
-              {
-                method: 'POST',
-                headers: {
-                  'Authorization': 'Bearer ' + accessToken,
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                  role: 'reader',
-                  type: 'anyone'
-                })
-              }
-            );
-
-            await fetch('/api/files', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                list_id:       list_ID,
-                drive_file_id: fileId,
-                filename
-              })
-            });
-
-            const downloadLink = `https://drive.google.com/uc?export=download&id=${fileId}&confirm=true`;
-            const linkInput = document.getElementById('DriveDownloadLink');
-            if (linkInput) {
-              linkInput.value = downloadLink;
+            client_id: CLIENT_ID,
+            scope: SCOPES,
+            callback: async (response) => {
+                if (response.error) {
+                    reject(response);
+                    return;
+                }
+                
+                try {
+                    const accessToken = response.access_token;
+                    
+                    const metadata = {
+                        name: filename,
+                        mimeType: 'application/octet-stream'
+                    };
+                    
+                    const form = new FormData();
+                    form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+                    form.append('file', blob);
+                    
+                    const uploadRes = await fetch(
+                        'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',
+                        {
+                            method: 'POST',
+                            headers: { 'Authorization': 'Bearer ' + accessToken },
+                            body: form
+                        }
+                    );
+                    
+                    const { id: fileId } = await uploadRes.json();
+                    
+                    await fetch(
+                        `https://www.googleapis.com/drive/v3/files/${fileId}/permissions`,
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': 'Bearer ' + accessToken,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                role: 'writer',
+                                type: 'user',
+                                emailAddress: 'ferteque@repository-456118.iam.gserviceaccount.com'
+                            })
+                        }
+                    );
+                    
+                    await fetch(
+                        `https://www.googleapis.com/drive/v3/files/${fileId}/permissions`,
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': 'Bearer ' + accessToken,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                role: 'reader',
+                                type: 'anyone'
+                            })
+                        }
+                    );
+                    
+                    await fetch('/api/files', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ list_id: listID, drive_file_id: fileId, filename })
+                    });
+                    
+                    resolve({ fileId, downloadLink: `https://drive.usercontent.google.com/download?id=${fileId}&confirm=t` });
+                    
+                } catch (err) {
+                    reject(err);
+                }
             }
-
-            resolve({ fileId, downloadLink });
-          }
         });
-
-        tokenClient.requestAccessToken();
-      } catch (err) {
-        reject(err);
-      }
+        
+        tokenClient.requestAccessToken({ prompt: '' });
     });
-  });
 }
+
 
 function showDriveLoading() {
     document.getElementById('uploadDriveBtn').disabled = true;
