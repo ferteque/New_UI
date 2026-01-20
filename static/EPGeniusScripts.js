@@ -1116,94 +1116,97 @@ function watchFormatInputs() {
 document.querySelector('#playlistModal .button-container button:first-child').addEventListener('click', function() {
     document.getElementById('playlistModal').style.display = 'none';
     document.getElementById('googleDriveModal').style.display = 'block';
-    watchFormatInputs();  // ADD THIS LINE
+    watchFormatInputs(); 
 });
 
 // uploadToGoogleDrive
 const CLIENT_ID = '385455010248-stgruhhb6geh32kontlgi7g929tmfgqa.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
-async function uploadToGoogleDrive(blob, filename, listID) {
-    return new Promise((resolve, reject) => {
-        const tokenClient = google.accounts.oauth2.initTokenClient({
-            client_id: CLIENT_ID,
-            scope: SCOPES,
-            callback: async (response) => {
-                if (response.error) {
-                    reject(response);
-                    return;
-                }
-                
-                try {
-                    const accessToken = response.access_token;
-                    
-                    const metadata = {
-                        name: filename,
-                        mimeType: 'application/octet-stream'
-                    };
-                    
-                    const form = new FormData();
-                    form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-                    form.append('file', blob);
-                    
-                    const uploadRes = await fetch(
-                        'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',
-                        {
-                            method: 'POST',
-                            headers: { 'Authorization': 'Bearer ' + accessToken },
-                            body: form
-                        }
-                    );
-                    
-                    const { id: fileId } = await uploadRes.json();
-                    
-                    await fetch(
-                        `https://www.googleapis.com/drive/v3/files/${fileId}/permissions`,
-                        {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': 'Bearer ' + accessToken,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                role: 'writer',
-                                type: 'user',
-                                emailAddress: 'ferteque@repository-456118.iam.gserviceaccount.com'
-                            })
-                        }
-                    );
-                    
-                    await fetch(
-                        `https://www.googleapis.com/drive/v3/files/${fileId}/permissions`,
-                        {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': 'Bearer ' + accessToken,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                role: 'reader',
-                                type: 'anyone'
-                            })
-                        }
-                    );
-                    
-                    await fetch('/api/files', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ list_id: listID, drive_file_id: fileId, filename })
-                    });
-                    
-                    resolve({ fileId, downloadLink: `https://drive.usercontent.google.com/download?id=${fileId}&confirm=t` });
-                    
-                } catch (err) {
-                    reject(err);
-                }
-            }
-        });
-        
-        tokenClient.requestAccessToken({ prompt: '' });
+function requestDriveAccessToken() {
+  return new Promise((resolve, reject) => {
+    const tc = google.accounts.oauth2.initTokenClient({
+      client_id: CLIENT_ID,
+      scope: SCOPES,
+      callback: (response) => {
+        if (response?.error) return reject(response);
+        resolve(response.access_token);
+      },
+      error_callback: (err) => reject(err)
     });
+
+    tc.requestAccessToken({ prompt: '' });
+  });
+}
+
+function isIOS() {
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  );
+}
+
+async function uploadToGoogleDrive(accessToken, blob, filename, listID) {
+  const metadata = {
+    name: filename,
+    mimeType: 'application/octet-stream'
+  };
+
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+  form.append('file', blob);
+
+  const uploadRes = await fetch(
+    'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',
+    {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + accessToken },
+      body: form
+    }
+  );
+
+  const uploadJson = await uploadRes.json();
+  const fileId = uploadJson.id;
+  if (!uploadRes.ok || !fileId) throw new Error(uploadJson?.error?.message || 'Drive upload failed');
+
+  await fetch(
+    `https://www.googleapis.com/drive/v3/files/${fileId}/permissions`,
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + accessToken,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        role: 'writer',
+        type: 'user',
+        emailAddress: 'ferteque@repository-456118.iam.gserviceaccount.com'
+      })
+    }
+  );
+
+  await fetch(
+    `https://www.googleapis.com/drive/v3/files/${fileId}/permissions`,
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + accessToken,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        role: 'reader',
+        type: 'anyone'
+      })
+    }
+  );
+
+  await fetch('/api/files', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ list_id: listID, drive_file_id: fileId, filename })
+  });
+
+  return { fileId, downloadLink: `https://drive.usercontent.google.com/download?id=${fileId}&confirm=t` };
 }
 
 function showDriveLoading() {
@@ -1218,87 +1221,89 @@ function hideDriveLoading() {
 
 // Click Upload to Google Drive
 document.getElementById('uploadDriveBtn').addEventListener('click', async function () {
-    const m3uInput = document.getElementById('m3u').value.trim();
-    const hostInput = document.getElementById('dns').value.trim();
-    const userInput = document.getElementById('username').value.trim();
-    const passInput = document.getElementById('password').value.trim();
+  const m3uInput = document.getElementById('m3u').value.trim();
+  const hostInput = document.getElementById('dns').value.trim();
+  const userInput = document.getElementById('username').value.trim();
+  const passInput = document.getElementById('password').value.trim();
 
-    let dns, username, password;
+  let dns, username, password;
 
-    if (m3uInput) {
-        try {
-            const url = new URL(m3uInput);
-            const params = new URLSearchParams(url.search);
-            username = params.get('username');
-            password = params.get('password');
-            dns = url.host;
-
-            if (!username || !password) {
-                alert('The entered URL is not correct. Follow the placeholder example or use Xtream credentials instead.');
-                return;
-            }
-        } catch (e) {
-            alert('Invalid M3U URL');
-            return;
-        }
-    } else if (hostInput || userInput || passInput) {
-        if (!hostInput || !userInput || !passInput) {
-            alert('Please fill in DNS, username, and password, or clear them and use M3U.');
-            return;
-        }
-        dns = hostInput.replace(/^https?:\/\/|\/$/g, '');
-        username = userInput;
-        password = passInput;
-    } else {
-        alert('Please provide either an M3U URL or Xtream credentials.');
-        return;
-    }
-
-    const selectedID = window.currentPlaylistId;
-    if (!selectedID) {
-        alert('No playlist selected.');
-        return;
-    }
-
-    showDriveLoading();
-
+  if (m3uInput) {
     try {
-        const response = await fetch('/process', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: selectedID, dns, username, password })
-        });
+      const url = new URL(m3uInput);
+      const params = new URLSearchParams(url.search);
+      username = params.get('username');
+      password = params.get('password');
+      dns = url.host;
 
-        if (!response.ok) throw new Error('Network response was not ok');
-
-        const disposition = response.headers.get('Content-Disposition');
-        let filename = `modified_playlist_${selectedID}.m3u`;
-        if (disposition && disposition.indexOf('filename=') !== -1) {
-            const match = disposition.match(/filename="?([^"]+)"?/);
-            if (match && match[1]) filename = match[1];
-        }
-
-        const blob = await response.blob();
-        const result = await uploadToGoogleDrive(blob, filename, selectedID);
-
-        document.getElementById('googleDriveModal').style.display = 'none';
-
-        const epgUrl = window.currentEpgUrl || 'No EPG available';
-
-        const playlistUrl = `https://drive.usercontent.google.com/download?id=${result.fileId}&confirm=t`;
-
-        document.getElementById('drivePlaylistLink').value = playlistUrl;
-        document.getElementById('driveEpgLink').value = epgUrl;
-        document.getElementById('driveSuccessModal').style.display = 'block';
-
-    } catch (err) {
-        console.error(err);
-        alert('Failed to process or upload to Google Drive.');
-    } finally {
-        hideDriveLoading();
+      if (!username || !password) {
+        alert('The entered URL is not correct. Follow the placeholder example or use Xtream credentials instead.');
+        return;
+      }
+    } catch (e) {
+      alert('Invalid M3U URL');
+      return;
     }
-});
+  } else if (hostInput || userInput || passInput) {
+    if (!hostInput || !userInput || !passInput) {
+      alert('Please fill in DNS, username, and password, or clear them and use M3U.');
+      return;
+    }
+    dns = hostInput.replace(/^https?:\/\/|\/$/g, '');
+    username = userInput;
+    password = passInput;
+  } else {
+    alert('Please provide either an M3U URL or Xtream credentials.');
+    return;
+  }
 
+  const selectedID = window.currentPlaylistId;
+  if (!selectedID) {
+    alert('No playlist selected.');
+    return;
+  }
+
+  showDriveLoading();
+
+  try {
+    // IMPORTANT: do this FIRST so iOS will allow the Google popup
+    const accessToken = await requestDriveAccessToken();
+
+    const response = await fetch('/process', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: selectedID, dns, username, password })
+    });
+
+    if (!response.ok) throw new Error('Network response was not ok');
+
+    const disposition = response.headers.get('Content-Disposition');
+    let filename = `modified_playlist_${selectedID}.m3u`;
+    if (disposition && disposition.indexOf('filename=') !== -1) {
+      const match = disposition.match(/filename="?([^"]+)"?/);
+      if (match && match[1]) filename = match[1];
+    }
+
+    const blob = await response.blob();
+
+    // Now upload WITHOUT triggering auth UI again
+    const result = await uploadToGoogleDrive(accessToken, blob, filename, selectedID);
+
+    document.getElementById('googleDriveModal').style.display = 'none';
+
+    const epgUrl = window.currentEpgUrl || 'No EPG available';
+    const playlistUrl = `https://drive.usercontent.google.com/download?id=${result.fileId}&confirm=t`;
+
+    document.getElementById('drivePlaylistLink').value = playlistUrl;
+    document.getElementById('driveEpgLink').value = epgUrl;
+    document.getElementById('driveSuccessModal').style.display = 'block';
+  } catch (err) {
+    console.error(err);
+    alert('Failed to process or upload to Google Drive.');
+  } finally {
+    hideDriveLoading();
+  }
+});
 
 function submitPlaylist(formData) {
     console.log('submitPlaylist called');
