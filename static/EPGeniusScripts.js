@@ -1214,7 +1214,7 @@ async function uploadToGoogleDrive(blob, filename, list_ID) {
 
 // Click Upload to Google Drive
 document.getElementById('uploadDriveBtn').addEventListener('click', async function () {
-    const m3uInput  = document.getElementById('m3u').value.trim();
+    const m3uInput = document.getElementById('m3u').value.trim();
     const hostInput = document.getElementById('dns').value.trim();
     const userInput = document.getElementById('username').value.trim();
     const passInput = document.getElementById('password').value.trim();
@@ -1222,7 +1222,6 @@ document.getElementById('uploadDriveBtn').addEventListener('click', async functi
     let dns, username, password;
 
     if (m3uInput) {
-        // M3U URL case
         try {
             const url = new URL(m3uInput);
             const params = new URLSearchParams(url.search);
@@ -1231,7 +1230,7 @@ document.getElementById('uploadDriveBtn').addEventListener('click', async functi
             dns = url.host;
 
             if (!username || !password) {
-                alert('The entered URL is not correct, follow the placeholder example or use Xtream credentials instead');
+                alert('The entered URL is not correct. Follow the placeholder example or use Xtream credentials instead.');
                 return;
             }
         } catch (e) {
@@ -1239,17 +1238,15 @@ document.getElementById('uploadDriveBtn').addEventListener('click', async functi
             return;
         }
     } else if (hostInput || userInput || passInput) {
-        // Xtream case
         if (!hostInput || !userInput || !passInput) {
-            alert('Please fill in DNS, Username, and Password, or clear them and use M3U.');
+            alert('Please fill in DNS, username, and password, or clear them and use M3U.');
             return;
         }
-
         dns = hostInput.replace(/^https?:\/\/|\/$/g, '');
         username = userInput;
         password = passInput;
     } else {
-        alert('Please provide either M3U URL or Xtream credentials.');
+        alert('Please provide either an M3U URL or Xtream credentials.');
         return;
     }
 
@@ -1265,12 +1262,7 @@ document.getElementById('uploadDriveBtn').addEventListener('click', async functi
         const response = await fetch('/process', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                id: selectedID,
-                dns,
-                username,
-                password
-            })
+            body: JSON.stringify({ id: selectedID, dns, username, password })
         });
 
         if (!response.ok) throw new Error('Network response was not ok');
@@ -1283,10 +1275,18 @@ document.getElementById('uploadDriveBtn').addEventListener('click', async functi
         }
 
         const blob = await response.blob();
+        const result = await uploadToGoogleDrive(blob, filename, selectedID);
 
-        await uploadToGoogleDrive(blob, filename, selectedID);
-        // close Drive modal or show success page here
         document.getElementById('googleDriveModal').style.display = 'none';
+
+        const epgUrl = window.currentEpgUrl || 'No EPG available';
+
+        const playlistUrl = `https://drive.usercontent.google.com/download?id=${result.fileId}&confirm=t`;
+
+        document.getElementById('drivePlaylistLink').value = playlistUrl;
+        document.getElementById('driveEpgLink').value = epgUrl;
+        document.getElementById('driveSuccessModal').style.display = 'block';
+
     } catch (err) {
         console.error(err);
         alert('Failed to process or upload to Google Drive.');
@@ -1295,15 +1295,6 @@ document.getElementById('uploadDriveBtn').addEventListener('click', async functi
     }
 });
 
-function showDriveLoading() {
-    document.getElementById('uploadDriveBtn').disabled = true;
-    document.getElementById('uploadDriveBtn').textContent = 'Processing...';
-}
-
-function hideDriveLoading() {
-    document.getElementById('uploadDriveBtn').disabled = false;
-    document.getElementById('uploadDriveBtn').textContent = 'Upload to Google Drive';
-}
 
 function submitPlaylist(formData) {
     console.log('submitPlaylist called');
@@ -1696,16 +1687,68 @@ document.addEventListener('DOMContentLoaded', () => {
             editCredentials(formData);
         });
     }
+
     const closeShareSuccessBtn = document.getElementById("closeShareSuccessBtn");
     if (closeShareSuccessBtn) {
         closeShareSuccessBtn.addEventListener('click', () => {
             document.getElementById("shareCategoriesModal").style.display = 'none';
         });
     }
+
     const closeSuccessBtn = document.getElementById("closeSuccessBtn");
     if (closeSuccessBtn) {
         closeSuccessBtn.addEventListener('click', () => {
             document.getElementById("editCredentialsModal").style.display = 'none';
+        });
+    }
+
+    const driveSuccessModal = document.getElementById('driveSuccessModal');
+    if (driveSuccessModal) {
+        const mobileCloseBtn = driveSuccessModal.querySelector('.mobile-close-btn');
+        if (mobileCloseBtn) {
+            mobileCloseBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                driveSuccessModal.style.display = 'none';
+                unlockScroll();
+            });
+        }
+    }
+
+    const copyPlaylistBtn = document.getElementById('copyPlaylistBtn');
+    if (copyPlaylistBtn) {
+        copyPlaylistBtn.addEventListener('click', function() {
+            const input = document.getElementById('drivePlaylistLink');
+            navigator.clipboard.writeText(input.value).then(() => {
+                this.textContent = 'Copied!';
+                setTimeout(() => {
+                    this.textContent = 'Copy';
+                }, 2000);
+            });
+        });
+    }
+
+    const copyDriveEpgBtn = document.getElementById('copyDriveEpgBtn');
+    if (copyDriveEpgBtn) {
+        copyDriveEpgBtn.addEventListener('click', function() {
+            const input = document.getElementById('driveEpgLink');
+            if (input.value === 'No EPG available') {
+                alert('No EPG URL available');
+                return;
+            }
+            navigator.clipboard.writeText(input.value).then(() => {
+                this.textContent = 'Copied!';
+                setTimeout(() => {
+                    this.textContent = 'Copy';
+                }, 2000);
+            });
+        });
+    }
+
+    const closeDriveSuccessBtn = document.getElementById('closeDriveSuccessBtn');
+    if (closeDriveSuccessBtn) {
+        closeDriveSuccessBtn.addEventListener('click', () => {
+            document.getElementById('driveSuccessModal').style.display = 'none';
         });
     }
 });
