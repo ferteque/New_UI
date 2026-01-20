@@ -2,8 +2,7 @@
 
 EPGenius
 
-https://repo-server.site/
-
+https://epgenius.org/
 */
 
 @charset "utf-8";
@@ -753,6 +752,44 @@ nav .cyber-button {
 .cyber-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 0 30px rgba(232, 212, 191, 0.5);
+}
+
+/* Donation link buttons */
+.donate-link-btn {
+    width: 100%;
+    margin: 0.4rem 0;
+    padding: 0.6rem 1rem;
+    background: rgba(150, 150, 150, 0.2);
+    border: 1px solid rgba(150, 150, 150, 0.4);
+    border-radius: 5px;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.donate-link-btn:hover {
+    background: rgba(150, 150, 150, 0.3);
+    border-color: rgba(150, 150, 150, 0.6);
+}
+
+/* Creators Only Warning Box */
+.creators-warning {
+    background: rgba(220, 38, 38, 0.1);
+    border: 2px solid var(--primary-purple);
+    border-radius: 8px;
+    padding: .5rem;
+    margin: .5rem auto;
+    max-width: 600px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 900;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 /* Animation keyframes for mobile menu */
@@ -1937,6 +1974,7 @@ nav .cyber-button {
 
 .link-container {
     display: flex;
+    flex-direction: column;
     gap: 8px;
 }
 
@@ -3160,4 +3198,8 @@ code {
         display: block;
         margin: 0;
     }
+
 }     */
+
+
+

@@ -2,7 +2,7 @@
 
 EPGenius
 
-https://epgenius.org/
+/
 
 */
 
@@ -155,7 +155,7 @@ if (document.readyState === 'loading') {
 let config = {};
 async function loadConfig() {
     try {
-        const response = await fetch('config.json');
+        const response = await fetch('/static/config.json');
         config = await response.json();
     } catch (err) {
         console.error('Config load failed:', err);
@@ -544,6 +544,102 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+async function showDonateModal() {
+  // Show loading modal immediately
+  const modal = document.createElement('div');
+  modal.id = 'donateLinksModal';
+  modal.className = 'modal';
+  modal.style.display = 'block';
+  
+  modal.innerHTML = `
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Donation Links</h3>
+      </div>
+      <div class="modal-body">
+        <p style="text-align: center;">Loading donation links...</p>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  lockScroll();
+
+  try {
+    const response = await fetch('/playlists');
+    const playlists = await response.json();
+    
+    // Filter out empty donation_info, dedupe by user, and sort alphabetically
+    const donations = playlists
+      .filter(p => p.donation_info && p.donation_info !== '')
+      .reduce((acc, curr) => {
+        if (!acc.find(d => d.user === curr.reddit_user)) {
+          acc.push({
+            user: curr.reddit_user,
+            url: curr.donation_info
+          });
+        }
+        return acc;
+      }, [])
+      .sort((a, b) => a.user.localeCompare(b.user));
+    
+    // Build donation buttons HTML
+    const donationButtons = donations
+      .map(d => `<button class="donate-link-btn" onclick="window.open('${d.url}', '_blank', 'noopener,noreferrer')">Donate to ${d.user}</button>`)
+      .join('');
+    
+    // UPDATE the existing modal (don't create a new one)
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Donation Links</h3>
+        </div>
+        <div class="modal-body">
+          <h3 style="color: var(--primary-cyan); text-align: center; margin: 0 0 1rem 0; font-size: 1.3rem;">Support EPGenius</h3>
+          <button class="donate-link-btn" style="width: 100%; margin-bottom: 2rem;" onclick="window.open('https://cwallet.com/t/ZK4DRBG5', '_blank', 'noopener,noreferrer')">Donate to Ferteque</button>
+          
+          <h3 style="color: var(--primary-cyan); text-align: center; margin: 0 0 1rem 0; font-size: 1.3rem;">Support Playlist Creators</h3>
+          
+          ${donationButtons || '<p style="text-align: center;">No donation links available at this time.</p>'}
+        </div>
+        <div class="button-container" style="justify-content: center;">
+          <button class="modal-button" onclick="closeDonateModal()">Go Back</button>
+        </div>
+      </div>
+    `;
+    
+    // Re-attach click handler after updating innerHTML
+    modal.onclick = function(event) {
+      if (event.target === modal) {
+        closeDonateModal();
+      }
+    };
+    
+  } catch (error) {
+    console.error('Error fetching donation links:', error);
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Donation Links</h3>
+        </div>
+        <div class="modal-body">
+          <p style="text-align: center; color: var(--primary-orange);">Failed to load donation links. Please try again later.</p>
+        </div>
+        <div class="button-container" style="justify-content: center;">
+          <button class="modal-button" onclick="closeDonateModal()">Go Back</button>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function closeDonateModal() {
+  const modal = document.getElementById('donateLinksModal');
+  if (modal) {
+    modal.remove();
+  }
+  document.getElementById('playlistModal').style.display = 'block';
+}
 
 // Close modals when clicking outside
 window.addEventListener('click', function(event) {
@@ -587,7 +683,7 @@ let playlistsData = [];
 
 // Load playlists dynamically
 function loadPlaylists() {
-    fetch("https://epgenius.org/playlists")
+    fetch("/playlists")
         .then(res => res.json())
         .then(data => {
             playlistsData = data; // Store the data
@@ -671,18 +767,12 @@ document.getElementById('agreeBtn').addEventListener('click', function () {
     const playlistModal = document.getElementById('playlistModal');
     const owner = window.currentPlaylistOwner || '';
 
-    document.getElementById('playlistOwnerName').textContent = owner;
-    document.getElementById('donateBtn').textContent = `Donate to ${owner}`;
-
     // Wire donate button
     const donateBtn = document.getElementById('donateBtn');
     donateBtn.onclick = function() {
-        const link = window.currentDonationLink;
-        if (link) {
-            window.open(link, '_blank', 'noopener,noreferrer');
-        } else {
-            alert('No donation link available for this playlist owner.');
-        }
+        disclaimerModal.style.display = 'none';
+        playlistModal.style.display = 'none';
+        showDonateModal();
     };
 
     disclaimerModal.style.display = "none";
@@ -707,7 +797,7 @@ document.getElementById('downloadM3uBtn').addEventListener('click', async functi
     btn.textContent = 'Downloading...';
 
     try {
-        const response = await fetch('https://epgenius.org/manual', {
+        const response = await fetch('/manual', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: selectedID })
@@ -771,8 +861,8 @@ document.getElementById('previewBtn').addEventListener('click', function() {
     // const m3uUrl = `${window.location.origin}/m3u/${id}`;
     // const targetUrl = `${window.location.origin}/epgdisplayer?m3u=${encodeURIComponent(m3uUrl)}&epg=${encodeURIComponent(epgUrl || '')}`;
 
-    const m3uUrl = `https://epgenius.org/m3u/${id}`;
-    const targetUrl = `https://epgenius.org/epgdisplayer?m3u=${encodeURIComponent(m3uUrl)}&epg=${encodeURIComponent(epgUrl || '')}`;
+    const m3uUrl = `/m3u/${id}`;
+    const targetUrl = `/epgdisplayer?m3u=${encodeURIComponent(m3uUrl)}&epg=${encodeURIComponent(epgUrl || '')}`;
 
     window.open(targetUrl, '_blank', 'noopener');
 });
@@ -895,7 +985,7 @@ document.getElementById('categoriesBtn').addEventListener('click', function() {
 // Load categories table
 async function loadCategories(id) {
     try {
-        const response = await fetch(`https://epgenius.org/get_categories/${id}`);
+        const response = await fetch(`/get_categories/${id}`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
 
@@ -1164,7 +1254,7 @@ document.getElementById('uploadDriveBtn').addEventListener('click', async functi
     showDriveLoading();
 
     try {
-        const response = await fetch('https://epgenius.org/process', {
+        const response = await fetch('/process', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1209,7 +1299,7 @@ function hideDriveLoading() {
 
 function submitPlaylist(formData) {
     console.log('submitPlaylist called');
-    fetch('https://epgenius.org/upload_playlist', {
+    fetch('/upload_playlist', {
         method: 'POST',
         body: formData
     })
@@ -1276,7 +1366,7 @@ function submitShareGroups() {
         auto_update: cb.checked ? 1 : 0
     }));
 
-    fetch('https://epgenius.org/save_selected_groups', {
+    fetch('/save_selected_groups', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ groups: selectedGroups })
@@ -1304,7 +1394,7 @@ function submitShareGroups() {
     }
 
 function updatePlaylist(formData) {
-    fetch('https://epgenius.org/update_playlist', {
+    fetch('/update_playlist', {
         method: 'POST',
         body: formData
     })
@@ -1377,7 +1467,7 @@ function editCredentials(formData) {
         }
     }
 
-    fetch('https://epgenius.org/edit_creds_file', {
+    fetch('/edit_creds_file', {
         method: 'POST',
         body: formData
     })
@@ -1414,10 +1504,28 @@ function openHowtoModal(imageSrc) {
     document.body.style.overflow = 'hidden';
 }
 
+const botons = document.querySelectorAll('.step-thumb');
+
+botons.forEach(boto => {
+    boto.addEventListener('click', (e) => {
+	const rutaImatge = e.target.src;
+        openHowtoModal(rutaImatge);
+    });
+});
+
 function closeHowtoModal() {
     const modal = document.getElementById('howtoImageModal');
     modal.style.display = "none";
     document.body.style.overflow = 'auto';
+}
+
+const modal = document.getElementById('howtoImageModal');
+if (modal) {
+    modal.addEventListener('click', (e) => {
+        if (e.target.id === 'howtoImageModal' || e.target.classList.contains('howto-modal-close')) {
+            closeHowtoModal();
+        }
+    });
 }
 
 // Close modal on Escape key
