@@ -1769,7 +1769,14 @@ document.addEventListener('DOMContentLoaded', () => {
             newWindow.location.href = window.location.origin + '/#step5';
             setTimeout(() => {
                 newWindow.document.querySelector('[data-tab="howto"]').click();
-                newWindow.document.getElementById('step5').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const step5 = newWindow.document.getElementById('step5');
+                const navHeight = 78;
+                const elementPosition = step5.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + newWindow.pageYOffset - navHeight;
+                newWindow.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
             }, 500);
         });
     }
@@ -1781,7 +1788,14 @@ document.addEventListener('DOMContentLoaded', () => {
             newWindow.location.href = window.location.origin + '/#step6';
             setTimeout(() => {
                 newWindow.document.querySelector('[data-tab="howto"]').click();
-                newWindow.document.getElementById('step6').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const step6 = newWindow.document.getElementById('step6');
+                const navHeight = 78;
+                const elementPosition = step6.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + newWindow.pageYOffset - navHeight;
+                newWindow.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
             }, 500);
         });
     }
