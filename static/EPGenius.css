@@ -1958,6 +1958,7 @@ nav .cyber-button {
 
 .link-container {
     display: flex;
+    flex-direction: column;
     gap: 8px;
 }
 
