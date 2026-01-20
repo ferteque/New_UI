@@ -1761,4 +1761,29 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('driveSuccessModal').style.display = 'none';
         });
     }
+
+    const nextStepsBtn = document.getElementById('nextStepsBtn');
+    if (nextStepsBtn) {
+        nextStepsBtn.addEventListener('click', () => {
+            const newWindow = window.open('', '_blank');
+            newWindow.location.href = window.location.origin + '/#step5';
+            setTimeout(() => {
+                newWindow.document.querySelector('[data-tab="howto"]').click();
+                newWindow.document.getElementById('step5').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 500);
+        });
+    }
+
+    const registerInstructionsBtn = document.getElementById('registerInstructionsBtn');
+    if (registerInstructionsBtn) {
+        registerInstructionsBtn.addEventListener('click', () => {
+            const newWindow = window.open('', '_blank');
+            newWindow.location.href = window.location.origin + '/#step6';
+            setTimeout(() => {
+                newWindow.document.querySelector('[data-tab="howto"]').click();
+                newWindow.document.getElementById('step6').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 500);
+        });
+    }
+
 });
