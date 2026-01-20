@@ -544,6 +544,74 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+async function showDonateModal() {
+  try {
+    const response = await fetch('/playlists');
+    const playlists = await response.json();
+    
+    // Filter out empty donation_info, dedupe by user, and sort alphabetically
+    const donations = playlists
+      .filter(p => p.donation_info && p.donation_info !== '')
+      .reduce((acc, curr) => {
+        // Dedupe by reddit_user - only keep first occurrence
+        if (!acc.find(d => d.user === curr.reddit_user)) {
+          acc.push({
+            user: curr.reddit_user,
+            url: curr.donation_info
+          });
+        }
+        return acc;
+      }, [])
+      .sort((a, b) => a.user.localeCompare(b.user));
+    
+    // Build links HTML
+    const linksHTML = donations
+      .map(d => `<p style="margin: 0.5rem 0;"><a href="${d.url}" target="_blank" rel="noopener noreferrer" style="color: var(--primary-cyan); text-decoration: none; font-weight: 600; transition: all 0.3s ease;">Donate to ${d.user}</a></p>`)
+      .join('');
+    
+    // Create and show modal
+    const modal = document.createElement('div');
+    modal.id = 'donateLinksModal';
+    modal.className = 'modal';
+    modal.style.display = 'block';
+    
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Support Playlist Contributors</h3>
+        </div>
+        <div class="modal-body">
+          ${linksHTML || '<p>No donation links available at this time.</p>'}
+        </div>
+        <div class="button-container">
+          <button class="modal-button" onclick="closeDonateModal()">Close</button>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    lockScroll();
+    
+    // Close on background click
+    modal.onclick = function(event) {
+      if (event.target === modal) {
+        closeDonateModal();
+      }
+    };
+    
+  } catch (error) {
+    console.error('Error fetching donation links:', error);
+    alert('Failed to load donation links. Please try again later.');
+  }
+}
+
+function closeDonateModal() {
+  const modal = document.getElementById('donateLinksModal');
+  if (modal) {
+    modal.remove();
+    unlockScroll();
+  }
+}
 
 // Close modals when clicking outside
 window.addEventListener('click', function(event) {
@@ -672,17 +740,13 @@ document.getElementById('agreeBtn').addEventListener('click', function () {
     const owner = window.currentPlaylistOwner || '';
 
     document.getElementById('playlistOwnerName').textContent = owner;
-    document.getElementById('donateBtn').textContent = `Donate to ${owner}`;
 
     // Wire donate button
     const donateBtn = document.getElementById('donateBtn');
     donateBtn.onclick = function() {
-        const link = window.currentDonationLink;
-        if (link) {
-            window.open(link, '_blank', 'noopener,noreferrer');
-        } else {
-            alert('No donation link available for this playlist owner.');
-        }
+        disclaimerModal.style.display = 'none';
+        playlistModal.style.display = 'none';
+        showDonateModal();
     };
 
     disclaimerModal.style.display = "none";
