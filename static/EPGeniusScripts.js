@@ -569,10 +569,10 @@ async function showDonateModal() {
         const playlists = await response.json();
         
         const donations = playlists
-            .filter(p => p.donationinfo && p.donationinfo !== '!')
+            .filter(p => p.donation_info && p.donation_info !== '!')
             .reduce((acc, curr) => {
-                if (!acc.find(d => d.user === curr.reddituser)) {
-                    acc.push({ user: curr.reddituser, url: curr.donationinfo });
+                if (!acc.find(d => d.user === curr.reddit_user)) {
+                    acc.push({ user: curr.reddit_user, url: curr.donation_info });
                 }
                 return acc;
             }, [])
