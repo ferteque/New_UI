@@ -311,7 +311,15 @@ https://epgenius.org/
                     </div>
                 </div>
             </div>
-            <div class="button-container">
+            <div class="manual-section">
+                <p style="text-align: center; margin-bottom: 1rem;">
+                    If you're unsure what to do next, <a href="#step5" id="nextStepsLink" target="_blank" style="color: var(--primary-cyan); font-weight: 600; text-decoration: underline;">click here for a step by step guide.</a>
+                </p>
+                <p style="text-align: center;">
+                    Don't forget, you must register your playlist in the EPGenius Discord to keep using it. <a href="#step6" id="registerDirectionsLink" target="_blank" style="color: var(--primary-purple); font-weight: 600; text-decoration: underline;">Click here for directions.</a>
+                </p>
+            </div>
+            <div class="button-container" style="justify-content: center;">
                 <button id="closeDriveSuccessBtn" class="modal-button">Close</button>
             </div>
         </div>
@@ -706,12 +714,12 @@ https://epgenius.org/
                 <p>Sign in to your Google Account when prompted. This allows EPGenius to save your customized playlist to your personal Google Drive so that you automatically receive new playlist updates.</p>
                 
                 <div class="step-images">
-                    <img src= {{ url_for('static', filename='5.png') }} alt="Google login" class="step-thumb" />
+                    <img src= {{ url_for('static', filename='4.png') }} alt="Google login" class="step-thumb" />
                 </div>
             </div>
 
             <!-- Step 5 -->
-            <div class="howto-step">
+            <div class="howto-step" id="step5">
                 <div class="step-header">
                     <div class="step-number-badge">5</div>
                     <h3 class="step-title">Copy Your Links</h3>
@@ -736,39 +744,17 @@ https://epgenius.org/
                 </ul>
                 
                 <div class="step-images">
-                    <img src= {{ url_for('static', filename='6.png') }} alt="Copy links" class="step-thumb" />
+                    <img src= {{ url_for('static', filename='5.png') }} alt="Copy links" class="step-thumb" />
                 </div>
-            </div>
-
-            <div class="yellow-box">
-                <strong>Almost Done!</strong>
-                <p>Your EPGenius playlist is <i>technically</i> ready to go. <b>However, to take advantage of EPGenius's best feature, automatic playlist updates, you must follow the steps below to register your playlist!</b></p>
             </div>
 
             <!-- Step 6 -->
-            <div class="howto-step">
+            <div class="howto-step" id="step6">
                 <div class="step-header">
                     <div class="step-number-badge">6</div>
-                    <h3 class="step-title">Join the Discord Community</h3>
-                </div>
-                <p>We highly encourage joining the EPGenius Discord server for:</p>
-                <ul>
-                    <li><b>Automatic updates via playlist registration (step 7)</b></li>
-                    <li>Access to FAQs and troubleshooting guides</li>
-                    <li>Direct support from the community and playlist owners</li>
-                    <li>Ability to provide feedback to improve playlists</li>
-                    <li>Playlist recovery (retrieve your links anytime)</li>
-                </ul>
-                <a href="https://discord.gg/pZwcncweFc" target="_blank" class="howto-button">Join Discord Server</a>
-            </div>
-
-            <!-- Step 7 -->
-            <div class="howto-step">
-                <div class="step-header">
-                    <div class="step-number-badge">7</div>
                     <h3 class="step-title">Register Your Playlist</h3>
                 </div>
-                <p>Once you've joined the Discord, head over to the channel <a href="https://discord.com/channels/1382432361840509039/1383563895913844786" target="_blank" style="color: var(--primary-purple); font-weight: 600;">#🚑•help</a> to register your playlist by sending the message below and entering your Playlist URL from step 6 when prompted.</p>
+                <p>In order to keep using your new playlist, you'll need to join the Discord and register your playlist. Once you've joined, head over to the channel <a href="https://discord.com/channels/1382432361840509039/1383563895913844786" target="_blank" style="color: var(--primary-purple); font-weight: 600;">#🚑•help</a> to register your playlist by sending the message below and entering your Playlist URL from step 5 when prompted.</p>
                 <ul>
                     <li><code>/register</code></li>
                 </ul>
@@ -777,6 +763,13 @@ https://epgenius.org/
                     <li>Retrieve your playlist and EPG links</li>
                     <li>Access helpful playlist information, like your playlist statuses, latest updates, and more!</li>
                 </ul>
+                <p>Other helpful things you can find on the EPGenius Discord include:</p>
+                <ul>
+                    <li>Access to FAQs and troubleshooting guides</li>
+                    <li>Direct support from the community and playlist owners</li>
+                    <li>Ability to provide feedback to improve playlists</li>
+                </ul>
+                <a href="https://discord.gg/pZwcncweFc" target="_blank" class="howto-button">Join Discord Server</a>
                 
                 <div class="step-images">
                     <img src= {{ url_for('static', filename='playlistregister_1.png') }} alt="Register command" class="step-thumb" />
@@ -798,10 +791,10 @@ https://epgenius.org/
                 <p class="section-subtitle">ENHANCE YOUR EXPERIENCE</p>
             </div>
 
-            <!-- Step 8 -->
+            <!-- Step 7 -->
             <div class="howto-step">
                 <div class="step-header">
-                    <div class="step-number-badge">8</div>
+                    <div class="step-number-badge">7</div>
                     <h3 class="step-title">Consider Supporting Us</h3>
                 </div>
                 <p>If you're loving your playlist, consider donating to support us. Benefits include:</p>
@@ -813,7 +806,7 @@ https://epgenius.org/
                 
                 <div class="info-box">
                     <strong>Support:</strong>
-                    <p>The donation link can be found in the playlist selection box from step 2. Thanks for showing your love for their work!</p>
+                    <p>The donation link can be found in the playlist selection box from step 2. Thanks for showing your love of our work!</p>
                 </div>
                 
                 <div class="step-images">
@@ -826,35 +819,20 @@ https://epgenius.org/
             <!-- FAQ Section -->
             <div class="section-header" style="margin-bottom: 3rem;">
                 <h2 class="section-title">Frequently Asked Questions</h2>
-                <p class="section-subtitle">COMMON QUESTIONS AND ANSWERS</p>
+                <p class="section-subtitle">WHERE TO FIND HELP</p>
             </div>
 
             <div class="howto-step">
                 <div class="step-header">
-                    <h3 class="step-title">What if my playlist isn't working?</h3>
+                    <h3 class="step-title">What if I am having trouble?</h3>
                 </div>
-                <p>Check these common issues:</p>
+                <p>Join the EPGenius Discord and visit:</p>
                 <ul>
-                    <li>Verify the playlist link was copied exactly</li>
-                    <li>Ensure your credentials are active and valid</li>
-                    <li>Make sure you were sold the correct service. Some sellers advertise one service, but provide credentials for a completely different one</li>
-                    <li>Join the Discord server for more troubleshooting steps and help</li>
+                    <li><a href="https://discord.com/channels/1382432361840509039/1393241275800621107" target="_blank" style="color: var(--primary-purple); font-weight: 600;">🆕〢start-here</a> to find answers to common questions</li>
+                    <li><a href="https://discord.com/channels/1382432361840509039/1436426869212708888" target="_blank" style="color: var(--primary-purple); font-weight: 600;">🛠️〢troubleshooting</a> to find answers to common problems</li>
                 </ul>
             </div>
 
-            <div class="howto-step">
-                <div class="step-header">
-                    <h3 class="step-title">Can I use multiple playlists?</h3>
-                </div>
-                <p>Yes! You can set up multiple playlists. Just remember, you can only view as many concurrent streams as your credentials allow.</p>
-            </div>
-
-            <div class="howto-step">
-                <div class="step-header">
-                    <h3 class="step-title">How often do playlists update?</h3>
-                </div>
-                <p>Free updates happen as often as the playlist owner makes updates. Supporter updates happen every 4 hours to keep your playlist and EPG in sync with live events, sports, and PPV.</p>
-            </div>
         </div>
 
         <!-- Image Modal -->
