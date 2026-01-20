@@ -1124,6 +1124,8 @@ const CLIENT_ID = '385455010248-stgruhhb6geh32kontlgi7g929tmfgqa.apps.googleuser
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
 async function uploadToGoogleDrive(blob, filename, list_ID) {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
   return new Promise((resolve, reject) => {
     gapi.load('client', async () => {
       try {
@@ -1132,6 +1134,7 @@ async function uploadToGoogleDrive(blob, filename, list_ID) {
         const tokenClient = google.accounts.oauth2.initTokenClient({
           client_id: CLIENT_ID,
           scope: SCOPES,
+          ux_mode: isMobile ? 'redirect' : 'popup',
           callback: async (tokenResponse) => {
             const accessToken = tokenResponse.access_token;
 
