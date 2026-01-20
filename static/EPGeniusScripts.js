@@ -578,7 +578,7 @@ async function showDonateModal() {
     modal.innerHTML = `
       <div class="modal-content">
         <div class="modal-header">
-          <h3>Support Playlist Contributors</h3>
+          <h3>Donation Links</h3>
         </div>
         <div class="modal-body">
           ${linksHTML || '<p>No donation links available at this time.</p>'}
@@ -738,8 +738,6 @@ document.getElementById('agreeBtn').addEventListener('click', function () {
     const disclaimerModal = document.getElementById('disclaimerModal');
     const playlistModal = document.getElementById('playlistModal');
     const owner = window.currentPlaylistOwner || '';
-
-    document.getElementById('playlistOwnerName').textContent = owner;
 
     // Wire donate button
     const donateBtn = document.getElementById('donateBtn');
