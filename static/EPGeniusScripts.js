@@ -545,6 +545,26 @@ style.textContent = `
 document.head.appendChild(style);
 
 async function showDonateModal() {
+  // Show loading modal immediately
+  const modal = document.createElement('div');
+  modal.id = 'donateLinksModal';
+  modal.className = 'modal';
+  modal.style.display = 'block';
+  
+  modal.innerHTML = `
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Donation Links</h3>
+      </div>
+      <div class="modal-body">
+        <p style="text-align: center;">Loading donation links...</p>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  lockScroll();
+
   try {
     const response = await fetch('/playlists');
     const playlists = await response.json();
@@ -568,35 +588,27 @@ async function showDonateModal() {
       .map(d => `<button class="donate-link-btn" onclick="window.open('${d.url}', '_blank', 'noopener,noreferrer')">Donate to ${d.user}</button>`)
       .join('');
     
-    // Create and show modal
-    const modal = document.createElement('div');
-    modal.id = 'donateLinksModal';
-    modal.className = 'modal';
-    modal.style.display = 'block';
-    
+    // UPDATE the existing modal (don't create a new one)
     modal.innerHTML = `
-    <div class="modal-content">
+      <div class="modal-content">
         <div class="modal-header">
-        <h3>Donation Links</h3>
+          <h3>Donation Links</h3>
         </div>
         <div class="modal-body">
-        <h3 style="color: var(--primary-cyan); text-align: center; margin: 0 0 1rem 0; font-size: 1.3rem;">Support EPGenius</h3>
-        <button class="donate-link-btn" style="width: 100%; margin-bottom: 2rem;" onclick="window.open('https://cwallet.com/t/ZK4DRBG5', '_blank', 'noopener,noreferrer')">Donate to Ferteque</button>
-        
-        <h3 style="color: var(--primary-cyan); text-align: center; margin: 2rem 0 1rem 0; font-size: 1.3rem;">Support Playlist Creators</h3>
-        
-        ${donationButtons || '<p style="text-align: center;">No donation links available at this time.</p>'}
+          <h3 style="color: var(--primary-cyan); text-align: center; margin: 0 0 1rem 0; font-size: 1.3rem;">Support EPGenius</h3>
+          <button class="donate-link-btn" style="width: 100%; margin-bottom: 2rem;" onclick="window.open('https://cwallet.com/t/ZK4DRBG5', '_blank', 'noopener,noreferrer')">Donate to Ferteque</button>
+          
+          <h3 style="color: var(--primary-cyan); text-align: center; margin: 2rem 0 1rem 0; font-size: 1.3rem;">Support Playlist Creators</h3>
+          
+          ${donationButtons || '<p style="text-align: center;">No donation links available at this time.</p>'}
         </div>
         <div class="button-container" style="justify-content: center;">
-        <button class="modal-button" onclick="closeDonateModal()">Go Back</button>
+          <button class="modal-button" onclick="closeDonateModal()">Go Back</button>
         </div>
-    </div>
+      </div>
     `;
     
-    document.body.appendChild(modal);
-    lockScroll();
-    
-    // Close on background click
+    // Re-attach click handler after updating innerHTML
     modal.onclick = function(event) {
       if (event.target === modal) {
         closeDonateModal();
@@ -605,7 +617,19 @@ async function showDonateModal() {
     
   } catch (error) {
     console.error('Error fetching donation links:', error);
-    alert('Failed to load donation links. Please try again later.');
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Donation Links</h3>
+        </div>
+        <div class="modal-body">
+          <p style="text-align: center; color: var(--primary-orange);">Failed to load donation links. Please try again later.</p>
+        </div>
+        <div class="button-container" style="justify-content: center;">
+          <button class="modal-button" onclick="closeDonateModal()">Go Back</button>
+        </div>
+      </div>
+    `;
   }
 }
 
