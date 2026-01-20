@@ -1212,6 +1212,16 @@ async function uploadToGoogleDrive(blob, filename, list_ID) {
   });
 }
 
+function showDriveLoading() {
+    document.getElementById('uploadDriveBtn').disabled = true;
+    document.getElementById('uploadDriveBtn').textContent = 'Processing...';
+}
+
+function hideDriveLoading() {
+    document.getElementById('uploadDriveBtn').disabled = false;
+    document.getElementById('uploadDriveBtn').textContent = 'Upload to Google Drive';
+}
+
 // Click Upload to Google Drive
 document.getElementById('uploadDriveBtn').addEventListener('click', async function () {
     const m3uInput = document.getElementById('m3u').value.trim();
