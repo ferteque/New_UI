@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EPGenius - A Curated Lists and EPG Repository</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='EPGenius.css') }}">
-    <script src="https://accounts.google.com/gsi/client"></script> 
+    <script src="https://accounts.google.com/gsi/client"></script>
     <script type="module" src="{{ url_for('static', filename='EPGeniusScripts.js') }}" ></script>
 <!--
 
@@ -22,7 +22,7 @@ https://epgenius.org/
         var iOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
         var isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|DuckDuckGo|Brave|Vivaldi|SamsungBrowser|UCBrowser|Puffin|Mercury|Dolphin|Coast|Yandex|Focus/.test(ua);
         var isMacOS = /Macintosh/.test(ua);
-        
+
         if (iOS && isSafari) {
             alert('This site does not function properly on iOS Safari.\n\nPlease use Chrome, Firefox, or Brave on your iOS device instead.');
         } else if (isMacOS && isSafari) {
@@ -32,7 +32,7 @@ https://epgenius.org/
 
     (function() {
         const hash = window.location.hash;
-        
+
         if (hash === '#editcreds') {
             // Wait for DOM to load
             if (document.readyState === 'loading') {
@@ -51,7 +51,7 @@ https://epgenius.org/
                 }
             }
         }
-        
+
         if (hash === '#howto') {
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', function() {
@@ -70,23 +70,23 @@ https://epgenius.org/
         <div class="cyber-gradient"></div>
         <div class="matrix-rain" id="matrixRain"></div>
     </div>
-    
+
     <div class="particles" id="particlesContainer"></div>
-    
+
     <div class="data-streams" id="dataStreams"></div>
-    
+
     <div class="orb orb1"></div>
     <div class="orb orb2"></div>
     <div class="orb orb3"></div>
-    
+
     <div class="grid-overlay">
         <div class="grid-lines"></div>
         <div class="grid-glow"></div>
     </div>
-    
+
     <div class="scanlines"></div>
     <div class="noise-overlay"></div>
-    
+
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
@@ -136,8 +136,8 @@ https://epgenius.org/
             <h1 class="hero-title">
                 <span class="hero-ep">EP</span><span class="hero-genius">Genius</span>
             </h1>
-            <p class="hero-subtitle">CURATED PLAYLISTS MADE EASY</p>	
-    
+            <p class="hero-subtitle">CURATED PLAYLISTS MADE EASY</p>
+
             <div class="stats-grid">
                 <div class="stat-item">
                     <span class="stat-number"></span>
@@ -196,7 +196,7 @@ https://epgenius.org/
             </div>
             <div class="modal-body">
                 <p class="disclaimer-text">
-                    EPGenius provides pre-configured M3U templates for personal use only. 
+                    EPGenius provides pre-configured M3U templates for personal use only.
                     We do not store, provide, or enable access to copyrighted content.<br><br>
                     By using this service, you confirm you are authorized to access the content associated with your credentials.
                     Playlists are non-functional without user-provided credentials from a legitimate provider.
@@ -208,7 +208,7 @@ https://epgenius.org/
         </div>
     </div>
 
-	
+
     <!-- Playlist Modal structure -->
     <div id="playlistModal" class="modal">
         <div class="modal-content">
@@ -259,12 +259,16 @@ https://epgenius.org/
     <div id="categoriesModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-            <h3>Supporter Update Categories</h3>
-            <button class="mobile-close-btn" onclick="event.stopPropagation(); event.preventDefault(); this.closest('.modal').style.display='none'; unlockScroll();">✕</button>
+                <h3>Supporter Update Categories</h3>
+                <button class="mobile-close-btn" onclick="event.stopPropagation(); event.preventDefault(); this.closest('.modal').style.display='none'; unlockScroll();">✕</button>
             </div>
-            <div id="categoriesContainer"></div>
-            <div class="button-container">
-                <button id="closeCategoriesBtn" class="modal-button">Go Back</button>
+            <div class="modal-body">
+                <div id="categoriesContainer"></div>
+            </div>
+            <div class="modal-footer">
+                    <div class="button-container">
+                        <button id="closeCategoriesBtn" class="modal-button">Go Back</button>
+                    </div>
             </div>
         </div>
     </div>
@@ -325,7 +329,7 @@ https://epgenius.org/
                                     <svg class="eye eye-closed" viewBox="0 0 24 24" aria-hidden="true">
                                         <path d="M2 3l19 19-1.5 1.5L16.7 20C15.3 20.6 13.7 21 12 21 5 21 1 12 1 12c1.3-2.3 3.1-4.2 5.2-5.6L.5 4.5 2 3zm10 5a4 4 0 0 0-3.9 3.2l5.7 5.7A4 4 0 0 0 12 8zm9.8 4c-.7 1.3-1.6 2.5-2.7 3.5l-3.3-3.3A4 4 0 0 0 12 8c-.4 0-.7 0-1 .1L8.4 5.5C9.5 5.2 10.7 5 12 5c7 0 11 7 11 7z"/>
                                     </svg>
-                                </button>  
+                                </button>
                         </div>
                     </div>
                 </div>
@@ -366,7 +370,7 @@ https://epgenius.org/
                     Follow the how-to guide for the next steps.
                 </p>
                 <button class="donate-link-btn" id="nextStepsBtn" style="display: block; width: 100%; margin-bottom: 1.5rem;">How-To Guide</button>
-                
+
                 <p style="text-align: center; margin-bottom: 0.5rem;">
                     You must register your playlist in the EPGenius Discord to keep using it.
                 </p>
@@ -386,7 +390,7 @@ https://epgenius.org/
                 <p class="section-subtitle">SELECT AN OPTION</p>
                 <div class="creators-warning">THIS SECTION IS FOR PLAYLIST CREATORS ONLY</div>
             </div>
-            
+
             <div class="creators-grid">
                 <div class="creators-card">
                     <a class="btn-secondary" id="sharePlaylistBtn">SHARE A NEW PLAYLIST</a>
@@ -405,7 +409,7 @@ https://epgenius.org/
                 <h2 class="section-title">Edit Your Credentials</h2>
                 <p class="section-subtitle">CLICK BELOW TO UPDATE YOUR DNS, USERNAME, AND/OR PASSWORD</p>
             </div>
-            
+
             <div class="creators-grid">
                 <div class="creators-card">
                     <a class="btn-secondary" id="editCredentialsBtn">EDIT CREDENTIALS</a>
@@ -425,14 +429,14 @@ https://epgenius.org/
                 <div class="modal-warning">
                     Use this to update the DNS, username, and/or password of an existing Google Drive playlist.
                 </div>
-                
+
                 <form id="editCredsForm">
                     <div class="format-group">
                         <div class="format-section">
                             <label>DNS</label>
                             <input type="url" id="DNS" name="DNS" placeholder="http://example.com" required>
                         </div>
-                        
+
                         <div class="format-section">
                             <label>Username</label>
                             <input type="text" id="Username" name="Username" placeholder="Username" required>
@@ -450,21 +454,21 @@ https://epgenius.org/
                                         <path d="M2 3l19 19-1.5 1.5L16.7 20C15.3 20.6 13.7 21 12 21 5 21 1 12 1 12c1.3-2.3 3.1-4.2 5.2-5.6L.5 4.5 2 3zm10 5a4 4 0 0 0-3.9 3.2l5.7 5.7A4 4 0 0 0 12 8zm9.8 4c-.7 1.3-1.6 2.5-2.7 3.5l-3.3-3.3A4 4 0 0 0 12 8c-.4 0-.7 0-1 .1L8.4 5.5C9.5 5.2 10.7 5 12 5c7 0 11 7 11 7z"/>
                                     </svg>
                                 </button>
-                            </div>   
+                            </div>
                         </div>
-                        
+
                         <div class="format-section">
                             <label>Google Drive URL or File ID</label>
                             <input type="text" id="File_ID" name="File_ID" placeholder="https://drive.google.com/uc?export=download&id=1AbCdEfGhIjKlMnOpQrStUvWxYz" required>
                         </div>
                     </div>
-                    
+
                     <div class="button-container">
                         <button type="submit" class="modal-button" id="submitEditCreds">Update Credentials</button>
                         <button type="button" class="modal-button secondary" id="cancelEditCreds">Go Back</button>
                     </div>
                 </form>
-                
+
                 <h3 id="Wait6" style="display: none;">Updating Credentials...</h3>
                 <div id="editCredsStatus" style="display: none; padding: 1rem; border-radius: 5px; margin-top: 1rem; text-align: center;"></div>
                 <div class="button-container" id="successButtons" style="display: none; margin-top: 1rem;">
@@ -485,7 +489,7 @@ https://epgenius.org/
                 <div class="modal-warning">
                     This section is for playlist creators only.
                 </div>
-                
+
                 <form id="submitPlaylistForm">
                     <div class="format-group">
                         <div class="format-section">
@@ -508,22 +512,22 @@ https://epgenius.org/
                             <label>Discord Username</label>
                             <input type="text" id="reddit_username" name="reddit_username" placeholder="Discord Username" required>
                         </div>
-                        
+
                         <div class="format-section">
                             <label>Main Categories</label>
                             <input type="text" id="main_categories" name="main_categories" placeholder="Live TV, Movies, Sports, etc..." required>
                         </div>
-                        
+
                         <div class="format-section">
                             <label>EPG URL</label>
                             <input type="url" id="epgForm" name="epg" placeholder="http://example.com/epg.xml" required>
                         </div>
-                        
+
                         <div class="format-section">
                             <label>Donation URL</label>
                             <input type="url" id="donation_link" name="donation_link" placeholder="https://example.com/donations">
                         </div>
-                        
+
                         <div class="format-section">
                             <label for="list_password">Playlist Password</label>
                             <div class="password-wrapper">
@@ -536,21 +540,21 @@ https://epgenius.org/
                                         <path d="M2 3l19 19-1.5 1.5L16.7 20C15.3 20.6 13.7 21 12 21 5 21 1 12 1 12c1.3-2.3 3.1-4.2 5.2-5.6L.5 4.5 2 3zm10 5a4 4 0 0 0-3.9 3.2l5.7 5.7A4 4 0 0 0 12 8zm9.8 4c-.7 1.3-1.6 2.5-2.7 3.5l-3.3-3.3A4 4 0 0 0 12 8c-.4 0-.7 0-1 .1L8.4 5.5C9.5 5.2 10.7 5 12 5c7 0 11 7 11 7z"/>
                                     </svg>
                                 </button>
-                            </div>   
+                            </div>
                         </div>
-                        
+
                         <div class="format-section">
                             <label>Upload M3U</label>
                             <input type="file" id="m3u_fileForm" name="m3u_file" accept=".m3u" required>
                         </div>
                     </div>
-                    
+
                     <div class="button-container">
                         <button type="submit" class="modal-button" id="submitPlaylist">Submit Playlist</button>
                         <button type="button" class="modal-button secondary" id="cancelShareBtn">Go Back</button>
                     </div>
                 </form>
-                
+
                 <h3 id="Wait4" style="display: none;">Uploading Playlist...</h3>
             </div>
         </div>
@@ -568,6 +572,8 @@ https://epgenius.org/
                     Please select all categories that need to be auto-updated every 4 hours.
                 </p>
                 <div id="shareGroupList"></div>
+            </div>
+            <div class="modal-footer">
                 <button class="modal-button" id="shareSubmitGroups" style="display: none;">
                     Submit
                 </button>
@@ -590,14 +596,14 @@ https://epgenius.org/
                 <div class="modal-warning">
                     This section is for playlist creators only.
                 </div>
-                
+
                 <form id="updatePlaylistForm">
                     <div class="format-group">
                         <div class="format-section">
                             <label>Playlist Number</label>
                             <input type="text" id="playlist_id" name="id" placeholder="1, 2, etc..." required>
                         </div>
-                        
+
                         <div class="format-section">
                             <label for="list_password">Playlist Password</label>
                             <div class="password-wrapper">
@@ -610,9 +616,9 @@ https://epgenius.org/
                                         <path d="M2 3l19 19-1.5 1.5L16.7 20C15.3 20.6 13.7 21 12 21 5 21 1 12 1 12c1.3-2.3 3.1-4.2 5.2-5.6L.5 4.5 2 3zm10 5a4 4 0 0 0-3.9 3.2l5.7 5.7A4 4 0 0 0 12 8zm9.8 4c-.7 1.3-1.6 2.5-2.7 3.5l-3.3-3.3A4 4 0 0 0 12 8c-.4 0-.7 0-1 .1L8.4 5.5C9.5 5.2 10.7 5 12 5c7 0 11 7 11 7z"/>
                                     </svg>
                                 </button>
-                            </div>   
+                            </div>
                         </div>
-                        
+
                         <div class="format-section">
                             <label>Countries</label>
                             <div class="multi-select" id="countriesSelectUpdate">
@@ -621,34 +627,34 @@ https://epgenius.org/
                             </div>
                             <input type="hidden" id="countriesUpdate" name="countries">
                         </div>
-                        
+
                         <div class="format-section">
                             <label>Main Categories</label>
                             <input type="text" id="new_categories" name="main_categories" placeholder="Leave blank to keep current. This will overwrite all current categories">
                         </div>
-                        
+
                         <div class="format-section">
                             <label>EPG URL</label>
                             <input type="url" id="new_epgForm" name="epg_url" placeholder="Leave blank to keep current">
                         </div>
-                        
+
                         <div class="format-section">
                             <label>Donation URL</label>
                             <input type="url" id="new_donation_link" name="donation_info" placeholder="Leave blank to keep current">
                         </div>
-                        
+
                         <div class="format-section">
                             <label>Upload M3U</label>
                             <input type="file" id="update_m3u_fileForm" name="m3u_file" accept=".m3u" required>
                         </div>
                     </div>
-                    
+
                     <div class="button-container">
                         <button type="submit" class="modal-button" id="updatePlaylistBtn">Update Playlist</button>
                         <button type="button" class="modal-button secondary" id="cancelUpdateBtn">Go Back</button>
                     </div>
                 </form>
-                
+
                 <h3 id="Wait5" style="display: none;">Updating Playlist...</h3>
             </div>
         </div>
@@ -678,12 +684,12 @@ https://epgenius.org/
                     <h3 class="step-title">Choose Your Playlist</h3>
                 </div>
                 <p>Start by browsing the available playlists. If you're new to this, we recommend sorting by service to find a playlist matching your current service.</p>
-                
+
                 <div class="info-box">
                     <strong>Pro Tip:</strong>
                     <p>Click <b>"Preview Playlist"</b> to see what categories and channels each playlist contains before committing.</p>
                 </div>
-                
+
                 <div class="step-images">
                     <img src= {{ url_for('static', filename='1a.png') }} alt="Sorting playlists" class="step-thumb" />
                     <img src= {{ url_for('static', filename='1b.png') }} alt="Playlist preview button" class="step-thumb" />
@@ -698,7 +704,7 @@ https://epgenius.org/
                     <h3 class="step-title">Select Configuration Method</h3>
                 </div>
                 <p>When you're ready, click <b>"Google Drive"</b> to begin the setup process.</p>
-                
+
                 <div class="step-images">
                     <img src= {{ url_for('static', filename='2.png') }} alt="Select automatic" class="step-thumb" />
                 </div>
@@ -711,7 +717,7 @@ https://epgenius.org/
                     <h3 class="step-title">Enter Your Credentials</h3>
                 </div>
                 <p>Choose the option that matches what your seller gave you:</p>
-                
+
                 <div class="option-grid">
                     <div class="option-card">
                         <h4>Option A: M3U</h4>
@@ -721,7 +727,7 @@ https://epgenius.org/
                             <li>Click <b>"Upload to Google Drive"</b></li>
                         </ul>
                     </div>
-                    
+
                     <div class="option-card">
                         <h4>Option B: Xtream</h4>
                         <p>If you were provided Xtream credentials:</p>
@@ -738,7 +744,7 @@ https://epgenius.org/
                     <strong>Which Option to Choose:</strong>
                     <p>If you received both an M3U link and Xtream credentials, use <b>Option B: Xtream</b> as it's generally more reliable and less prone to transcription errors.</p>
                 </div>
-                
+
                 <div class="step-images">
                     <img src= {{ url_for('static', filename='3a.png') }} alt="M3U option" class="step-thumb" />
                     <img src= {{ url_for('static', filename='3b.png') }} alt="Xtream option" class="step-thumb" />
@@ -752,7 +758,7 @@ https://epgenius.org/
                     <h3 class="step-title">Upload to Google Drive</h3>
                 </div>
                 <p>Click the <b>"Upload to Google Drive"</b> button.</p>
-                
+
                 <div class="step-images">
                     <img src="4.png" alt="Upload button" class="step-thumb" onclick="openHowtoModal('4.png')"/>
                 </div>
@@ -765,7 +771,7 @@ https://epgenius.org/
                     <h3 class="step-title">Sign in to Google</h3>
                 </div>
                 <p>Sign in to your Google Account when prompted. This allows EPGenius to save your customized playlist to your personal Google Drive so that you automatically receive new playlist updates.</p>
-                
+
                 <div class="step-images">
                     <img src= {{ url_for('static', filename='4.png') }} alt="Google login" class="step-thumb" />
                 </div>
@@ -783,7 +789,7 @@ https://epgenius.org/
                     <li><strong>EPG URL</strong> - Your EPG link</li>
                 </ul>
                 <p>Use these links when adding a new M3U playlist to the player of your choice. You must use the M3U option within your player, not the Xtream option.</p>
-                
+
                 <div class="warning-box">
                     <strong>Critical:</strong>
                     <p>Enter these links <b>exactly</b> as they appear. We recommend copying and pasting them directly into your player.</p>
@@ -795,7 +801,7 @@ https://epgenius.org/
                     <li>Amazon Fire TV: Use the Fire TV app</li>
                     <li>Apple TV: Use the built-in iOS Apple Remote</li>
                 </ul>
-                
+
                 <div class="step-images">
                     <img src= {{ url_for('static', filename='5.png') }} alt="Copy links" class="step-thumb" />
                 </div>
@@ -823,7 +829,7 @@ https://epgenius.org/
                     <li>Ability to provide feedback to improve playlists</li>
                 </ul>
                 <a href="https://discord.gg/pZwcncweFc" target="_blank" class="howto-button">Join Discord Server</a>
-                
+
                 <div class="step-images">
                     <img src= {{ url_for('static', filename='register_1.png') }} alt="Register command" class="step-thumb" style="max-width: 500px;" />
                     <img src= {{ url_for('static', filename='register_2.png') }} alt="Registration confirmation" class="step-thumb" style="max-width: 500px;" />
@@ -856,12 +862,12 @@ https://epgenius.org/
                     <li>Increased EPG updates</li>
                     <li><strong>Supporter Updates:</strong> Keep your TV guide synced with live events, sports, and PPV</li>
                 </ul>
-                
+
                 <div class="info-box">
                     <strong>Support:</strong>
                     <p>The donation link can be found in the playlist selection box from step 2. Thanks for showing your love of our work!</p>
                 </div>
-                
+
                 <div class="step-images">
                     <img src= {{ url_for('static', filename='donations.png') }} alt="Donations" class="step-thumb" />
                 </div>
@@ -890,7 +896,7 @@ https://epgenius.org/
 
         <!-- Image Modal -->
         <div id="howtoImageModal" class="howto-modal" >
-		<span class="howto-modal-close" >&times;</span>
+                <span class="howto-modal-close" >&times;</span>
             <img class="howto-modal-content" id="howtoModalImage" />
         </div>
     </section>
@@ -900,13 +906,13 @@ https://epgenius.org/
         <div class="section-divider"></div>
         <div class="disclaimer-container">
             <p class="disclaimer-text">
-            EPGenius provides pre-configured M3U templates for personal use only. 
-            We do not store, provide, or enable access to copyrighted content. 
+            EPGenius provides pre-configured M3U templates for personal use only.
+            We do not store, provide, or enable access to copyrighted content.
             By using this service, you confirm you are authorized to access the content associated with your credentials.
             Playlists are non-functional without user-provided credentials from a legitimate provider.
             </p>
         </div>
-    </section> 
+    </section>
 
     <script src="https://apis.google.com/js/api.js"></script>
 
