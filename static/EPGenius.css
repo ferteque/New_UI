@@ -2810,23 +2810,6 @@ code {
     box-shadow: 0 5px 20px rgba(232, 212, 191, 0.3);
 }
 
-.step-thumb-wide {
-    max-width: 400px;
-    width: 100%;
-    height: auto;
-    border-radius: 6px;
-    cursor: pointer;
-    border: 2px solid var(--border-color);
-    transition: all 0.3s ease;
-}
-
-.step-thumb-wide:hover {
-    transform: scale(1.05);
-    border-color: var(--accent-gold);
-    box-shadow: 0 5px 20px rgba(232, 212, 191, 0.3);
-}
-
-
 /* Modal for Images */
 .howto-modal {
     display: none;
