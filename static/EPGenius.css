@@ -1741,7 +1741,17 @@ nav .cyber-button {
 /* Modal Body */
 .modal-body {
     color: var(--text-primary);
+    max-height: 64vh;
+    overflow-y: auto;
 }
+
+/* Modal Footer */
+.modal-footer {
+    margin-top: 16px;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
 
 /* Custom Scrollbar */
 .modal-content::-webkit-scrollbar {
@@ -3186,6 +3196,7 @@ code {
     }
 
 }     */
+
 
 
 
