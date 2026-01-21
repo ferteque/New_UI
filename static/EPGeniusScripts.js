@@ -1616,6 +1616,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (sharePlaylistBtn) {
         sharePlaylistBtn.addEventListener('click', () => {
             document.getElementById('shareModal').style.display = 'block';
+            syncScrollLock();
             setTimeout(initShareDropdowns, 300);
         });
     }
@@ -1624,6 +1625,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeShareModal) {
         closeShareModal.addEventListener('click', () => {
             document.getElementById('shareModal').style.display = 'none';
+            syncScrollLock();
         });
     }
 
@@ -1631,6 +1633,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cancelShareBtn) {
         cancelShareBtn.addEventListener('click', () => {
             document.getElementById('shareModal').style.display = 'none';
+            syncScrollLock();
         });
     }
 
@@ -1638,6 +1641,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeShareCategoriesModal) {
         closeShareCategoriesModal.addEventListener('click', () => {
             document.getElementById('shareCategoriesModal').style.display = 'none';
+            syncScrollLock();
         });
     }
 
@@ -1676,6 +1680,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (updatePlaylistBtn) {
         updatePlaylistBtn.addEventListener('click', () => {
             document.getElementById('updateModal').style.display = 'block';
+            syncScrollLock();
             setTimeout(initShareDropdowns, 300);
         });
     }
@@ -1684,6 +1689,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeUpdateModal) {
         closeUpdateModal.addEventListener('click', () => {
             document.getElementById('updateModal').style.display = 'none';
+            syncScrollLock();
         });
     }
 
@@ -1691,6 +1697,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cancelUpdateBtn) {
         cancelUpdateBtn.addEventListener('click', () => {
             document.getElementById('updateModal').style.display = 'none';
+            syncScrollLock();
         });
     }
 
@@ -1708,6 +1715,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (editCredentialsBtn) {
         editCredentialsBtn.addEventListener('click', () => {
             document.getElementById('editCredsModal').style.display = 'block';
+            syncScrollLock();
         });
     }
 
@@ -1715,6 +1723,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeEditCreds) {
         closeEditCreds.addEventListener('click', () => {
             document.getElementById('editCredsModal').style.display = 'none';
+            syncScrollLock();
         });
     }
 
@@ -1722,6 +1731,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cancelEditCreds) {
         cancelEditCreds.addEventListener('click', () => {
             document.getElementById('editCredsModal').style.display = 'none';
+            syncScrollLock();
         });
     }
 
@@ -1739,6 +1749,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeShareSuccessBtn) {
         closeShareSuccessBtn.addEventListener('click', () => {
             document.getElementById("shareCategoriesModal").style.display = 'none';
+            syncScrollLock();
         });
     }
 
@@ -1746,6 +1757,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeSuccessBtn) {
         closeSuccessBtn.addEventListener('click', () => {
             document.getElementById("editCredentialsModal").style.display = 'none';
+            syncScrollLock();
         });
     }
 
@@ -1796,6 +1808,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeDriveSuccessBtn) {
         closeDriveSuccessBtn.addEventListener('click', () => {
             document.getElementById('driveSuccessModal').style.display = 'none';
+            syncScrollLock();
         });
     }
 
