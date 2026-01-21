@@ -74,6 +74,10 @@ body {
     overflow-x: hidden;
 }
 
+#howto:target {
+    display: block;
+}
+
 .cyber-bg {
     position: fixed;
     top: 0;

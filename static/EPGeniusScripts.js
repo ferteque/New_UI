@@ -1794,17 +1794,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-window.addEventListener('load', () => {
-    const hash = window.location.hash;
-    
-    if (hash === '#editcreds') {
-        document.getElementById('editCredsModal').style.display = 'block';
-        lockScroll();
-    }
-    
-    if (hash === '#howto') {
-        const howtoTab = document.querySelector('[data-tab="howto"]');
-        if (howtoTab) howtoTab.click();
-    }
-});
-
