@@ -313,19 +313,6 @@ function syncScrollLock() {
   else unlockScroll();
 }
 
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('.mobile-close-btn');
-  if (!btn) return;
-
-  e.preventDefault();
-  e.stopPropagation();
-
-  const modal = btn.closest('.modal');
-  if (modal) modal.style.display = 'none';
-
-  syncScrollLock();
-});
-
 // Generate Matrix Rain Effect
 function generateMatrixRain() {
     const matrixRain = document.getElementById('matrixRain');
@@ -1850,20 +1837,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const mobileCloseButtons = document.querySelectorAll('.mobile-close-btn');
-    mobileCloseButtons.forEach(btn => {
-        const newBtn = btn.cloneNode(true);
-        btn.parentNode.replaceChild(newBtn, btn);
-        
-        newBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const modal = newBtn.closest('.modal');
-            if (modal) {
-                modal.style.display = 'none';
-                syncScrollLock();
-            }
-        });
+    document.addEventListener('click', function handleMobileClose(e) {
+    let btn = e.target.closest('.mobile-close-btn');
+    if (!btn) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const modal = btn.closest('.modal');
+    if (modal) {
+        modal.style.display = 'none';
+        syncScrollLock();
+    }
     });
 });
