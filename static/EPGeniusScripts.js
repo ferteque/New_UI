@@ -1849,4 +1849,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 500);
         });
     }
+
+    const mobileCloseButtons = document.querySelectorAll('.mobile-close-btn');
+    mobileCloseButtons.forEach(btn => {
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+        
+        newBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const modal = newBtn.closest('.modal');
+            if (modal) {
+                modal.style.display = 'none';
+                syncScrollLock();
+            }
+        });
+    });
 });
