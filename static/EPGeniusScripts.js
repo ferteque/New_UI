@@ -1837,17 +1837,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    document.addEventListener('click', function handleMobileClose(e) {
-    let btn = e.target.closest('.mobile-close-btn');
-    if (!btn) return;
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.mobile-close-btn');
+        if (!btn) return;
+        alert("Button was tapped!");
 
-    e.preventDefault();
-    e.stopPropagation();
+        e.preventDefault();
+        e.stopPropagation();
 
-    const modal = btn.closest('.modal');
-    if (modal) {
-        modal.style.display = 'none';
-        syncScrollLock();
-    }
+        let modal = btn;
+        while (modal && !modal.classList.contains('modal')) {
+            modal = modal.parentElement;
+        }
+
+        if (modal) {
+            modal.style.display = 'none';
+            if (typeof syncScrollLock === 'function') {
+                syncScrollLock();
+            }
+        }
+
+        // Optional: visual debug during testing (remove later)
+        btn.style.backgroundColor = 'lime';
+        setTimeout(() => { btn.style.backgroundColor = ''; }, 300);
+
+    }, { passive: false 
     });
 });
