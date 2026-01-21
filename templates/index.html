@@ -282,7 +282,8 @@ https://epgenius.org/
                 </div>
 
                 <div class="button-container">
-                    <button class="modal-button" id="uploadDriveBtn">Upload to Google Drive</button>
+                    <!-- <button class="modal-button" id="uploadDriveBtn">Upload to Google Drive</button> -->
+                    <button class="modal-button" id="uploadDriveBtn" onclick="initiateGoogleAuth(); return false;">Upload to Google Drive</button>
                     <button class="modal-button secondary" id="cancelDriveBtn">Go Back</button>
                 </div>
             </div>
@@ -776,9 +777,9 @@ https://epgenius.org/
                 <a href="https://discord.gg/pZwcncweFc" target="_blank" class="howto-button">Join Discord Server</a>
                 
                 <div class="step-images">
-                    <img src= {{ url_for('static', filename='playlistregister_1.png') }} alt="Register command" class="step-thumb" />
-                    <img src= {{ url_for('static', filename='playlistregister_2.png') }} alt="Registration confirmation" class="step-thumb"/>
-                    <img src= {{ url_for('static', filename='playlistinfo.png') }} alt="Playlist info command" class="step-thumb" />
+                    <img src= {{ url_for('static', filename='register_1.png') }} alt="Register command" class="step-thumb" />
+                    <img src= {{ url_for('static', filename='register_2.png') }} alt="Registration confirmation" class="step-thumb"/>
+                    <img src= {{ url_for('static', filename='info.png') }} alt="Info command" class="step-thumb" />
                 </div>
             </div>
 
