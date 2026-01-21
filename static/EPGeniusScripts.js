@@ -1837,38 +1837,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function attachCloseListeners() {
-        document.querySelectorAll('.mobile-close-btn').forEach(btn => {
-            const freshBtn = btn.cloneNode(true);
-            btn.parentNode.replaceChild(freshBtn, btn);
+    document.addEventListener('touchend', function(e) {
+        const btn = e.target.closest('.mobile-close-btn');
+        if (!btn) return;
 
-            freshBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                let modal = freshBtn;
-                while (modal && !modal.classList.contains('modal')) {
-                    modal = modal.parentElement;
-                }
-
-                if (modal) {
-                    modal.style.display = 'none';
-                }
-
-                if (typeof syncScrollLock === 'function') syncScrollLock();
-                else if (typeof unlockScroll === 'function') unlockScroll();
-
-                freshBtn.style.backgroundColor = 'lime';
-                setTimeout(() => { freshBtn.style.backgroundColor = ''; }, 400);
-
-            }, { passive: false });
+        const syntheticClick = new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            view: window
         });
-    }
 
-    attachCloseListeners();
+        btn.dispatchEvent(syntheticClick);
 
-    const observer = new MutationObserver(attachCloseListeners);
-    observer.observe(document.body, { childList: true, subtree: true });
+        let modal = btn;
+        while (modal && !modal.classList.contains('modal')) {
+            modal = modal.parentElement;
+        }
 
-    setInterval(attachCloseListeners, 700);
+        if (modal) {
+            modal.style.display = 'none';
+            syncScrollLock();
+        }
+
+        btn.style.backgroundColor = 'yellow';
+        setTimeout(() => { btn.style.backgroundColor = ''; }, 300);
+
+    }, { passive: true });
 });
