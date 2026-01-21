@@ -1793,5 +1793,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('editcreds') !== null) {
+        document.getElementById('editCredsModal').style.display = 'block';
+        lockScroll();
+    }
+    if (urlParams.get('howto') !== null) {
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelector('[data-tab="howto"]').classList.add('active');
+        document.getElementById('howto').classList.add('active');
+        document.getElementById('howto').scrollIntoView({ behavior: 'smooth' });
+    }
+
 });
 
