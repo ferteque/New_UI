@@ -1793,17 +1793,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('editcreds') !== null) {
+    const hash = window.location.hash.substring(1); // Remove the #
+    
+    if (hash === 'editcreds') {
         document.getElementById('editCredsModal').style.display = 'block';
         lockScroll();
-    }
-    if (urlParams.get('howto') !== null) {
-        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelector('[data-tab="howto"]').classList.add('active');
-        document.getElementById('howto').classList.add('active');
-        document.getElementById('howto').scrollIntoView({ behavior: 'smooth' });
+    } else if (hash === 'howto') {
+        // Trigger click on the howto tab
+        const howtoTab = document.querySelector('.nav-tab[data-tab="howto"]');
+        if (howtoTab) howtoTab.click();
     }
 
 });
