@@ -32,7 +32,6 @@ function initializeMobileMenu() {
     //             closeBtn.className = 'mobile-close-btn';
     //             closeBtn.innerHTML = '✕ Close';
     //             closeBtn.onclick = () => modal.style.display = 'none';
-    //             syncScrollLock(); 
     //             modal.querySelector('.modal-content').prepend(closeBtn);
     //         }
     //     });
@@ -42,7 +41,7 @@ function initializeMobileMenu() {
         mobileMenuBtn.classList.add('active');
         mobileMenu.classList.add('active');
         mobileMenuOverlay.classList.add('active');
-        syncScrollLock();
+        lockScroll();
 
         // Reset and trigger animations for links
         mobileMenuLinks.forEach((link, index) => {
@@ -78,7 +77,7 @@ function initializeMobileMenu() {
         mobileMenuBtn.classList.remove('active');
         mobileMenu.classList.remove('active');
         mobileMenuOverlay.classList.remove('active');
-        syncScrollLock();
+        unlockScroll();
     }
 
     // Toggle mobile menu
@@ -263,54 +262,23 @@ function populateProviderSelect() {
     ).join('');
 }
 
+// Scroll lock helpers
 let scrollPosition = 0;
-let scrollLocked = false;
 
 function lockScroll() {
-  if (scrollLocked) return;
-  scrollLocked = true;
-
-  scrollPosition = window.pageYOffset;
-  document.body.style.overflow = "hidden";
-  document.body.style.position = "fixed";
-  document.body.style.top = `-${scrollPosition}px`;
-  document.body.style.width = "100%";
+    scrollPosition = window.pageYOffset;
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollPosition}px`;
+    document.body.style.width = '100%';
 }
 
 function unlockScroll() {
-  if (!scrollLocked) return;
-  scrollLocked = false;
-
-  document.body.style.removeProperty("overflow");
-  document.body.style.removeProperty("position");
-  document.body.style.removeProperty("top");
-  document.body.style.removeProperty("width");
-  window.scrollTo(0, scrollPosition);
-}
-
-function isModalVisible(modal) {
-  if (!modal) return false;
-
-  if (!document.documentElement.contains(modal)) return false;
-
-  if (modal.style.display === "none") return false;
-
-  if (getComputedStyle(modal).display === "none") return false;
-
-  return true;
-}
-
-function syncScrollLock() {
-  const anyModalOpen = Array.from(document.querySelectorAll('.modal')).some(isModalVisible);
-
-  const mobileMenu = document.getElementById('mobileMenu');
-  const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-  const mobileMenuOpen =
-    (mobileMenu && mobileMenu.classList.contains('active')) ||
-    (mobileMenuOverlay && mobileMenuOverlay.classList.contains('active'));
-
-  if (anyModalOpen || mobileMenuOpen) lockScroll();
-  else unlockScroll();
+    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty('position');
+    document.body.style.removeProperty('top');
+    document.body.style.removeProperty('width');
+    window.scrollTo(0, scrollPosition);
 }
 
 // Generate Matrix Rain Effect
@@ -594,7 +562,7 @@ async function showDonateModal() {
     `;
     
     document.body.appendChild(modal);
-    syncScrollLock();
+    lockScroll();
     
     try {
         const response = await fetch('/playlists');
@@ -675,9 +643,10 @@ async function showDonateModal() {
 
 function closeDonateModal() {
   const modal = document.getElementById('donateLinksModal');
-  if (modal) modal.remove();
+  if (modal) {
+    modal.remove();
+  }
   document.getElementById('playlistModal').style.display = 'block';
-  syncScrollLock();
 }
 
 // Close modals when clicking outside
@@ -688,15 +657,15 @@ window.addEventListener('click', function(event) {
     
     if (event.target === disclaimerModal) {
         disclaimerModal.style.display = "none";
-        syncScrollLock();
+        unlockScroll();
     }
     if (event.target === playlistModal) {
         playlistModal.style.display = "none";
-        syncScrollLock();
+        unlockScroll();
     }
     if (event.target === shareCategoriesModal) {
         shareCategoriesModal.style.display = "none";
-        syncScrollLock();
+        unlockScroll();
     }
 });
 
@@ -792,7 +761,7 @@ function renderPlaylists(data) {
             window.currentEpgUrl = row.github_epg_url || null;
 
             const disclaimerModal = document.getElementById('disclaimerModal');
-            syncScrollLock()
+            lockScroll();
             disclaimerModal.style.display = "block";
         });
 
@@ -1530,11 +1499,11 @@ function editCredentials(formData) {
 }
 
 function openHowtoModal(imageSrc) {
-  const modal = document.getElementById("howtoImageModal");
-  const modalImg = document.getElementById("howtoModalImage");
-  modal.style.display = "block";
-  modalImg.src = imageSrc;
-  syncScrollLock();
+    const modal = document.getElementById('howtoImageModal');
+    const modalImg = document.getElementById('howtoModalImage');
+    modal.style.display = "block";
+    modalImg.src = imageSrc;
+    document.body.style.overflow = 'hidden';
 }
 
 const botons = document.querySelectorAll('.step-thumb');
@@ -1547,9 +1516,9 @@ botons.forEach(boto => {
 });
 
 function closeHowtoModal() {
-  const modal = document.getElementById("howtoImageModal");
-  modal.style.display = "none";
-  syncScrollLock();
+    const modal = document.getElementById('howtoImageModal');
+    modal.style.display = "none";
+    document.body.style.overflow = 'auto';
 }
 
 const modal = document.getElementById('howtoImageModal');
@@ -1603,7 +1572,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (sharePlaylistBtn) {
         sharePlaylistBtn.addEventListener('click', () => {
             document.getElementById('shareModal').style.display = 'block';
-            syncScrollLock();
             setTimeout(initShareDropdowns, 300);
         });
     }
@@ -1612,7 +1580,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeShareModal) {
         closeShareModal.addEventListener('click', () => {
             document.getElementById('shareModal').style.display = 'none';
-            syncScrollLock();
         });
     }
 
@@ -1620,7 +1587,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cancelShareBtn) {
         cancelShareBtn.addEventListener('click', () => {
             document.getElementById('shareModal').style.display = 'none';
-            syncScrollLock();
         });
     }
 
@@ -1628,7 +1594,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeShareCategoriesModal) {
         closeShareCategoriesModal.addEventListener('click', () => {
             document.getElementById('shareCategoriesModal').style.display = 'none';
-            syncScrollLock();
         });
     }
 
@@ -1667,7 +1632,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (updatePlaylistBtn) {
         updatePlaylistBtn.addEventListener('click', () => {
             document.getElementById('updateModal').style.display = 'block';
-            syncScrollLock();
             setTimeout(initShareDropdowns, 300);
         });
     }
@@ -1676,7 +1640,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeUpdateModal) {
         closeUpdateModal.addEventListener('click', () => {
             document.getElementById('updateModal').style.display = 'none';
-            syncScrollLock();
         });
     }
 
@@ -1684,7 +1647,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cancelUpdateBtn) {
         cancelUpdateBtn.addEventListener('click', () => {
             document.getElementById('updateModal').style.display = 'none';
-            syncScrollLock();
         });
     }
 
@@ -1702,7 +1664,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (editCredentialsBtn) {
         editCredentialsBtn.addEventListener('click', () => {
             document.getElementById('editCredsModal').style.display = 'block';
-            syncScrollLock();
         });
     }
 
@@ -1710,7 +1671,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeEditCreds) {
         closeEditCreds.addEventListener('click', () => {
             document.getElementById('editCredsModal').style.display = 'none';
-            syncScrollLock();
         });
     }
 
@@ -1718,7 +1678,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cancelEditCreds) {
         cancelEditCreds.addEventListener('click', () => {
             document.getElementById('editCredsModal').style.display = 'none';
-            syncScrollLock();
         });
     }
 
@@ -1736,7 +1695,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeShareSuccessBtn) {
         closeShareSuccessBtn.addEventListener('click', () => {
             document.getElementById("shareCategoriesModal").style.display = 'none';
-            syncScrollLock();
         });
     }
 
@@ -1744,7 +1702,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeSuccessBtn) {
         closeSuccessBtn.addEventListener('click', () => {
             document.getElementById("editCredentialsModal").style.display = 'none';
-            syncScrollLock();
         });
     }
 
@@ -1756,7 +1713,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.stopPropagation();
                 e.preventDefault();
                 driveSuccessModal.style.display = 'none';
-                syncScrollLock();
+                unlockScroll();
             });
         }
     }
@@ -1795,7 +1752,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeDriveSuccessBtn) {
         closeDriveSuccessBtn.addEventListener('click', () => {
             document.getElementById('driveSuccessModal').style.display = 'none';
-            syncScrollLock();
         });
     }
 
@@ -1837,30 +1793,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    document.addEventListener('touchend', function(e) {
-        const btn = e.target.closest('.mobile-close-btn');
-        if (!btn) return;
-
-        const syntheticClick = new MouseEvent('click', {
-            bubbles: true,
-            cancelable: true,
-            view: window
-        });
-
-        btn.dispatchEvent(syntheticClick);
-
-        let modal = btn;
-        while (modal && !modal.classList.contains('modal')) {
-            modal = modal.parentElement;
-        }
-
-        if (modal) {
-            modal.style.display = 'none';
-            syncScrollLock();
-        }
-
-        btn.style.backgroundColor = 'yellow';
-        setTimeout(() => { btn.style.backgroundColor = ''; }, 300);
-
-    }, { passive: true });
 });
+

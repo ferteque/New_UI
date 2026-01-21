@@ -2898,10 +2898,6 @@ code {
 
 .mobile-close-btn {
     display: none;
-    pointer-events: auto !important;
-    -webkit-tap-highlight-color: rgba(0, 255, 30, 0.5);
-    touch-action: manipulation;
-    cursor: pointer !important;
 }
 
 @media (max-width: 768px) {
