@@ -16,6 +16,20 @@ https://epgenius.org/
 -->
 </head>
 <body id="top">
+    <script>
+    (function() {
+        var ua = navigator.userAgent;
+        var iOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+        var isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+        var isMacOS = /Macintosh/.test(ua);
+        
+        if (iOS && isSafari) {
+            alert('This site does not function properly on iOS Safari.\n\nPlease use Chrome, Firefox, or Brave on your iOS device instead.');
+        } else if (isMacOS && isSafari) {
+            alert('Safari Popup Blocker Detected\n\nYou must allow popups for this site to function properly.\n\nGo to Safari > Settings for This Website > Allow Pop-ups');
+        }
+    })();
+    </script>
     <!-- Enhanced Background Elements -->
     <div class="cyber-bg">
         <div class="cyber-gradient"></div>
