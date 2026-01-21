@@ -1837,30 +1837,43 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    document.addEventListener('click', function(e) {
-        const btn = e.target.closest('.mobile-close-btn');
-        if (!btn) return;
-        alert("Button was tapped!");
+    function makeCloseButtonsWork() {
+        document.querySelectorAll('.modal').forEach(modal => {
+            const btn = modal.querySelector('.mobile-close-btn');
+            if (!btn) return;
 
-        e.preventDefault();
-        e.stopPropagation();
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
 
-        let modal = btn;
-        while (modal && !modal.classList.contains('modal')) {
-            modal = modal.parentElement;
-        }
+            newBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
 
-        if (modal) {
-            modal.style.display = 'none';
-            if (typeof syncScrollLock === 'function') {
-                syncScrollLock();
-            }
-        }
+                modal.style.display = 'none';
 
-        // Optional: visual debug during testing (remove later)
-        btn.style.backgroundColor = 'lime';
-        setTimeout(() => { btn.style.backgroundColor = ''; }, 300);
+                if (typeof syncScrollLock === 'function') {
+                    syncScrollLock();
+                } else if (typeof unlockScroll === 'function') {
+                    unlockScroll();
+                }
 
-    }, { passive: false 
+                //Debug
+                newBtn.style.backgroundColor = 'lime';
+                setTimeout(() => newBtn.style.backgroundColor = '', 400);
+
+            }, { passive: false });
+        });
+    }
+
+    makeCloseButtonsWork();
+
+    const modalObserver = new MutationObserver(makeCloseButtonsWork);
+    modalObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style', 'class']
     });
+
+    setInterval(makeCloseButtonsWork, 800);
 });
