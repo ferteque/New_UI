@@ -20,7 +20,7 @@ https://epgenius.org/
     (function() {
         var ua = navigator.userAgent;
         var iOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
-        var isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+        var isSafari = /Safari/.test(ua);
         var isMacOS = /Macintosh/.test(ua);
         
         if (iOS && isSafari) {
