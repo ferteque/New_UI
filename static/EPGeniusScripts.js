@@ -1837,43 +1837,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function makeCloseButtonsWork() {
-        document.querySelectorAll('.modal').forEach(modal => {
-            const btn = modal.querySelector('.mobile-close-btn');
-            if (!btn) return;
+    function attachCloseListeners() {
+        document.querySelectorAll('.mobile-close-btn').forEach(btn => {
+            const freshBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(freshBtn, btn);
 
-            const newBtn = btn.cloneNode(true);
-            btn.parentNode.replaceChild(newBtn, btn);
-
-            newBtn.addEventListener('click', function(e) {
+            freshBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
 
-                modal.style.display = 'none';
-
-                if (typeof syncScrollLock === 'function') {
-                    syncScrollLock();
-                } else if (typeof unlockScroll === 'function') {
-                    unlockScroll();
+                let modal = freshBtn;
+                while (modal && !modal.classList.contains('modal')) {
+                    modal = modal.parentElement;
                 }
 
-                //Debug
-                newBtn.style.backgroundColor = 'lime';
-                setTimeout(() => newBtn.style.backgroundColor = '', 400);
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+
+                if (typeof syncScrollLock === 'function') syncScrollLock();
+                else if (typeof unlockScroll === 'function') unlockScroll();
+
+                freshBtn.style.backgroundColor = 'lime';
+                setTimeout(() => { freshBtn.style.backgroundColor = ''; }, 400);
 
             }, { passive: false });
         });
     }
 
-    makeCloseButtonsWork();
+    attachCloseListeners();
 
-    const modalObserver = new MutationObserver(makeCloseButtonsWork);
-    modalObserver.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['style', 'class']
-    });
+    const observer = new MutationObserver(attachCloseListeners);
+    observer.observe(document.body, { childList: true, subtree: true });
 
-    setInterval(makeCloseButtonsWork, 800);
+    setInterval(attachCloseListeners, 700);
 });
