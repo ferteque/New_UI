@@ -1202,6 +1202,11 @@ function hideDriveLoading() {
 
 // Step 1: Called from HTML onclick - synchronous
 function initiateGoogleAuth() {
+    if (typeof google === 'undefined' || !google.accounts) {
+        alert('Google Sign-In library not loaded yet. Please wait and try again.');
+        return;
+    }
+    
     const tokenClient = google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
         scope: SCOPES,
@@ -1215,6 +1220,8 @@ function initiateGoogleAuth() {
     });
     tokenClient.requestAccessToken({ prompt: '' });
 }
+
+window.initiateGoogleAuth = initiateGoogleAuth;
 
 // Step 2: Handle upload after OAuth succeeds
 async function handleUploadWithToken(accessToken) {
