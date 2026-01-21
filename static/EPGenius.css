@@ -46,25 +46,11 @@ https://epgenius.org/
     --primary-green: #047c00;
 }
 
-/* body {
-    font-family: 'JetBrains Mono', 'Fira Code', monospace;
-    background: var(--darker-bg);
-    color: var(--text-primary);
-    line-height: 1.6;
-    overflow-x: hidden;
-} */
-
-/* Enhanced Cyberpunk Background */
-/* .cyber-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--darker-bg);
-    overflow: hidden;
-    z-index: -5;
-} */
+@media (min-width: 769px) {
+    html {
+        scroll-padding-top: 78px;
+    }
+}
 
 body {
     font-family: 'JetBrains Mono', 'Fira Code', monospace;
