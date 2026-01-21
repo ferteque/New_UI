@@ -32,6 +32,7 @@ function initializeMobileMenu() {
     //             closeBtn.className = 'mobile-close-btn';
     //             closeBtn.innerHTML = '✕ Close';
     //             closeBtn.onclick = () => modal.style.display = 'none';
+    //             syncScrollLock(); 
     //             modal.querySelector('.modal-content').prepend(closeBtn);
     //         }
     //     });
@@ -41,7 +42,7 @@ function initializeMobileMenu() {
         mobileMenuBtn.classList.add('active');
         mobileMenu.classList.add('active');
         mobileMenuOverlay.classList.add('active');
-        lockScroll();
+        syncScrollLock();
 
         // Reset and trigger animations for links
         mobileMenuLinks.forEach((link, index) => {
@@ -77,7 +78,7 @@ function initializeMobileMenu() {
         mobileMenuBtn.classList.remove('active');
         mobileMenu.classList.remove('active');
         mobileMenuOverlay.classList.remove('active');
-        unlockScroll();
+        syncScrollLock();
     }
 
     // Toggle mobile menu
@@ -262,24 +263,68 @@ function populateProviderSelect() {
     ).join('');
 }
 
-// Scroll lock helpers
 let scrollPosition = 0;
+let scrollLocked = false;
 
 function lockScroll() {
-    scrollPosition = window.pageYOffset;
-    document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${scrollPosition}px`;
-    document.body.style.width = '100%';
+  if (scrollLocked) return;
+  scrollLocked = true;
+
+  scrollPosition = window.pageYOffset;
+  document.body.style.overflow = "hidden";
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${scrollPosition}px`;
+  document.body.style.width = "100%";
 }
 
 function unlockScroll() {
-    document.body.style.removeProperty('overflow');
-    document.body.style.removeProperty('position');
-    document.body.style.removeProperty('top');
-    document.body.style.removeProperty('width');
-    window.scrollTo(0, scrollPosition);
+  if (!scrollLocked) return;
+  scrollLocked = false;
+
+  document.body.style.removeProperty("overflow");
+  document.body.style.removeProperty("position");
+  document.body.style.removeProperty("top");
+  document.body.style.removeProperty("width");
+  window.scrollTo(0, scrollPosition);
 }
+
+function isModalVisible(modal) {
+  if (!modal) return false;
+
+  if (!document.documentElement.contains(modal)) return false;
+
+  if (modal.style.display === "none") return false;
+
+  if (getComputedStyle(modal).display === "none") return false;
+
+  return true;
+}
+
+function syncScrollLock() {
+  const anyModalOpen = Array.from(document.querySelectorAll('.modal')).some(isModalVisible);
+
+  const mobileMenu = document.getElementById('mobileMenu');
+  const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+  const mobileMenuOpen =
+    (mobileMenu && mobileMenu.classList.contains('active')) ||
+    (mobileMenuOverlay && mobileMenuOverlay.classList.contains('active'));
+
+  if (anyModalOpen || mobileMenuOpen) lockScroll();
+  else unlockScroll();
+}
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.mobile-close-btn');
+  if (!btn) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  const modal = btn.closest('.modal');
+  if (modal) modal.style.display = 'none';
+
+  syncScrollLock();
+});
 
 // Generate Matrix Rain Effect
 function generateMatrixRain() {
@@ -562,7 +607,7 @@ async function showDonateModal() {
     `;
     
     document.body.appendChild(modal);
-    lockScroll();
+    syncScrollLock();
     
     try {
         const response = await fetch('/playlists');
@@ -643,10 +688,9 @@ async function showDonateModal() {
 
 function closeDonateModal() {
   const modal = document.getElementById('donateLinksModal');
-  if (modal) {
-    modal.remove();
-  }
+  if (modal) modal.remove();
   document.getElementById('playlistModal').style.display = 'block';
+  syncScrollLock();
 }
 
 // Close modals when clicking outside
@@ -657,15 +701,15 @@ window.addEventListener('click', function(event) {
     
     if (event.target === disclaimerModal) {
         disclaimerModal.style.display = "none";
-        unlockScroll();
+        syncScrollLock();
     }
     if (event.target === playlistModal) {
         playlistModal.style.display = "none";
-        unlockScroll();
+        syncScrollLock();
     }
     if (event.target === shareCategoriesModal) {
         shareCategoriesModal.style.display = "none";
-        unlockScroll();
+        syncScrollLock();
     }
 });
 
@@ -761,7 +805,7 @@ function renderPlaylists(data) {
             window.currentEpgUrl = row.github_epg_url || null;
 
             const disclaimerModal = document.getElementById('disclaimerModal');
-            lockScroll();
+            syncScrollLock()
             disclaimerModal.style.display = "block";
         });
 
@@ -1499,11 +1543,11 @@ function editCredentials(formData) {
 }
 
 function openHowtoModal(imageSrc) {
-    const modal = document.getElementById('howtoImageModal');
-    const modalImg = document.getElementById('howtoModalImage');
-    modal.style.display = "block";
-    modalImg.src = imageSrc;
-    document.body.style.overflow = 'hidden';
+  const modal = document.getElementById("howtoImageModal");
+  const modalImg = document.getElementById("howtoModalImage");
+  modal.style.display = "block";
+  modalImg.src = imageSrc;
+  syncScrollLock();
 }
 
 const botons = document.querySelectorAll('.step-thumb');
@@ -1516,9 +1560,9 @@ botons.forEach(boto => {
 });
 
 function closeHowtoModal() {
-    const modal = document.getElementById('howtoImageModal');
-    modal.style.display = "none";
-    document.body.style.overflow = 'auto';
+  const modal = document.getElementById("howtoImageModal");
+  modal.style.display = "none";
+  syncScrollLock();
 }
 
 const modal = document.getElementById('howtoImageModal');
@@ -1713,7 +1757,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.stopPropagation();
                 e.preventDefault();
                 driveSuccessModal.style.display = 'none';
-                unlockScroll();
+                syncScrollLock();
             });
         }
     }
@@ -1792,6 +1836,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 500);
         });
     }
-
 });
-
