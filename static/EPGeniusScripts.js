@@ -1792,17 +1792,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 500);
         });
     }
+});
 
-    const hash = window.location.hash.substring(1); // Remove the #
+window.addEventListener('load', () => {
+    const hash = window.location.hash;
     
-    if (hash === 'editcreds') {
+    if (hash === '#editcreds') {
         document.getElementById('editCredsModal').style.display = 'block';
         lockScroll();
-    } else if (hash === 'howto') {
-        // Trigger click on the howto tab
-        const howtoTab = document.querySelector('.nav-tab[data-tab="howto"]');
+    }
+    
+    if (hash === '#howto') {
+        const howtoTab = document.querySelector('[data-tab="howto"]');
         if (howtoTab) howtoTab.click();
     }
-
 });
 
