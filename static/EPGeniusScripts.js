@@ -1395,98 +1395,98 @@ async function handleUploadWithToken(accessToken) {
 //     });
 // }
 
-function showDriveLoading() {
-    document.getElementById('uploadDriveBtn').disabled = true;
-    document.getElementById('uploadDriveBtn').textContent = 'Processing...';
-}
+// function showDriveLoading() {
+//     document.getElementById('uploadDriveBtn').disabled = true;
+//     document.getElementById('uploadDriveBtn').textContent = 'Processing...';
+// }
 
-function hideDriveLoading() {
-    document.getElementById('uploadDriveBtn').disabled = false;
-    document.getElementById('uploadDriveBtn').textContent = 'Upload to Google Drive';
-}
+// function hideDriveLoading() {
+//     document.getElementById('uploadDriveBtn').disabled = false;
+//     document.getElementById('uploadDriveBtn').textContent = 'Upload to Google Drive';
+// }
 
-// Click Upload to Google Drive
-document.getElementById('uploadDriveBtn').addEventListener('click', async function () {
-    const m3uInput = document.getElementById('m3u').value.trim();
-    const hostInput = document.getElementById('dns').value.trim();
-    const userInput = document.getElementById('username').value.trim();
-    const passInput = document.getElementById('password').value.trim();
+// // Click Upload to Google Drive
+// document.getElementById('uploadDriveBtn').addEventListener('click', async function () {
+//     const m3uInput = document.getElementById('m3u').value.trim();
+//     const hostInput = document.getElementById('dns').value.trim();
+//     const userInput = document.getElementById('username').value.trim();
+//     const passInput = document.getElementById('password').value.trim();
 
-    let dns, username, password;
+//     let dns, username, password;
 
-    if (m3uInput) {
-        try {
-            const url = new URL(m3uInput);
-            const params = new URLSearchParams(url.search);
-            username = params.get('username');
-            password = params.get('password');
-            dns = url.host;
+//     if (m3uInput) {
+//         try {
+//             const url = new URL(m3uInput);
+//             const params = new URLSearchParams(url.search);
+//             username = params.get('username');
+//             password = params.get('password');
+//             dns = url.host;
 
-            if (!username || !password) {
-                alert('The entered URL is not correct. Follow the placeholder example or use Xtream credentials instead.');
-                return;
-            }
-        } catch (e) {
-            alert('Invalid M3U URL');
-            return;
-        }
-    } else if (hostInput || userInput || passInput) {
-        if (!hostInput || !userInput || !passInput) {
-            alert('Please fill in DNS, username, and password, or clear them and use M3U.');
-            return;
-        }
-        dns = hostInput.replace(/^https?:\/\/|\/$/g, '');
-        username = userInput;
-        password = passInput;
-    } else {
-        alert('Please provide either an M3U URL or Xtream credentials.');
-        return;
-    }
+//             if (!username || !password) {
+//                 alert('The entered URL is not correct. Follow the placeholder example or use Xtream credentials instead.');
+//                 return;
+//             }
+//         } catch (e) {
+//             alert('Invalid M3U URL');
+//             return;
+//         }
+//     } else if (hostInput || userInput || passInput) {
+//         if (!hostInput || !userInput || !passInput) {
+//             alert('Please fill in DNS, username, and password, or clear them and use M3U.');
+//             return;
+//         }
+//         dns = hostInput.replace(/^https?:\/\/|\/$/g, '');
+//         username = userInput;
+//         password = passInput;
+//     } else {
+//         alert('Please provide either an M3U URL or Xtream credentials.');
+//         return;
+//     }
 
-    const selectedID = window.currentPlaylistId;
-    if (!selectedID) {
-        alert('No playlist selected.');
-        return;
-    }
+//     const selectedID = window.currentPlaylistId;
+//     if (!selectedID) {
+//         alert('No playlist selected.');
+//         return;
+//     }
 
-    showDriveLoading();
+//     showDriveLoading();
 
-    try {
-        const response = await fetch('/process', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: selectedID, dns, username, password })
-        });
+//     try {
+//         const response = await fetch('/process', {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify({ id: selectedID, dns, username, password })
+//         });
 
-        if (!response.ok) throw new Error('Network response was not ok');
+//         if (!response.ok) throw new Error('Network response was not ok');
 
-        const disposition = response.headers.get('Content-Disposition');
-        let filename = `modified_playlist_${selectedID}.m3u`;
-        if (disposition && disposition.indexOf('filename=') !== -1) {
-            const match = disposition.match(/filename="?([^"]+)"?/);
-            if (match && match[1]) filename = match[1];
-        }
+//         const disposition = response.headers.get('Content-Disposition');
+//         let filename = `modified_playlist_${selectedID}.m3u`;
+//         if (disposition && disposition.indexOf('filename=') !== -1) {
+//             const match = disposition.match(/filename="?([^"]+)"?/);
+//             if (match && match[1]) filename = match[1];
+//         }
 
-        const blob = await response.blob();
-        const result = await uploadToGoogleDrive(blob, filename, selectedID);
+//         const blob = await response.blob();
+//         const result = await uploadToGoogleDrive(blob, filename, selectedID);
 
-        document.getElementById('googleDriveModal').style.display = 'none';
+//         document.getElementById('googleDriveModal').style.display = 'none';
 
-        const epgUrl = window.currentEpgUrl || 'No EPG available';
+//         const epgUrl = window.currentEpgUrl || 'No EPG available';
 
-        const playlistUrl = `https://drive.usercontent.google.com/download?id=${result.fileId}&confirm=t`;
+//         const playlistUrl = `https://drive.usercontent.google.com/download?id=${result.fileId}&confirm=t`;
 
-        document.getElementById('drivePlaylistLink').value = playlistUrl;
-        document.getElementById('driveEpgLink').value = epgUrl;
-        document.getElementById('driveSuccessModal').style.display = 'block';
+//         document.getElementById('drivePlaylistLink').value = playlistUrl;
+//         document.getElementById('driveEpgLink').value = epgUrl;
+//         document.getElementById('driveSuccessModal').style.display = 'block';
 
-    } catch (err) {
-        console.error(err);
-        alert('Failed to process or upload to Google Drive.');
-    } finally {
-        hideDriveLoading();
-    }
-});
+//     } catch (err) {
+//         console.error(err);
+//         alert('Failed to process or upload to Google Drive.');
+//     } finally {
+//         hideDriveLoading();
+//     }
+// });
 
 function submitPlaylist(formData) {
     console.log('submitPlaylist called');
