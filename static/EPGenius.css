@@ -46,7 +46,7 @@ https://epgenius.org/
     --primary-green: #047c00;
 }
 
-@media (min-width: 769px) {
+@media (min-width: 1000px) {
     html {
         scroll-padding-top: 108px;
     }
