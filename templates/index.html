@@ -29,6 +29,41 @@ https://epgenius.org/
             alert('Safari Popup Blocker Detected\n\nYou must allow popups for this site to function properly.\n\nGo to Safari > Settings for epgenius.org > Allow Pop-ups');
         }
     })();
+
+    (function() {
+        const hash = window.location.hash;
+        
+        if (hash === '#editcreds') {
+            // Wait for DOM to load
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    const modal = document.getElementById('editCredsModal');
+                    if (modal) {
+                        modal.style.display = 'block';
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
+            } else {
+                const modal = document.getElementById('editCredsModal');
+                if (modal) {
+                    modal.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+        }
+        
+        if (hash === '#howto') {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    const howtoTab = document.querySelector('[data-tab="howto"]');
+                    if (howtoTab) howtoTab.click();
+                });
+            } else {
+                const howtoTab = document.querySelector('[data-tab="howto"]');
+                if (howtoTab) howtoTab.click();
+            }
+        }
+    })();
     </script>
     <!-- Enhanced Background Elements -->
     <div class="cyber-bg">
