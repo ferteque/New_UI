@@ -486,7 +486,7 @@ const animateStats = () => {
 const statsObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            setTimeout(animateStats, 1000); // ⏱ delay (ms)
+            animateStats();
             statsObserver.unobserve(entry.target);
         }
     });
@@ -1793,6 +1793,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
 
 
 
