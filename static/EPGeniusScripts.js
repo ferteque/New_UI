@@ -466,19 +466,27 @@ document.querySelectorAll('.btn-primary, .btn-secondary').forEach(button => {
 // Stats counter animation
 const animateStats = () => {
     const stats = document.querySelectorAll('.stat-number');
+
     stats.forEach(stat => {
-        const target = parseInt(stat.textContent.replace(/[^\d]/g, ''));
-        let count = 0;
-        const increment = target / 100;
-        const timer = setInterval(() => {
-            count += increment;
-            if (count >= target) {
-                clearInterval(timer);
-                count = target;
+        const originalText = stat.textContent;
+        const target = parseFloat(originalText.replace(/[^\d.]/g, ''));
+        const suffix = originalText.replace(/[\d.]/g, '');
+
+        let start = null;
+        const duration = 2000; // 2 seconds
+
+        const step = (timestamp) => {
+            if (!start) start = timestamp;
+            const progress = Math.min((timestamp - start) / duration, 1); // 0 → 1
+            const current = Math.floor(progress * target);
+            stat.textContent = current.toLocaleString() + suffix; // commas for large numbers
+
+            if (progress < 1) {
+                requestAnimationFrame(step);
             }
-            const suffix = stat.textContent.replace(/[\d]/g, '');
-            stat.textContent = Math.floor(count) + suffix;
-        }, 20);
+        };
+
+        requestAnimationFrame(step);
     });
 };
 
@@ -1793,6 +1801,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
 
 
 
