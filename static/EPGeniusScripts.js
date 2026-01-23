@@ -567,7 +567,7 @@ async function showDonateModal() {
         modal.innerHTML = `
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>Donation Links</h3>
+                    <h3>DONATION LINKS</h3>
                 </div>
                 <div class="modal-body">
                     <h3 style="color: var(--primary-cyan); text-align: center; margin: 0 0 1rem 0; font-size: 1.3rem;">Support EPGenius</h3>
@@ -605,7 +605,7 @@ async function showDonateModal() {
         modal.innerHTML = `
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>Donation Links</h3>
+                    <h3>DONATION LINKS</h3>
                 </div>
                 <div class="modal-body">
                     <p style="text-align: center; color: var(--primary-orange);">Failed to load donation links. Please try again later.</p>
@@ -1777,6 +1777,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
 
 
 
