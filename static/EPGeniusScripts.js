@@ -224,11 +224,48 @@ function initCountriesSelect(selectId, hiddenInputId) {
             'Countries';
     }
     
-    document.addEventListener('click', function() {
-        items.classList.add('select-hide');
-        selected.classList.remove('multi-arrow-active');
+    document.addEventListener('click', function(e) {
+        if (!countriesSelect.contains(e.target)) {
+            items.classList.add('select-hide');
+            selected.classList.remove('multi-arrow-active');
+        }
     });
 }
+// function initCountriesSelect(selectId, hiddenInputId) {
+//     const countriesSelect = document.getElementById(selectId);
+//     if (!countriesSelect) return;
+    
+//     const selected = countriesSelect.querySelector('.multi-selected');
+//     const items = countriesSelect.querySelector('.multi-items');
+//     const hiddenInput = document.getElementById(hiddenInputId);
+    
+//     selected.addEventListener('click', function(e) {
+//         e.stopPropagation();
+//         items.classList.toggle('select-hide');
+//         selected.classList.toggle('multi-arrow-active');
+//     });
+    
+//     items.querySelectorAll('div').forEach(option => {
+//         option.addEventListener('click', function() {
+//             this.classList.toggle('selected');
+//             updateCountriesSelected();
+//         });
+//     });
+    
+//     function updateCountriesSelected() {
+//         const selectedCountries = Array.from(items.querySelectorAll('.selected'))
+//             .map(el => el.dataset.value);
+//         hiddenInput.value = selectedCountries.join(',');
+//         selected.textContent = selectedCountries.length ? 
+//             `${selectedCountries.length} countries selected` : 
+//             'Countries';
+//     }
+    
+//     document.addEventListener('click', function() {
+//         items.classList.add('select-hide');
+//         selected.classList.remove('multi-arrow-active');
+//     });
+// }
 
 // Update populateCountriesSelect to work with both
 function populateCountriesSelect(selectId) {
