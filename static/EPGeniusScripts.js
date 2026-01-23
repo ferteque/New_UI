@@ -462,7 +462,7 @@ const animateStats = () => {
         const target = parseInt(stat.textContent.replace(/[^\d]/g, ''));
         let count = 0;
         
-        const duration = 2000;
+        const duration = 1000;
         const steps = Math.min(target, 100);
         const increment = target / steps;
         const interval = duration / steps;
@@ -478,24 +478,6 @@ const animateStats = () => {
         }, interval);
     });
 };
-
-// const animateStats = () => {
-//     const stats = document.querySelectorAll('.stat-number');
-//     stats.forEach(stat => {
-//         const target = parseInt(stat.textContent.replace(/[^\d]/g, ''));
-//         let count = 0;
-//         const increment = target / 200;
-//         const timer = setInterval(() => {
-//             count += increment;
-//             if (count >= target) {
-//                 clearInterval(timer);
-//                 count = target;
-//             }
-//             const suffix = stat.textContent.replace(/[\d]/g, '');
-//             stat.textContent = Math.floor(count) + suffix;
-//         }, 30);
-//     });
-// };
 
 // Glitch effect on hover for feature cards
 document.querySelectorAll('.feature-card').forEach(card => {
