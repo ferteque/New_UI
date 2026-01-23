@@ -461,7 +461,7 @@ const animateStats = () => {
     stats.forEach(stat => {
         const target = parseInt(stat.textContent.replace(/[^\d]/g, ''));
         let count = 0;
-        const increment = target / 100;
+        const increment = target / 200;
         const timer = setInterval(() => {
             count += increment;
             if (count >= target) {
@@ -470,24 +470,9 @@ const animateStats = () => {
             }
             const suffix = stat.textContent.replace(/[\d]/g, '');
             stat.textContent = Math.floor(count) + suffix;
-        }, 20);
+        }, 30);
     });
 };
-
-// Trigger stats animation when section is visible
-// const statsObserver = new IntersectionObserver((entries) => {
-//     entries.forEach(entry => {
-//         if (entry.isIntersecting) {
-//             animateStats();
-//             statsObserver.unobserve(entry.target);
-//         }
-//     });
-// }, { threshold: 0.5 });
-
-// const statsSection = document.querySelector('.stats');
-// if (statsSection) {
-//     statsObserver.observe(statsSection);
-// }
 
 // Glitch effect on hover for feature cards
 document.querySelectorAll('.feature-card').forEach(card => {
