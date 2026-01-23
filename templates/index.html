@@ -39,7 +39,6 @@ https://epgenius.org/
         const hash = window.location.hash;
 
         if (hash === '#editcreds') {
-            // Wait for DOM to load
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', function() {
                     const modal = document.getElementById('editCredsModal');
@@ -65,6 +64,18 @@ https://epgenius.org/
                 });
             } else {
                 const howtoTab = document.querySelector('[data-tab="howto"]');
+                if (howtoTab) howtoTab.click();
+            }
+        }
+
+        if (hash === '#creators') {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    const howtoTab = document.querySelector('[data-tab="creators"]');
+                    if (howtoTab) howtoTab.click();
+                });
+            } else {
+                const howtoTab = document.querySelector('[data-tab="creators"]');
                 if (howtoTab) howtoTab.click();
             }
         }
