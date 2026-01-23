@@ -13,47 +13,6 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script>
-    (function () {
-        function showViewportDebug() {
-            const vv = window.visualViewport || {};
-            const data = {
-            innerWidth: window.innerWidth,
-            visualWidth: vv.width || 'N/A',
-            scrollWidth: document.documentElement.scrollWidth,
-            bodyScrollWidth: document.body.scrollWidth,
-            devicePixelRatio: window.devicePixelRatio,
-            };
-
-            const scaling =
-            vv.width && Math.round(vv.width) < Math.round(window.innerWidth)
-                ? 'YES (Chrome is layout-scaling)'
-                : 'NO';
-
-            const offenders = Array.from(document.querySelectorAll('*'))
-            .filter(el => el.scrollWidth > window.innerWidth)
-            .slice(0, 5)
-            .map(el => `${el.tagName}.${el.className} → ${el.scrollWidth}px`)
-            .join('\n') || 'None';
-
-            alert(
-            `📐 Chrome Viewport Debug\n\n` +
-            `innerWidth: ${data.innerWidth}\n` +
-            `visualViewport.width: ${data.visualWidth}\n` +
-            `document.scrollWidth: ${data.scrollWidth}\n` +
-            `body.scrollWidth: ${data.bodyScrollWidth}\n` +
-            `devicePixelRatio: ${data.devicePixelRatio}\n\n` +
-            `Layout scaling: ${scaling}\n\n` +
-            `Overflowing elements:\n${offenders}`
-            );
-        }
-
-        // Run after first paint
-        window.addEventListener('load', () => {
-            setTimeout(showViewportDebug, 500);
-        });
-        })();
-    </script>
 
 <!--
 
@@ -125,10 +84,10 @@ https://epgenius.org/
     })();
     </script>
     <!-- Enhanced Background Elements -->
-    <!-- <div class="cyber-bg">
+    <div class="cyber-bg">
         <div class="cyber-gradient"></div>
         <div class="matrix-rain" id="matrixRain"></div>
-    </div> -->
+    </div>
 
     <div class="particles" id="particlesContainer"></div>
 
