@@ -6,6 +6,7 @@ https://epgenius.org/
 */
 
 @charset "utf-8";
+
 /* CSS Document */
 
  * {
@@ -483,7 +484,7 @@ nav {
 
 /* Mobile Menu Button */
 .mobile-menu-button {
-    display: none;
+    display: block;
     background: none;
     border: none;
     color: var(--primary-cyan);
@@ -2900,10 +2901,16 @@ code {
 @media (max-width: 768px) {
     /* Keep your working touch-action */
     html, body {
-        height: -webkit-fill-available;
         background: #0f0805 !important;
         touch-action: pan-y !important;
         -webkit-overflow-scrolling: touch;
+    }
+    
+    @supports (-webkit-touch-callout: none) {
+        /* iOS only */
+        html, body {
+            height: -webkit-fill-available;
+        }
     }
 
     .cyber-bg, .particles, .grid-overlay, .scanlines, .noise-overlay {
@@ -3084,7 +3091,6 @@ code {
         filter: none !important;
     }
 
-    /* OLD MOBILE 768 */
     .mobile-menu-button {
         display: block !important;
     }
@@ -3143,6 +3149,7 @@ code {
     .nav-bottom .cyber-button { 
         display: block !important; 
     }
+
 
     /* .footer-links {
         flex-direction: column;
