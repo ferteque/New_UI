@@ -475,19 +475,19 @@ const animateStats = () => {
 };
 
 // Trigger stats animation when section is visible
-const statsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            animateStats();
-            statsObserver.unobserve(entry.target);
-        }
-    });
-}, { threshold: 0.5 });
+// const statsObserver = new IntersectionObserver((entries) => {
+//     entries.forEach(entry => {
+//         if (entry.isIntersecting) {
+//             animateStats();
+//             statsObserver.unobserve(entry.target);
+//         }
+//     });
+// }, { threshold: 0.5 });
 
-const statsSection = document.querySelector('.stats');
-if (statsSection) {
-    statsObserver.observe(statsSection);
-}
+// const statsSection = document.querySelector('.stats');
+// if (statsSection) {
+//     statsObserver.observe(statsSection);
+// }
 
 // Glitch effect on hover for feature cards
 document.querySelectorAll('.feature-card').forEach(card => {
@@ -702,6 +702,8 @@ function loadPlaylists() {
             if (playlistsStat) {
                 playlistsStat.textContent = totalPlaylists;
             }
+
+            animateStats();
         })
         .catch(err => console.error('Error loading playlists:', err));
 }
