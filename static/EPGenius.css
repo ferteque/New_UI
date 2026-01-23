@@ -72,7 +72,7 @@ body {
     z-index: -5;
 }
 
-.cyber-gradient {
+/* .cyber-gradient {
     position: absolute;
     top: -20%;
     left: -20%;
@@ -83,7 +83,7 @@ body {
         radial-gradient(circle at 80% 70%, rgba(80, 20, 20, 0.3) 0%, transparent 50%);
     animation: gradientRotate 60s linear infinite;
     filter: blur(60px);
-}
+} */
 
 /* Animated gradient background */
 /* .cyber-gradient {
