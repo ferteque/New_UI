@@ -535,7 +535,7 @@ async function showDonateModal() {
     modal.innerHTML = `
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Donation Links</h3>
+                <h3>DONATION LINKS</h3>
             </div>
             <div class="modal-body">
                 <p style="text-align: center;">Loading donation links...</p>
@@ -1777,6 +1777,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
 
 
 
