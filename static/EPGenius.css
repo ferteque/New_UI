@@ -47,6 +47,11 @@ https://epgenius.org/
     --primary-green: #047c00;
 }
 
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 @media (min-width: 1000px) {
     html {
         scroll-padding-top: 108px;
@@ -2897,6 +2902,17 @@ code {
 .mobile-close-btn {
     display: none;
 }
+
+.cyber-bg,
+.particles,
+.grid-overlay,
+.scanlines,
+.noise-overlay,
+.data-streams {
+  max-width: 100vw;
+  overflow: hidden;
+}
+
 
 @media (max-width: 768px) {
     /* Keep your working touch-action */
