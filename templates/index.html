@@ -12,6 +12,11 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="manifest" href="{{ url_for('static', filename='site.webmanifest') }}">
+    <script>
+    window.addEventListener('load', function() {
+        alert('Current viewport width (window.innerWidth): ' + window.innerWidth + ' px\n\nIf this is ≥769 → desktop layout is active and hamburger is hidden');
+    });
+    </script>
 <!--
 
 EPGenius

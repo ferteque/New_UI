@@ -7,21 +7,6 @@ https://epgenius.org/
 
 @charset "utf-8";
 
-/* Android Chrome viewport fix */
-@supports (-webkit-touch-callout: none) {
-    .mobile-menu-button {
-        display: block !important;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .mobile-menu-button {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-}
-
 /* CSS Document */
 
  * {
