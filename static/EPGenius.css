@@ -1173,6 +1173,7 @@ nav .cyber-button {
 }
 
 .btn-secondary {
+    display: block;
     background: transparent;
     color: var(--primary-cyan);
     padding: 1.2rem 3rem;
