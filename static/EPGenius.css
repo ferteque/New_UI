@@ -58,7 +58,7 @@ body {
     background: linear-gradient(135deg, #0a0a1a 0%, #1a0a0a 100%);  /* dark blue to dark red */
     color: var(--text-primary);
     line-height: 1.6;
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
 }
 
 .cyber-bg {
