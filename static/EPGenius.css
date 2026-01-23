@@ -483,7 +483,7 @@ nav {
 
 /* Mobile Menu Button */
 .mobile-menu-button {
-    display: none;
+    display: block;
     background: none;
     border: none;
     color: var(--primary-cyan);
@@ -3084,7 +3084,6 @@ code {
         filter: none !important;
     }
 
-    /* OLD MOBILE 768 */
     .mobile-menu-button {
         display: block !important;
     }
@@ -3143,6 +3142,7 @@ code {
     .nav-bottom .cyber-button { 
         display: block !important; 
     }
+
 
     /* .footer-links {
         flex-direction: column;
