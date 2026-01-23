@@ -2484,7 +2484,7 @@ text-transform: uppercase;
     100% {
         width: 0;
         opacity: 0;
-        transform: translateX(100vw);
+        transform: translateX(100%);
     }
 }
 
@@ -2904,13 +2904,7 @@ code {
         background: #0f0805 !important;
         touch-action: pan-y !important;
         -webkit-overflow-scrolling: touch;
-    }
-    
-    @supports (-webkit-touch-callout: none) {
-        /* iOS only */
-        html, body {
-            height: -webkit-fill-available;
-        }
+        height: -webkit-fill-available;
     }
 
     .cyber-bg, .particles, .grid-overlay, .scanlines, .noise-overlay {
