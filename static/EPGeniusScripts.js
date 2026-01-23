@@ -198,6 +198,9 @@ function initCountriesSelect(selectId, hiddenInputId) {
     const countriesSelect = document.getElementById(selectId);
     if (!countriesSelect) return;
     
+    if (countriesSelect.dataset.initialized === 'true') return;
+    countriesSelect.dataset.initialized = 'true';
+    
     const selected = countriesSelect.querySelector('.multi-selected');
     const items = countriesSelect.querySelector('.multi-items');
     const hiddenInput = document.getElementById(hiddenInputId);
