@@ -256,42 +256,21 @@ function populateProviderSelect() {
 
 // Scroll lock helpers
 let scrollPosition = 0;
-let isScrollLocked = false;
 
 function lockScroll() {
-    if (isScrollLocked) return;
-    
-    scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-    document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
+    scrollPosition = window.pageYOffset;
+    document.body.classList.add('scroll-locked');
     document.body.style.top = `-${scrollPosition}px`;
-    document.body.style.left = '0';
-    document.body.style.right = '0';
-    document.body.style.width = '100%';
-    
-    isScrollLocked = true;
 }
 
 function unlockScroll() {
-    if (!isScrollLocked) return;
-    
-    document.body.style.overflow = '';
-    document.body.style.position = '';
+    document.body.classList.remove('scroll-locked');
     document.body.style.top = '';
-    document.body.style.left = '';
-    document.body.style.right = '';
-    document.body.style.width = '';
-    
     window.scrollTo(0, scrollPosition);
-    
-    requestAnimationFrame(() => {
-        window.scrollTo(0, scrollPosition);
-    });
-    
-    isScrollLocked = false;
 }
 
 window.unlockScroll = unlockScroll;
+window.lockScroll = lockScroll;
 
 // Generate Matrix Rain Effect
 function generateMatrixRain() {
