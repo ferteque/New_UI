@@ -738,6 +738,7 @@ nav {
     box-shadow: 0 0 20px rgba(232, 212, 191, 0.3);
     width: 100%;
     text-align: center;
+    align-items: center;
 }
 
 nav .cyber-button {
@@ -748,6 +749,12 @@ nav .cyber-button {
 .cyber-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 0 30px rgba(232, 212, 191, 0.5);
+}
+
+.discord-icon {
+  vertical-align: middle;
+  position: relative;
+  top: 0.125em;
 }
 
 /* Donation link buttons */
