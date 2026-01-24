@@ -742,11 +742,13 @@ function renderPlaylists(data) {
             window.currentPlaylistId = row.id;
             window.currentDonationLink = row.donation_info || null;
             window.currentEpgUrl = row.github_epg_url || null;
-
-            const disclaimerModal = document.getElementById('disclaimerModal');
-            lockScroll();
-            disclaimerModal.style.display = "block";
         });
+
+        function openDisclaimer() {
+        lockScroll();
+        document.getElementById('disclaimerModal').style.display = 'block';
+        }
+        card.onclick = openDisclaimer; 
 
         tileContainer.appendChild(card);
     });
