@@ -757,6 +757,12 @@ nav .cyber-button {
   flex-shrink: 0;
 }
 
+.back-icon {
+  transform: translateY(0.15em);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
 /* Donation link buttons */
 .donate-link-btn {
     width: 100%;
@@ -1804,6 +1810,7 @@ nav .cyber-button {
     border-radius: 5px;
     font-weight: 700;
     text-transform: uppercase;
+    align-items: center;
 }
 
 .modal-button:hover {
