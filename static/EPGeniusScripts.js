@@ -258,12 +258,14 @@ function populateProviderSelect() {
 let scrollPosition = 0;
 
 function lockScroll() {
+    console.log('lockScroll called, position saved:', window.pageYOffset);
     scrollPosition = window.pageYOffset;
     document.body.classList.add('scroll-locked');
     document.body.style.top = `-${scrollPosition}px`;
 }
 
 function unlockScroll() {
+    console.log('unlockScroll called, restoring to:', scrollPosition);
     document.body.classList.remove('scroll-locked');
     document.body.style.top = '';
     window.scrollTo(0, scrollPosition);
