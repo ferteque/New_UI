@@ -2941,6 +2941,7 @@ code {
         grid-auto-flow: row;
         grid-template-columns: 1fr;
         justify-content: center;
+        justify-items: center;
         gap: 1rem;
     }
     
