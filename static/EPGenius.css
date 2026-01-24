@@ -2958,13 +2958,22 @@ code {
         padding: 2rem 1.5rem;
     }
     
-    .btn-secondary {
+    /* .btn-secondary {
         width: 100%;
         text-align: center;
         padding: 1rem 1.5rem;
         font-size: 0.9rem;
         word-wrap: break-word;
         white-space: normal;
+    } */
+
+    .btn-secondary {
+        display: inline-block !important;
+        width: auto !important;     
+        max-width: 100% !important;  
+        margin: 0 auto !important;   
+        padding: 1rem 2rem !important;
+        text-align: center !important;
     }
 
     .howto-step {
