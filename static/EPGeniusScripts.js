@@ -258,15 +258,15 @@ function populateProviderSelect() {
 let scrollPosition = 0;
 
 function lockScroll() {
-    // scrollPosition = window.pageYOffset;
-    // document.body.classList.add('scroll-locked');
-    // document.body.style.top = `-${scrollPosition}px`;
+    scrollPosition = window.pageYOffset;
+    document.body.classList.add('scroll-locked');
+    document.body.style.top = `-${scrollPosition}px`;
 }
 
 function unlockScroll() {
-    // document.body.classList.remove('scroll-locked');
-    // document.body.style.top = '';
-    // window.scrollTo(0, scrollPosition);
+    document.body.classList.remove('scroll-locked');
+    document.body.style.top = '';
+    window.scrollTo(0, scrollPosition);
 }
 
 window.unlockScroll = unlockScroll;
