@@ -2940,6 +2940,7 @@ code {
     .creators-grid {
         grid-auto-flow: row;
         grid-template-columns: 1fr;
+        justify-content: center;
         gap: 1rem;
     }
     
