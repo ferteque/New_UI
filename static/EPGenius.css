@@ -3045,10 +3045,10 @@ code {
         max-height: none;
         margin: 0;
         border-radius: 0;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        padding: 1.5rem;
-        padding-top: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
     }
 
     body.scroll-locked {
@@ -3079,20 +3079,17 @@ code {
     }
     
     .modal-header {
-        position: static !important;
+        flex-shrink: 0;
+        position: sticky;
         top: 0;
         background: rgba(0, 0, 0, 0.95);
         z-index: 10;
-        padding: 1rem 0;
-        margin: 0 -1.5rem 1rem -1.5rem;
-        margin-top: -0.5rem; 
         padding: 1rem 1.5rem;
         border-bottom: 1px solid var(--border-color);
-        display: flex !important; 
-        align-items: center; 
-        justify-content: space-between; 
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         gap: 1rem;
-        z-index: 1; 
     }
     
     .modal-header h3 {
@@ -3100,17 +3097,26 @@ code {
         margin: 0; 
         flex: 1;
     }
+
+    .modal-body {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 1.5rem;
+        max-height: none !important; /* Remove 64vh limit */
+    }
     
     .button-container {
+        flex-shrink: 0;
         flex-direction: column;
         gap: 0.75rem;
         position: sticky;
         bottom: 0;
         background: rgba(0, 0, 0, 0.95);
-        margin: 1rem -1.5rem 0 -1.5rem;
         padding: 1rem 1.5rem;
         border-top: 1px solid var(--border-color);
         box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+        margin: 0 !important;
     }
     
     .modal-button {
