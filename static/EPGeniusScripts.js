@@ -570,7 +570,7 @@ async function showDonateModal() {
                 </div>
                 <div class="modal-body">
                     <h3 style="color: var(--primary-cyan); text-align: center; margin: 0 0 1rem 0; font-size: 1.3rem;">Support EPGenius</h3>
-                    <button class="donate-link-btn epgenius-donate" data-url="https://cwallet.com/tZK4DRBG5" style="width: 100%;">Donate to Ferteque</button>
+                    <button class="donate-link-btn epgenius-donate" data-url="https://cwallet.com/ZK4DRBG5" style="width: 100%;">Donate to Ferteque</button>
                     <button class="donate-link-btn epgenius-donate" data-url="https://ko-fi.com/greenspeedracer" style="width: 100%; margin-bottom: 2rem;">Donate to greenspeedracer</button>
                     
                     <h3 style="color: var(--primary-cyan); text-align: center; margin: 0 0 1rem 0; font-size: 1.3rem;">Support Playlist Creators</h3>
@@ -1802,6 +1802,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
 
 
 
