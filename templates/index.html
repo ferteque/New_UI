@@ -505,7 +505,11 @@ https://epgenius.org/
                             <input type="text" id="File_ID" name="File_ID" placeholder="https://drive.google.com/uc?export=download&id=1AbCdEfGhIjKlMnOpQrStUvWxYz" required>
                         </div>
                     </div>
-
+                    
+                    <h3 id="Wait6" style="display: none;">Updating Credentials...</h3>
+                    <div id="editCredsStatus" style="display: none; padding: 1rem; border-radius: 5px; margin-top: 1rem; text-align: center;"></div>
+                    <div class="button-container" id="successButtons" style="display: none; margin-top: 1rem;">
+                        
                     <div class="button-container">
                         <button type="submit" class="modal-button" id="submitEditCreds">Update Credentials</button>
                         <button type="button" class="modal-button secondary" id="cancelEditCreds">
@@ -517,9 +521,6 @@ https://epgenius.org/
                     </div>
                 </form>
 
-                <h3 id="Wait6" style="display: none;">Updating Credentials...</h3>
-                <div id="editCredsStatus" style="display: none; padding: 1rem; border-radius: 5px; margin-top: 1rem; text-align: center;"></div>
-                <div class="button-container" id="successButtons" style="display: none; margin-top: 1rem;">
                 <button type="button" class="modal-button" id="closeSuccessBtn">Close</button>
             </div>
             </div>
@@ -988,6 +989,7 @@ https://epgenius.org/
 </body>
 
 </html>
+
 
 
 
