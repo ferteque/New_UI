@@ -81,6 +81,16 @@ https://epgenius.org/
                 if (howtoTab) howtoTab.click();
             }
         }
+
+        if (hash === '#donate') {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    showDonateModal();
+                });
+            } else {
+                showDonateModal();
+            }
+        }
     })();
     </script>
     <!-- Enhanced Background Elements -->
