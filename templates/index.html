@@ -83,13 +83,16 @@ https://epgenius.org/
         }
 
         if (hash === '#donate') {
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', function() {
+            let attempts = 0;
+            function tryShowDonate() {
+                if (window.showDonateModal) {
                     showDonateModal();
-                });
-            } else {
-                showDonateModal();
+                } else if (attempts < 40) {
+                    attempts++;
+                    setTimeout(tryShowDonate, 50);
+                }
             }
+            tryShowDonate();
         }
     })();
     </script>

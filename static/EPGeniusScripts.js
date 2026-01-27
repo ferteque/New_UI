@@ -525,7 +525,7 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-async function showDonateModal() {
+window.showDonateModal = async function() {
     const modal = document.createElement('div');
     modal.id = 'donateLinksModal';
     modal.className = 'modal';
