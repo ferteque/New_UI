@@ -58,6 +58,24 @@ https://epgenius.org/
             }
         }
 
+        if (hash === '#update') {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    const modal = document.getElementById('updateModal');
+                    if (modal) {
+                        modal.style.display = 'block';
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
+            } else {
+                const modal = document.getElementById('updateModal');
+                if (modal) {
+                    modal.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+        }
+
         if (hash === '#howto') {
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', function() {
