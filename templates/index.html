@@ -94,6 +94,78 @@ https://epgenius.org/
             }
             tryShowDonate();
         }
+
+        if (hash === '#step5') {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    const howtoTab = document.querySelector('[data-tab="howto"]');
+                    if (howtoTab) howtoTab.click();
+                    setTimeout(() => {
+                        const step5 = document.getElementById('step5');
+                        if (step5) {
+                            const navHeight = 78;
+                            const elementPosition = step5.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }, 100);
+                });
+            } else {
+                const howtoTab = document.querySelector('[data-tab="howto"]');
+                if (howtoTab) howtoTab.click();
+                setTimeout(() => {
+                    const step5 = document.getElementById('step5');
+                    if (step5) {
+                        const navHeight = 78;
+                        const elementPosition = step5.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 100);
+            }
+        }
+
+        if (hash === '#step6') {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    const howtoTab = document.querySelector('[data-tab="howto"]');
+                    if (howtoTab) howtoTab.click();
+                    setTimeout(() => {
+                        const step6 = document.getElementById('step6');
+                        if (step6) {
+                            const navHeight = 78;
+                            const elementPosition = step6.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }, 100);
+                });
+            } else {
+                const howtoTab = document.querySelector('[data-tab="howto"]');
+                if (howtoTab) howtoTab.click();
+                setTimeout(() => {
+                    const step6 = document.getElementById('step6');
+                    if (step6) {
+                        const navHeight = 78;
+                        const elementPosition = step6.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 100);
+            }
+        }
     })();
     </script>
     <!-- Enhanced Background Elements -->
