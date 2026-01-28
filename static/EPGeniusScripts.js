@@ -669,6 +669,12 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
         // Show corresponding content
         const targetId = tab.dataset.tab;
         document.getElementById(targetId).classList.add('active');
+
+        // Scroll to top of page
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     });
 });
 
