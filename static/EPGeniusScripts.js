@@ -275,6 +275,8 @@ window.lockScroll = lockScroll;
 // Generate Matrix Rain Effect
 function generateMatrixRain() {
     const matrixRain = document.getElementById('matrixRain');
+    matrixRain.setAttribute('translate', 'no');
+    matrixRain.classList.add('notranslate');
     const characters = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
     const columns = Math.floor(window.innerWidth / 20);
 
