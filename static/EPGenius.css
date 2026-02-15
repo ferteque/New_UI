@@ -61,6 +61,8 @@ body {
     overflow-x: hidden;
 }
 
+.matrix-column,
+.particle,
 .hero-ep,
 .hero-ep::before,
 .hero-genius,
