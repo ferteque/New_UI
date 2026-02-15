@@ -61,25 +61,6 @@ body {
     overflow-x: hidden;
 }
 
-*[style*="animation"] {
-    animation: none !important;
-}
-
-.cyber-gradient,
-.matrix-column,
-.particle,
-.orb,
-.scanlines::before,
-.grid-lines,
-.grid-glow,
-.hero-ep,
-.hero-genius,
-.hero-ep::before,
-.hero-genius::before,
-.data-stream {
-    animation: none !important;
-}
-
 .cyber-bg {
     position: fixed;
     top: 0;
@@ -89,6 +70,11 @@ body {
     background: linear-gradient(135deg, #0a0a1a 0%, #1a0a0a 100%);  /* dark blue to dark red */
     overflow: hidden;
     z-index: -5;
+}
+
+.logo::before,
+.logo::after {
+    animation: none !important;
 }
 
 body.scroll-locked {
