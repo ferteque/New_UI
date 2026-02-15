@@ -8,7 +8,7 @@ EPGenius.org
 
 // JavaScript Document
 
-import Pinchable from 'https://unpkg.com/pinchable?module';
+import Pinchable from 'https://esm.sh/pinchable';
 
 // Initialize mobile menu functionality
 function initializeMobileMenu() {
