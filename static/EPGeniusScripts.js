@@ -1343,7 +1343,7 @@ function openHowtoModal(imageSrc) {
 
     // Clean up previous instance
     if (currentPinchInstance) {
-        currentPinchInstance.remove(); // or .dispose() if remove doesn't exist - check console
+        currentPinchInstance.dispose(); // or .dispose() if remove doesn't exist - check console
         currentPinchInstance = null;
     }
 
@@ -1378,7 +1378,7 @@ function openHowtoModal(imageSrc) {
     const closeHandler = (e) => {
         if (e.target === modal || e.target.classList.contains('howto-modal-close')) {
             if (currentPinchInstance) {
-                currentPinchInstance.remove();
+                currentPinchInstance.dispose();
                 currentPinchInstance = null;
             }
             closeHowtoModal();
@@ -1411,7 +1411,7 @@ function closeHowtoModal() {
     document.body.style.overflow = 'auto';
 
     if (currentPinchInstance) {
-        currentPinchInstance.remove();
+        currentPinchInstance.dispose();
         currentPinchInstance = null;
     }
 }
