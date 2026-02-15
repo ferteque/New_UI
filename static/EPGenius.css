@@ -81,6 +81,11 @@ body {
     display: none !important;
 }
 
+/* Test 5: Disable gradient background */
+.cyber-gradient {
+    display: none !important;
+}
+
 .cyber-bg {
     position: fixed;
     top: 0;
