@@ -3120,7 +3120,21 @@ code {
         padding: 1rem;
     }
     
-    /* For the image modal specifically */
+    .howto-modal,
+    .howto-modal * {
+        touch-action: pinch-zoom !important;
+    }
+
+    #howtoModalImage {
+        touch-action: pinch-zoom !important;
+        width: auto !important;
+        height: auto !important;
+        max-width: 500vw;
+        max-height: 500vh;
+        object-fit: contain;
+        transform-origin: 50% 50%;
+    }
+
     .howto-modal-content {
         max-width: 95%;
         max-height: 90vh;

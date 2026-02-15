@@ -1332,12 +1332,9 @@ function editCredentials(formData) {
 }
 
 function openHowtoModal(imageSrc) {
-    const viewport = document.querySelector('meta[name="viewport"]');
-    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0');
-    
     const modal = document.getElementById('howtoImageModal');
     const modalImg = document.getElementById('howtoModalImage');
-    modal.style.display = 'block';
+    modal.style.display = "block";
     modalImg.src = imageSrc;
     document.body.style.overflow = 'hidden';
 }
@@ -1352,11 +1349,8 @@ botons.forEach(boto => {
 });
 
 function closeHowtoModal() {
-    const viewport = document.querySelector('meta[name="viewport"]');
-    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0');
-    
     const modal = document.getElementById('howtoImageModal');
-    modal.style.display = 'none';
+    modal.style.display = "none";
     document.body.style.overflow = 'auto';
 }
 
