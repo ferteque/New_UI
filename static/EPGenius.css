@@ -70,6 +70,11 @@ body {
     animation: none !important;
 }
 
+.cyber-gradient,
+.orb {
+    filter: none !important;
+}
+
 .cyber-bg {
     position: fixed;
     top: 0;
