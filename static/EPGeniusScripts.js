@@ -8,6 +8,8 @@ EPGenius.org
 
 // JavaScript Document
 
+import Panzoom from 'https://esm.sh/@panzoom/panzoom@4';
+
 // Initialize mobile menu functionality
 function initializeMobileMenu() {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -1331,7 +1333,7 @@ function editCredentials(formData) {
     });
 }
 
-let currentPinchInstance = null;
+let currentPanzoomInstance = null;
 
 function openHowtoModal(imageSrc) {
     const modal = document.getElementById('howtoImageModal');
@@ -1340,71 +1342,55 @@ function openHowtoModal(imageSrc) {
     if (!modal || !modalImg) return;
 
     // Clean up previous instance
-    if (currentPinchInstance) {
-        currentPinchInstance.destroy();
-        currentPinchInstance = null;
+    if (currentPanzoomInstance) {
+        currentPanzoomInstance.dispose();
+        currentPanzoomInstance = null;
     }
 
     modal.style.display = 'block';
     modalImg.src = imageSrc;
     document.body.style.overflow = 'hidden';
 
-    // Wait for image to load (handles cached images too)
-    const initPinchable = () => {
-        // Reset image styles to allow natural sizing
+    const initGoodPanzoom = () => {
         modalImg.style.width = 'auto';
         modalImg.style.height = 'auto';
         modalImg.style.maxWidth = '100%';
         modalImg.style.maxHeight = '100vh';
 
-        // Use the global from the script tag
-        const PinchableLib = window.Pinchable;
-        if (typeof PinchableLib !== 'function') {
-            console.error('Pinchable library not loaded or not available on window');
-            // Optional: show fallback message in modal
-            const msg = document.createElement('div');
-            msg.textContent = 'Zoom unavailable (library failed to load)';
-            msg.style.color = 'red';
-            msg.style.textAlign = 'center';
-            modal.appendChild(msg);
-            return;
-        }
-
-        currentPinchInstance = new PinchableLib(modalImg, {
+        currentPanzoomInstance = Panzoom(modalImg, {
             maxScale: 8,
             minScale: 0.8,
+            animate: true,
             bounds: true,
-            momentum: true,
-            doubleTap: false,
-            // Add more options from repo/docs if needed
+            // finger-centered zoom is default in this library
+            // no extra touch listeners needed
         });
 
-        // Center the image initially
-        if (currentPinchInstance.scaleTo) currentPinchInstance.scaleTo(1);
-        if (currentPinchInstance.moveTo) currentPinchInstance.moveTo(0, 0);
+        // Force initial reset
+        currentPanzoomInstance.zoom(1, { animate: false });
+        currentPanzoomInstance.pan(0, 0, { animate: false });
     };
 
     if (modalImg.complete && modalImg.naturalWidth > 0) {
-        initPinchable();
+        initGoodPanzoom();
     } else {
-        modalImg.onload = initPinchable;
+        modalImg.onload = initGoodPanzoom;
     }
 
     // Close handlers (tap outside or X button)
     const closeHandler = (e) => {
         if (e.target === modal || e.target.classList.contains('howto-modal-close')) {
-            if (currentPinchInstance) {
-                currentPinchInstance.destroy();
-                currentPinchInstance = null;
+            if (currentPanzoomInstance) {
+                currentPanzoomInstance.dispose();
+                currentPanzoomInstance = null;
             }
             closeHowtoModal();
             modal.removeEventListener('click', closeHandler);
         }
     };
-
     modal.addEventListener('click', closeHandler);
 
-    // Extra safety for close button on touch devices
+    // Touch safety for close button
     const closeBtn = modal.querySelector('.howto-modal-close');
     if (closeBtn) {
         closeBtn.addEventListener('touchend', (e) => {
@@ -1427,9 +1413,9 @@ function closeHowtoModal() {
     }
     document.body.style.overflow = 'auto';
 
-    if (currentPinchInstance) {
-        currentPinchInstance.destroy();
-        currentPinchInstance = null;
+    if (currentPanzoomInstance) {
+        currentPanzoomInstance.dispose();
+        currentPanzoomInstance = null;
     }
 }
 
