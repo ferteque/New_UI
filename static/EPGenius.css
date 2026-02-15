@@ -73,7 +73,8 @@ body {
 .grid-lines,
 .grid-glow,
 .hero-ep,
-.hero-genius::before {
+.hero-genius::before,
+.data-stream {
     animation: none !important;
 }
 
