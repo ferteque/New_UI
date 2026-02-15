@@ -427,23 +427,23 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// Scroll animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
-};
+// // Scroll animations
+// const observerOptions = {
+//     threshold: 0.1,
+//     rootMargin: '0px 0px -100px 0px'
+// };
 
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-        }
-    });
-}, observerOptions);
+// const observer = new IntersectionObserver((entries) => {
+//     entries.forEach(entry => {
+//         if (entry.isIntersecting) {
+//             entry.target.classList.add('visible');
+//         }
+//     });
+// }, observerOptions);
 
-document.querySelectorAll('.fade-up').forEach(el => {
-    observer.observe(el);
-});
+// document.querySelectorAll('.fade-up').forEach(el => {
+//     observer.observe(el);
+// });
 
 // Button effects
 document.querySelectorAll('.btn-primary, .btn-secondary').forEach(button => {
