@@ -2852,6 +2852,20 @@ code {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.9);
     backdrop-filter: blur(10px);
+    overflow: hidden !important;
+    touch-action: none !important;
+}
+
+#howtoModalImage {
+    display: block;
+    max-width: none !important;
+    max-height: none !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain;
+    transform-origin: 0 0;         
+    will-change: transform;         
+    pointer-events: auto;
 }
 
 .howto-modal-content {
@@ -2863,6 +2877,7 @@ code {
     position: relative;
     top: 50%;
     transform: translateY(-50%);
+    overflow: visible !important;
 }
 
 .howto-modal-close {
@@ -3120,10 +3135,6 @@ code {
         padding: 1rem;
     }
     
-    .howto-modal,
-    .howto-modal * {
-        touch-action: pinch-zoom !important;
-    }
 
     .howto-modal-content {
         max-width: 95%;

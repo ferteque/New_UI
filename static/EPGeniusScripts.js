@@ -1336,31 +1336,40 @@ let currentPanzoomInstance = null;
 function openHowtoModal(imageSrc) {
     const modal = document.getElementById('howtoImageModal');
     const modalImg = document.getElementById('howtoModalImage');
-    
-    modal.style.display = "block";
-    modalImg.src = imageSrc;
+
+    if (!modal || !modalImg) return;
+
+    if (currentPanzoomInstance) {
+        currentPanzoomInstance.dispose();
+        currentPanzoomInstance = null;
+    }
+
+    modal.style.display = 'block';
+    modalImg.src = imageSrc;          
     document.body.style.overflow = 'hidden';
 
-    modalImg.onload = () => {
-        if (currentPanzoomInstance) {
-            currentPanzoomInstance.dispose();
-        }
-
+    const initPanzoom = () => {
         currentPanzoomInstance = Panzoom(modalImg, {
-            maxScale: 6,               
+            maxScale: 8,
             minScale: 1,                
-            bounds: true,               
-            animate: true,              
-            touchAction: 'none',        
-            onDoubleClick: false,       
+            bounds: true,                 
+            animate: true,
+            touchAction: 'auto',         
+            zoomDoubleClickSpeed: 1,     
             smoothScroll: false,
-            zoomDoubleClickSpeed: 1   
+            enableOnMobile: true
         });
 
-        modal.addEventListener('click', closeHandler);
+        currentPanzoomInstance.zoomAbs(0, 0, 1);
     };
 
-    function closeHandler(e) {
+    if (modalImg.complete && modalImg.naturalWidth > 0) {
+        initPanzoom();
+    } else {
+        modalImg.onload = initPanzoom;
+    }
+
+    const closeHandler = (e) => {
         if (e.target === modal || e.target.classList.contains('howto-modal-close')) {
             if (currentPanzoomInstance) {
                 currentPanzoomInstance.dispose();
@@ -1369,36 +1378,34 @@ function openHowtoModal(imageSrc) {
             closeHowtoModal();
             modal.removeEventListener('click', closeHandler);
         }
-    }
+    };
+
+    modal.addEventListener('click', closeHandler);
 }
-
-const botons = document.querySelectorAll('.step-thumb');
-
-botons.forEach(boto => {
-    boto.addEventListener('click', (e) => {
-	const rutaImatge = e.target.src;
-        openHowtoModal(rutaImatge);
-    });
-});
 
 function closeHowtoModal() {
     const modal = document.getElementById('howtoImageModal');
-    modal.style.display = "none";
+    if (modal) {
+        modal.style.display = 'none';
+    }
     document.body.style.overflow = 'auto';
+
+    if (currentPanzoomInstance) {
+        currentPanzoomInstance.dispose();
+        currentPanzoomInstance = null;
+    }
 }
 
-const modal = document.getElementById('howtoImageModal');
-if (modal) {
-    modal.addEventListener('click', (e) => {
-        if (e.target.id === 'howtoImageModal' || e.target.classList.contains('howto-modal-close')) {
-            closeHowtoModal();
-        }
+document.querySelectorAll('.step-thumb').forEach(thumb => {
+    thumb.addEventListener('click', (e) => {
+        const imageSrc = e.currentTarget.src;
+        openHowtoModal(imageSrc);
     });
-}
+});
 
-// Close modal on Escape key
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape') {
+// Escape key support
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
         closeHowtoModal();
     }
 });
