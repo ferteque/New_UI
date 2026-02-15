@@ -8,7 +8,7 @@ EPGenius.org
 
 // JavaScript Document
 
-import Panzoom from 'https://esm.sh/@panzoom/panzoom@4';
+import PinchZoom from 'https://esm.sh/pinch-zoom-js';
 
 // Initialize mobile menu functionality
 function initializeMobileMenu() {
@@ -1333,7 +1333,7 @@ function editCredentials(formData) {
     });
 }
 
-let currentPanzoomInstance = null;
+let currentPinchInstance = null;
 
 function openHowtoModal(imageSrc) {
     const modal = document.getElementById('howtoImageModal');
@@ -1342,46 +1342,44 @@ function openHowtoModal(imageSrc) {
     if (!modal || !modalImg) return;
 
     // Clean up previous instance
-    if (currentPanzoomInstance) {
-        currentPanzoomInstance.destroy();
-        currentPanzoomInstance = null;
+    if (currentPinchInstance) {
+        currentPinchInstance.remove(); // or .dispose() if remove doesn't exist - check console
+        currentPinchInstance = null;
     }
 
     modal.style.display = 'block';
     modalImg.src = imageSrc;
     document.body.style.overflow = 'hidden';
 
-    const initGoodPanzoom = () => {
+    const initPinchZoom = () => {
+        // Force fit to screen BEFORE init
         modalImg.style.width = '100%';
         modalImg.style.height = '100%';
         modalImg.style.maxWidth = '100%';
         modalImg.style.maxHeight = '100vh';
         modalImg.style.objectFit = 'contain';
 
-        currentPanzoomInstance = Panzoom(modalImg, {
-            maxScale: 8,
-            minScale: 0.1,
-            animate: true,
-            bounds: true,
+        currentPinchInstance = new PinchZoom(modalImg, {
+            maxZoom: 8,
+            minZoom: 0.8,
+            draggable: true,
+            // finger-centered zoom is automatic in this library
+            // no extra options usually needed
         });
-
-        // Force initial reset
-        currentPanzoomInstance.zoom(1, { animate: false });
-        currentPanzoomInstance.pan(0, 0, { animate: false });
     };
 
     if (modalImg.complete && modalImg.naturalWidth > 0) {
-        initGoodPanzoom();
+        initPinchZoom();
     } else {
-        modalImg.onload = initGoodPanzoom;
+        modalImg.onload = initPinchZoom;
     }
 
     // Close handlers (tap outside or X button)
     const closeHandler = (e) => {
         if (e.target === modal || e.target.classList.contains('howto-modal-close')) {
-            if (currentPanzoomInstance) {
-                currentPanzoomInstance.destroy();
-                currentPanzoomInstance = null;
+            if (currentPinchInstance) {
+                currentPinchInstance.remove();
+                currentPinchInstance = null;
             }
             closeHowtoModal();
             modal.removeEventListener('click', closeHandler);
@@ -1412,9 +1410,9 @@ function closeHowtoModal() {
     }
     document.body.style.overflow = 'auto';
 
-    if (currentPanzoomInstance) {
-        currentPanzoomInstance.destroy();
-        currentPanzoomInstance = null;
+    if (currentPinchInstance) {
+        currentPinchInstance.remove();
+        currentPinchInstance = null;
     }
 }
 
