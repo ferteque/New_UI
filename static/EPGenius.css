@@ -66,6 +66,11 @@ body {
     display: none !important;
 }
 
+/* Test 2: Disable matrix rain */
+.matrix-rain {
+    display: none !important;
+}
+
 .cyber-bg {
     position: fixed;
     top: 0;
