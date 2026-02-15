@@ -2858,13 +2858,13 @@ code {
 
 #howtoModalImage {
     display: block;
-    max-width: none !important;
-    max-height: none !important;
-    width: auto !important;
-    height: auto !important;
-    object-fit: contain;
-    transform-origin: 50% 50% !important;         
-    will-change: transform;         
+    width: 100% !important;             
+    height: 100% !important;             
+    max-width: 100% !important;         
+    max-height: 100vh !important;
+    object-fit: contain !important;       
+    transform-origin: 50% 50% !important;
+    will-change: transform;
     pointer-events: auto !important;
     touch-action: none !important;
 }

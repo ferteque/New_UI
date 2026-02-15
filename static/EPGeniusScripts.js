@@ -1352,18 +1352,17 @@ function openHowtoModal(imageSrc) {
     document.body.style.overflow = 'hidden';
 
     const initGoodPanzoom = () => {
-        modalImg.style.width = 'auto';
-        modalImg.style.height = 'auto';
+        modalImg.style.width = '100%';
+        modalImg.style.height = '100%';
         modalImg.style.maxWidth = '100%';
         modalImg.style.maxHeight = '100vh';
+        modalImg.style.objectFit = 'contain';
 
         currentPanzoomInstance = Panzoom(modalImg, {
             maxScale: 8,
-            minScale: 0.8,
+            minScale: 0.1,
             animate: true,
             bounds: true,
-            // finger-centered zoom is default in this library
-            // no extra touch listeners needed
         });
 
         // Force initial reset
