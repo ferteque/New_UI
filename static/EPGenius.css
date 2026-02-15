@@ -2863,6 +2863,8 @@ code {
     position: relative;
     top: 50%;
     transform: translateY(-50%);
+    touch-action: pinch-zoom;
+    user-select: none;
 }
 
 .howto-modal-close {
@@ -3124,6 +3126,8 @@ code {
     .howto-modal-content {
         max-width: 95%;
         max-height: 90vh;
+        touch-action: pinch-zoom;
+        user-select: none;
     }
     
     .howto-modal-close {
