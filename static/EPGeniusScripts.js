@@ -272,82 +272,6 @@ function unlockScroll() {
 window.unlockScroll = unlockScroll;
 window.lockScroll = lockScroll;
 
-// Generate Matrix Rain Effect
-function generateMatrixRain() {
-    const matrixRain = document.getElementById('matrixRain');
-    matrixRain.setAttribute('translate', 'no');
-    matrixRain.classList.add('notranslate');
-    const characters = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
-    const columns = Math.floor(window.innerWidth / 20);
-
-    for (let i = 0; i < columns; i++) {
-        const column = document.createElement('div');
-        column.className = 'matrix-column';
-        column.style.left = `${i * 20}px`;
-        column.style.animationDuration = `${Math.random() * 5 + 10}s`;
-        column.style.animationDelay = `${Math.random() * 5}s`;
-
-        // Generate random characters for the column
-        let text = '';
-        const charCount = Math.floor(Math.random() * 20 + 10);
-        for (let j = 0; j < charCount; j++) {
-            text += characters[Math.floor(Math.random() * characters.length)] + ' ';
-        }
-        column.textContent = text;
-
-        matrixRain.appendChild(column);
-    }
-}
-
-// Generate Floating Particles
-function generateParticles() {
-    const particlesContainer = document.getElementById('particlesContainer');
-    const particleCount = 50;
-
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = `${Math.random() * 100}%`;
-        particle.style.animationDelay = `${Math.random() * 20}s`;
-        particle.style.animationDuration = `${Math.random() * 10 + 20}s`;
-
-        particlesContainer.appendChild(particle);
-    }
-}
-
-// Generate Data Streams
-function generateDataStreams() {
-    const dataStreams = document.getElementById('dataStreams');
-    const streamCount = 10;
-
-    for (let i = 0; i < streamCount; i++) {
-        const stream = document.createElement('div');
-        stream.className = 'data-stream';
-        stream.style.top = `${Math.random() * 100}%`;
-        stream.style.left = `-300px`;
-        stream.style.animationDelay = `${Math.random() * 5}s`;
-        stream.style.transform = `rotate(${Math.random() * 30 - 15}deg)`;
-
-        dataStreams.appendChild(stream);
-    }
-}
-
-// Initialize background effects
-generateMatrixRain();
-generateParticles();
-generateDataStreams();
-
-// Regenerate matrix rain on window resize
-let resizeTimer;
-window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-        const matrixRain = document.getElementById('matrixRain');
-        matrixRain.innerHTML = '';
-        generateMatrixRain();
-    }, 250);
-});
-
 // Smooth scrolling
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -437,26 +361,6 @@ const animateStats = () => {
         }, interval);
     });
 };
-
-// Glitch effect on hover for feature cards
-document.querySelectorAll('.feature-card').forEach(card => {
-    card.addEventListener('mouseenter', function() {
-        this.style.animation = 'glitch1 0.3s ease-in-out';
-        setTimeout(() => {
-            this.style.animation = '';
-        }, 300);
-    });
-});
-
-// Add fadeOut animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes fadeOut {
-        0% { opacity: 0.7; transform: translateY(0); }
-        100% { opacity: 0; transform: translateY(-50px); }
-    }
-`;
-document.head.appendChild(style);
 
 window.showDonateModal = async function() {
     const modal = document.createElement('div');
