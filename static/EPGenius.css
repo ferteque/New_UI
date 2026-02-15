@@ -65,16 +65,6 @@ body {
     animation: none !important;
 }
 
-.cyber-gradient,
-.matrix-column,
-.particle,
-.orb,
-.scanlines::before,
-.grid-lines,
-.grid-glow,
-.hero-ep,
-.hero-genius,
-.hero-ep::before,
 .hero-genius::before {
     animation: none !important;
 }
