@@ -8,7 +8,7 @@ EPGenius.org
 
 // JavaScript Document
 
-import Panzoom from 'https://cdn.jsdelivr.net/npm/panzoom@9.4.3/+esm';
+import Pinchable from 'https://cdn.jsdelivr.net/npm/pinchable/+esm';
 
 // Initialize mobile menu functionality
 function initializeMobileMenu() {
@@ -1333,7 +1333,7 @@ function editCredentials(formData) {
     });
 }
 
-let currentPanzoomInstance = null;
+let currentPinchInstance = null;
 
 function openHowtoModal(imageSrc) {
     const modal = document.getElementById('howtoImageModal');
@@ -1341,72 +1341,52 @@ function openHowtoModal(imageSrc) {
 
     if (!modal || !modalImg) return;
 
-    if (currentPanzoomInstance) {
-        currentPanzoomInstance.dispose();
-        currentPanzoomInstance = null;
+    // Clean up previous instance
+    if (currentPinchInstance) {
+        currentPinchInstance.destroy();
+        currentPinchInstance = null;
     }
 
     modal.style.display = 'block';
-
-    // Explicit close button listener (bypasses Panzoom event blocking)
-    const closeBtn = modal.querySelector('.howto-modal-close');
-    if (closeBtn) {
-        closeBtn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            closeHowtoModal();
-        }, { passive: false });
-        
-        closeBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            closeHowtoModal();
-        });
-    }
-
-    // Backdrop click (outside image) - also reinforced
-    modal.addEventListener('touchend', (e) => {
-        if (e.target === modal) {
-            e.preventDefault();
-            closeHowtoModal();
-        }
-    }, { passive: false });
-
-    modalImg.src = imageSrc;          
+    modalImg.src = imageSrc;
     document.body.style.overflow = 'hidden';
 
-    const initPanzoom = () => {
+    // Wait for image to load (handles cached images too)
+    const initPinchable = () => {
+        // Reset image styles to allow natural sizing
         modalImg.style.width = 'auto';
         modalImg.style.height = 'auto';
         modalImg.style.maxWidth = '100%';
         modalImg.style.maxHeight = '100vh';
 
-        currentPanzoomInstance = Panzoom(modalImg, {
+        // Initialize Pinchable
+        currentPinchInstance = new Pinchable(modalImg, {
             maxScale: 8,
-            minScale: 0.8,               
-            boundsPadding: 0.05,          
-            animate: true,
-            touchAction: 'none',          
-            zoomDoubleClickSpeed: 1,      
-            smoothScroll: false,
-            pinchSpeed: 1.8,              
-            onTouch: function(e) { return true; } 
+            minScale: 0.8,
+            bounds: true,
+            momentum: true,          
+            doubleTap: false,       
+            // pinchSpeed: 1.5,
+            // transitionDuration: 300,
         });
 
-        currentPanzoomInstance.zoomAbs(0, 0, 1);
-        currentPanzoomInstance.pan(0, 0);
+        // Center the image initially
+        currentPinchInstance.scaleTo(1);
+        currentPinchInstance.moveTo(0, 0);
     };
 
     if (modalImg.complete && modalImg.naturalWidth > 0) {
-        initPanzoom();
+        initPinchable();
     } else {
-        modalImg.onload = initPanzoom;
+        modalImg.onload = initPinchable;
     }
 
+    // Close handlers (tap outside or X button)
     const closeHandler = (e) => {
         if (e.target === modal || e.target.classList.contains('howto-modal-close')) {
-            if (currentPanzoomInstance) {
-                currentPanzoomInstance.dispose();
-                currentPanzoomInstance = null;
+            if (currentPinchInstance) {
+                currentPinchInstance.destroy();
+                currentPinchInstance = null;
             }
             closeHowtoModal();
             modal.removeEventListener('click', closeHandler);
@@ -1414,6 +1394,21 @@ function openHowtoModal(imageSrc) {
     };
 
     modal.addEventListener('click', closeHandler);
+
+    // Extra safety for close button on touch devices
+    const closeBtn = modal.querySelector('.howto-modal-close');
+    if (closeBtn) {
+        closeBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            closeHowtoModal();
+        }, { passive: false });
+
+        closeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeHowtoModal();
+        });
+    }
 }
 
 function closeHowtoModal() {
@@ -1423,12 +1418,13 @@ function closeHowtoModal() {
     }
     document.body.style.overflow = 'auto';
 
-    if (currentPanzoomInstance) {
-        currentPanzoomInstance.dispose();
-        currentPanzoomInstance = null;
+    if (currentPinchInstance) {
+        currentPinchInstance.destroy();
+        currentPinchInstance = null;
     }
 }
 
+// Attach to thumbnails
 document.querySelectorAll('.step-thumb').forEach(thumb => {
     thumb.addEventListener('click', (e) => {
         const imageSrc = e.currentTarget.src;
