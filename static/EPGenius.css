@@ -61,18 +61,15 @@ body {
     overflow-x: hidden;
 }
 
-.matrix-column,
-.particle,
-.hero-ep,
-.hero-ep::before,
-.hero-genius,
-.hero-genius::before {
-    animation: none !important;
-}
-
+.cyber-bg,
 .cyber-gradient,
-.orb {
-    filter: none !important;
+#matrixRain,
+.orb,
+#particlesContainer,
+.grid-overlay,
+.scanlines,
+.noise-overlay {
+    display: none !important;
 }
 
 .cyber-bg {
