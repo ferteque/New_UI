@@ -2853,25 +2853,33 @@ code {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.9);
     backdrop-filter: blur(10px);
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    overflow: auto; 
-    touch-action: auto;
-    overscroll-behavior: contain;
+    overflow: auto;          
+    text-align: center;     
+    white-space: nowrap;     
+    touch-action: auto;      
+}
+
+.howto-modal::before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.25em;
 }
 
 .howto-modal-content {
-    margin: auto;    
-    display: block;
-    position: relative; 
+    display: inline-block;   
+    vertical-align: middle;  
+    position: relative;
+    margin: 20px auto;     
     top: auto;
     left: auto;
-    transform: none;   
+    transform: none;        
     max-width: 95%;
     max-height: 90vh;
     border-radius: 12px;
-    touch-action: auto; 
+    white-space: normal;     
+    touch-action: pan-x pan-y pinch-zoom; 
     pointer-events: auto;
 }
 
