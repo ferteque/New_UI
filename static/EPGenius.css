@@ -61,8 +61,9 @@ body {
     overflow-x: hidden;
 }
 
-.grid-overlay {
-    display: none !important;
+*, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
 }
 
 .cyber-bg {
