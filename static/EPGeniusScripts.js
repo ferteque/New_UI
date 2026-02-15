@@ -8,8 +8,6 @@ EPGenius.org
 
 // JavaScript Document
 
-import Pinchable from 'https://esm.sh/pinchable';
-
 // Initialize mobile menu functionality
 function initializeMobileMenu() {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -1359,20 +1357,31 @@ function openHowtoModal(imageSrc) {
         modalImg.style.maxWidth = '100%';
         modalImg.style.maxHeight = '100vh';
 
-        // Initialize Pinchable
-        currentPinchInstance = new Pinchable(modalImg, {
+        // Use the global from the script tag
+        const PinchableLib = window.Pinchable;
+        if (typeof PinchableLib !== 'function') {
+            console.error('Pinchable library not loaded or not available on window');
+            // Optional: show fallback message in modal
+            const msg = document.createElement('div');
+            msg.textContent = 'Zoom unavailable (library failed to load)';
+            msg.style.color = 'red';
+            msg.style.textAlign = 'center';
+            modal.appendChild(msg);
+            return;
+        }
+
+        currentPinchInstance = new PinchableLib(modalImg, {
             maxScale: 8,
             minScale: 0.8,
             bounds: true,
-            momentum: true,          
-            doubleTap: false,       
-            // pinchSpeed: 1.5,
-            // transitionDuration: 300,
+            momentum: true,
+            doubleTap: false,
+            // Add more options from repo/docs if needed
         });
 
         // Center the image initially
-        currentPinchInstance.scaleTo(1);
-        currentPinchInstance.moveTo(0, 0);
+        if (currentPinchInstance.scaleTo) currentPinchInstance.scaleTo(1);
+        if (currentPinchInstance.moveTo) currentPinchInstance.moveTo(0, 0);
     };
 
     if (modalImg.complete && modalImg.naturalWidth > 0) {
