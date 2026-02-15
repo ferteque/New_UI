@@ -1331,12 +1331,45 @@ function editCredentials(formData) {
     });
 }
 
+let currentPanzoomInstance = null;
+
 function openHowtoModal(imageSrc) {
     const modal = document.getElementById('howtoImageModal');
     const modalImg = document.getElementById('howtoModalImage');
+    
     modal.style.display = "block";
     modalImg.src = imageSrc;
     document.body.style.overflow = 'hidden';
+
+    modalImg.onload = () => {
+        if (currentPanzoomInstance) {
+            currentPanzoomInstance.dispose();
+        }
+
+        currentPanzoomInstance = Panzoom(modalImg, {
+            maxScale: 6,               
+            minScale: 1,                
+            bounds: true,               
+            animate: true,              
+            touchAction: 'none',        
+            onDoubleClick: false,       
+            smoothScroll: false,
+            zoomDoubleClickSpeed: 1   
+        });
+
+        modal.addEventListener('click', closeHandler);
+    };
+
+    function closeHandler(e) {
+        if (e.target === modal || e.target.classList.contains('howto-modal-close')) {
+            if (currentPanzoomInstance) {
+                currentPanzoomInstance.dispose();
+                currentPanzoomInstance = null;
+            }
+            closeHowtoModal();
+            modal.removeEventListener('click', closeHandler);
+        }
+    }
 }
 
 const botons = document.querySelectorAll('.step-thumb');
