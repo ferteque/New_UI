@@ -1347,25 +1347,53 @@ function openHowtoModal(imageSrc) {
     }
 
     modal.style.display = 'block';
+
+    // Explicit close button listener (bypasses Panzoom event blocking)
+    const closeBtn = modal.querySelector('.howto-modal-close');
+    if (closeBtn) {
+        closeBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            closeHowtoModal();
+        }, { passive: false });
+        
+        closeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeHowtoModal();
+        });
+    }
+
+    // Backdrop click (outside image) - also reinforced
+    modal.addEventListener('touchend', (e) => {
+        if (e.target === modal) {
+            e.preventDefault();
+            closeHowtoModal();
+        }
+    }, { passive: false });
+
     modalImg.src = imageSrc;          
     document.body.style.overflow = 'hidden';
 
     const initPanzoom = () => {
+        modalImg.style.width = 'auto';
+        modalImg.style.height = 'auto';
+        modalImg.style.maxWidth = '100%';
+        modalImg.style.maxHeight = '100vh';
+
         currentPanzoomInstance = Panzoom(modalImg, {
-            maxScale: 6,
-            minScale: 1,
-            bounds: true,
+            maxScale: 8,
+            minScale: 0.8,               
+            boundsPadding: 0.05,          
             animate: true,
-            touchAction: 'none',      
-            onTouch: function(e) { return true; },
-            onDoubleClick: function() { return false; },
-            pinchSpeed: 1.5, 
+            touchAction: 'none',          
+            zoomDoubleClickSpeed: 1,      
             smoothScroll: false,
-            beforeMouseDown: function(e) { return false; },
-            beforeWheel: function(e) { return false; }
+            pinchSpeed: 1.8,              
+            onTouch: function(e) { return true; } 
         });
 
         currentPanzoomInstance.zoomAbs(0, 0, 1);
+        currentPanzoomInstance.pan(0, 0);
     };
 
     if (modalImg.complete && modalImg.naturalWidth > 0) {
@@ -1384,23 +1412,6 @@ function openHowtoModal(imageSrc) {
             modal.removeEventListener('click', closeHandler);
         }
     };
-
-    // Explicitly add close button listener (bypass potential event blocking)
-    const closeBtn = modal.querySelector('.howto-modal-close');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            closeHowtoModal();
-        });
-    }
-
-    // For outside click (already in closeHandler, but reinforce)
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {  // only if clicking the modal backdrop
-            closeHowtoModal();
-        }
-    });
 
     modal.addEventListener('click', closeHandler);
 }
