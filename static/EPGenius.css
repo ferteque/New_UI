@@ -2921,7 +2921,7 @@ code {
     /* Keep your working touch-action */
     html, body {
         background: #0f0805 !important;
-        touch-action: manipulation !important;
+        touch-action: pan-y pinch-zoom !important;
         -webkit-overflow-scrolling: touch;
         height: -webkit-fill-available;
     }
