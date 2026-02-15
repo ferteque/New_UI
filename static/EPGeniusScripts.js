@@ -1341,11 +1341,8 @@ function openHowtoModal(imageSrc) {
 
     if (!modal || !modalImg) return;
 
-    // Clean up previous instance
-    if (currentPinchInstance) {
-        currentPinchInstance.dispose(); // or .dispose() if remove doesn't exist - check console
-        currentPinchInstance = null;
-    }
+    // No cleanup needed for this library - just null it
+    currentPinchInstance = null;
 
     modal.style.display = 'block';
     modalImg.src = imageSrc;
@@ -1362,9 +1359,7 @@ function openHowtoModal(imageSrc) {
         currentPinchInstance = new PinchZoom(modalImg, {
             maxZoom: 8,
             minZoom: 0.8,
-            draggable: true,
-            // finger-centered zoom is automatic in this library
-            // no extra options usually needed
+            draggable: true
         });
     };
 
@@ -1377,10 +1372,8 @@ function openHowtoModal(imageSrc) {
     // Close handlers (tap outside or X button)
     const closeHandler = (e) => {
         if (e.target === modal || e.target.classList.contains('howto-modal-close')) {
-            if (currentPinchInstance) {
-                currentPinchInstance.dispose();
-                currentPinchInstance = null;
-            }
+            // No explicit destroy/remove needed - library handles itself
+            currentPinchInstance = null;
             closeHowtoModal();
             modal.removeEventListener('click', closeHandler);
         }
@@ -1410,10 +1403,8 @@ function closeHowtoModal() {
     }
     document.body.style.overflow = 'auto';
 
-    if (currentPinchInstance) {
-        currentPinchInstance.dispose();
-        currentPinchInstance = null;
-    }
+    // No cleanup method needed
+    currentPinchInstance = null;
 }
 
 // Attach to thumbnails
