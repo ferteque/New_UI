@@ -74,7 +74,7 @@ body {
 .grid-glow,
 .hero-ep,
 .hero-genius,
-.hero-ep::before, {
+.hero-ep::before {
     animation: none !important;
 }
 
