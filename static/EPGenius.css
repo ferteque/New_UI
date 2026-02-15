@@ -2853,6 +2853,8 @@ code {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.9);
     backdrop-filter: blur(10px);
+    touch-action: none;
+    overscroll-behavior: contain;
 }
 
 .howto-modal-content {
@@ -2864,6 +2866,8 @@ code {
     position: relative;
     top: 50%;
     transform: translateY(-50%);
+    touch-action: manipulation;
+    transform-origin: center;
 }
 
 .howto-modal-close {
