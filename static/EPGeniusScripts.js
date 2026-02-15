@@ -8,7 +8,7 @@ EPGenius.org
 
 // JavaScript Document
 
-import Panzoom from 'https://esm.sh/panzoom@9.4.3';
+import Panzoom from 'https://cdn.jsdelivr.net/npm/panzoom@9.4.3/+esm';
 
 // Initialize mobile menu functionality
 function initializeMobileMenu() {
