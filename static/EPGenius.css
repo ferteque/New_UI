@@ -71,6 +71,11 @@ body {
     display: none !important;
 }
 
+/* Test 3: Disable data streams */
+.data-streams {
+    display: none !important;
+}
+
 .cyber-bg {
     position: fixed;
     top: 0;
