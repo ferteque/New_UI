@@ -8,6 +8,8 @@ EPGenius.org
 
 // JavaScript Document
 
+import Panzoom from 'https://esm.sh/panzoom@9.4.3';
+
 // Initialize mobile menu functionality
 function initializeMobileMenu() {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
