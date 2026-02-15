@@ -1343,7 +1343,7 @@ function openHowtoModal(imageSrc) {
 
     // Clean up previous instance
     if (currentPanzoomInstance) {
-        currentPanzoomInstance.dispose();
+        currentPanzoomInstance.destroy();
         currentPanzoomInstance = null;
     }
 
@@ -1381,7 +1381,7 @@ function openHowtoModal(imageSrc) {
     const closeHandler = (e) => {
         if (e.target === modal || e.target.classList.contains('howto-modal-close')) {
             if (currentPanzoomInstance) {
-                currentPanzoomInstance.dispose();
+                currentPanzoomInstance.destroy();
                 currentPanzoomInstance = null;
             }
             closeHowtoModal();
@@ -1414,7 +1414,7 @@ function closeHowtoModal() {
     document.body.style.overflow = 'auto';
 
     if (currentPanzoomInstance) {
-        currentPanzoomInstance.dispose();
+        currentPanzoomInstance.destroy();
         currentPanzoomInstance = null;
     }
 }
