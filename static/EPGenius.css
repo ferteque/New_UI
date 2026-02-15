@@ -72,11 +72,7 @@ body {
 .scanlines::before,
 .grid-lines,
 .grid-glow,
-.hero-ep,
-.hero-genius,
-.hero-ep::before,
-.hero-genius::before,
-.data-stream {
+.hero-ep {
     animation: none !important;
 }
 
