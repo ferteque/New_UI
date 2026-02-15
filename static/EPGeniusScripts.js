@@ -1352,14 +1352,17 @@ function openHowtoModal(imageSrc) {
 
     const initPanzoom = () => {
         currentPanzoomInstance = Panzoom(modalImg, {
-            maxScale: 8,
-            minScale: 1,                
-            bounds: true,                 
+            maxScale: 6,
+            minScale: 1,
+            bounds: true,
             animate: true,
-            touchAction: 'auto',         
-            zoomDoubleClickSpeed: 1,     
+            touchAction: 'none',      
+            onTouch: function(e) { return true; },
+            onDoubleClick: function() { return false; },
+            pinchSpeed: 1.5, 
             smoothScroll: false,
-            enableOnMobile: true
+            beforeMouseDown: function(e) { return false; },
+            beforeWheel: function(e) { return false; }
         });
 
         currentPanzoomInstance.zoomAbs(0, 0, 1);
@@ -1381,6 +1384,23 @@ function openHowtoModal(imageSrc) {
             modal.removeEventListener('click', closeHandler);
         }
     };
+
+    // Explicitly add close button listener (bypass potential event blocking)
+    const closeBtn = modal.querySelector('.howto-modal-close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            closeHowtoModal();
+        });
+    }
+
+    // For outside click (already in closeHandler, but reinforce)
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {  // only if clicking the modal backdrop
+            closeHowtoModal();
+        }
+    });
 
     modal.addEventListener('click', closeHandler);
 }
