@@ -72,11 +72,6 @@ body {
     z-index: -5;
 }
 
-.logo::before,
-.logo::after {
-    animation: none !important;
-}
-
 body.scroll-locked {
     position: fixed;
     overflow: hidden;
