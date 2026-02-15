@@ -61,9 +61,23 @@ body {
     overflow-x: hidden;
 }
 
-*, *::before, *::after {
+*[style*="animation"] {
     animation: none !important;
-    transition: none !important;
+}
+
+.cyber-gradient,
+.matrix-column,
+.particle,
+.orb,
+.scanlines::before,
+.grid-lines,
+.grid-glow,
+.hero-ep,
+.hero-genius,
+.hero-ep::before,
+.hero-genius::before,
+.data-stream {
+    animation: none !important;
 }
 
 .cyber-bg {
