@@ -61,35 +61,8 @@ body {
     overflow-x: hidden;
 }
 
-/* Test 1 */
-.particles {
+.grid-overlay {
     display: none !important;
-}
-
-/* Test 2: Disable matrix rain */
-.matrix-rain {
-    display: none !important;
-}
-
-/* Test 3: Disable data streams */
-.data-streams {
-    display: none !important;
-}
-
-/* Test 4: Disable orbs */
-.orb {
-    display: none !important;
-}
-
-/* Test 5: Disable gradient background */
-.cyber-gradient {
-    display: none !important;
-}
-
-/* Test 6: Disable all backdrop filters and blurs */
-* {
-    backdrop-filter: none !important;
-    filter: none !important;
 }
 
 .cyber-bg {

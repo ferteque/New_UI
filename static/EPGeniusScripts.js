@@ -427,23 +427,23 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// // Scroll animations
-// const observerOptions = {
-//     threshold: 0.1,
-//     rootMargin: '0px 0px -100px 0px'
-// };
+// Scroll animations
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px'
+};
 
-// const observer = new IntersectionObserver((entries) => {
-//     entries.forEach(entry => {
-//         if (entry.isIntersecting) {
-//             entry.target.classList.add('visible');
-//         }
-//     });
-// }, observerOptions);
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, observerOptions);
 
-// document.querySelectorAll('.fade-up').forEach(el => {
-//     observer.observe(el);
-// });
+document.querySelectorAll('.fade-up').forEach(el => {
+    observer.observe(el);
+});
 
 // Button effects
 document.querySelectorAll('.btn-primary, .btn-secondary').forEach(button => {
@@ -490,32 +490,32 @@ document.querySelectorAll('.feature-card').forEach(card => {
     });
 });
 
-// // Random cyber text effects
-// const cyberTexts = ['CONNECTING...', 'CONNECTED TO EPGENIUS', 'PLAYLIST ACTIVE', 'EPG LOADED'];
+// Random cyber text effects
+const cyberTexts = ['CONNECTING...', 'CONNECTED TO EPGENIUS', 'PLAYLIST ACTIVE', 'EPG LOADED'];
 
-// setInterval(() => {
-//     const randomText = cyberTexts[Math.floor(Math.random() * cyberTexts.length)];
-//     const tempElement = document.createElement('div');
-//     tempElement.textContent = randomText;
-//     tempElement.style.cssText = `
-//         position: fixed;
-//         top: ${Math.random() * 100}vh;
-//         left: ${Math.random() * 100}vw;
-//         color: var(--primary-cyan);
-//         font-size: 0.8rem;
-//         font-weight: 700;
-//         z-index: 1000;
-//         opacity: 0.7;
-//         pointer-events: none;
-//         animation: fadeOut 3s ease-out forwards;
-//         text-shadow: 0 0 10px var(--primary-cyan);
-//     `;
-//     document.body.appendChild(tempElement);
+setInterval(() => {
+    const randomText = cyberTexts[Math.floor(Math.random() * cyberTexts.length)];
+    const tempElement = document.createElement('div');
+    tempElement.textContent = randomText;
+    tempElement.style.cssText = `
+        position: fixed;
+        top: ${Math.random() * 100}vh;
+        left: ${Math.random() * 100}vw;
+        color: var(--primary-cyan);
+        font-size: 0.8rem;
+        font-weight: 700;
+        z-index: 1000;
+        opacity: 0.7;
+        pointer-events: none;
+        animation: fadeOut 3s ease-out forwards;
+        text-shadow: 0 0 10px var(--primary-cyan);
+    `;
+    document.body.appendChild(tempElement);
 
-//     setTimeout(() => {
-//         document.body.removeChild(tempElement);
-//     }, 3000);
-// }, 5000);
+    setTimeout(() => {
+        document.body.removeChild(tempElement);
+    }, 3000);
+}, 5000);
 
 // Add fadeOut animation
 const style = document.createElement('style');
