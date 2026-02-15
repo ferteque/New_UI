@@ -61,6 +61,13 @@ body {
     overflow-x: hidden;
 }
 
+.hero-ep,
+.hero-ep::before,
+.hero-genius,
+.hero-genius::before {
+    animation: none !important;
+}
+
 .cyber-bg {
     position: fixed;
     top: 0;
