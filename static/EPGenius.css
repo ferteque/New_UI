@@ -2943,7 +2943,7 @@ code {
         -webkit-overflow-scrolling: touch;
         min-height: 100vh;
         width: 100vw;  
-        overflow-x: hidden;
+        overflow-x: hidden !important;
         position: relative; 
     }
 
