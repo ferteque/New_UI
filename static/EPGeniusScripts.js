@@ -8,8 +8,6 @@ EPGenius.org
 
 // JavaScript Document
 
-import PinchZoom from 'https://esm.sh/pinch-zoom-js';
-
 // Initialize mobile menu functionality
 function initializeMobileMenu() {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -1333,91 +1331,41 @@ function editCredentials(formData) {
     });
 }
 
-let currentPinchInstance = null;
-
 function openHowtoModal(imageSrc) {
     const modal = document.getElementById('howtoImageModal');
     const modalImg = document.getElementById('howtoModalImage');
-
-    if (!modal || !modalImg) return;
-
-    // No cleanup needed for this library - just null it
-    currentPinchInstance = null;
-
-    modal.style.display = 'block';
+    modal.style.display = "block";
     modalImg.src = imageSrc;
     document.body.style.overflow = 'hidden';
-
-    const initPinchZoom = () => {
-        // Force fit to screen BEFORE init
-        modalImg.style.width = '100%';
-        modalImg.style.height = '100%';
-        modalImg.style.maxWidth = '100%';
-        modalImg.style.maxHeight = '100vh';
-        modalImg.style.objectFit = 'contain';
-
-        currentPinchInstance = new PinchZoom(modalImg, {
-            maxZoom: 8,
-            minZoom: 0.8,
-            draggable: true
-        });
-    };
-
-    if (modalImg.complete && modalImg.naturalWidth > 0) {
-        initPinchZoom();
-    } else {
-        modalImg.onload = initPinchZoom;
-    }
-
-    // Close handlers (tap outside or X button)
-    const closeHandler = (e) => {
-        if (e.target === modal || e.target.classList.contains('howto-modal-close')) {
-            // No explicit destroy/remove needed - library handles itself
-            currentPinchInstance = null;
-            closeHowtoModal();
-            modal.removeEventListener('click', closeHandler);
-        }
-    };
-    modal.addEventListener('click', closeHandler);
-
-    // Touch safety for close button
-    const closeBtn = modal.querySelector('.howto-modal-close');
-    if (closeBtn) {
-        closeBtn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            closeHowtoModal();
-        }, { passive: false });
-
-        closeBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            closeHowtoModal();
-        });
-    }
 }
 
-function closeHowtoModal() {
-    const modal = document.getElementById('howtoImageModal');
-    if (modal) {
-        modal.style.display = 'none';
-    }
-    document.body.style.overflow = 'auto';
+const botons = document.querySelectorAll('.step-thumb');
 
-    // No cleanup method needed
-    currentPinchInstance = null;
-}
-
-// Attach to thumbnails
-document.querySelectorAll('.step-thumb').forEach(thumb => {
-    thumb.addEventListener('click', (e) => {
-        const imageSrc = e.currentTarget.src;
-        openHowtoModal(imageSrc);
+botons.forEach(boto => {
+    boto.addEventListener('click', (e) => {
+	const rutaImatge = e.target.src;
+        openHowtoModal(rutaImatge);
     });
 });
 
-// Escape key support
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
+function closeHowtoModal() {
+    const modal = document.getElementById('howtoImageModal');
+    modal.style.display = "none";
+    document.body.style.overflow = 'auto';
+}
+
+const modal = document.getElementById('howtoImageModal');
+if (modal) {
+    modal.addEventListener('click', (e) => {
+        if (e.target.id === 'howtoImageModal' || e.target.classList.contains('howto-modal-close')) {
+            closeHowtoModal();
+        }
+    });
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
         closeHowtoModal();
     }
 });

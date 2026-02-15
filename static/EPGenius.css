@@ -2852,21 +2852,6 @@ code {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.9);
     backdrop-filter: blur(10px);
-    overflow: hidden !important;
-    touch-action: manipulation !important;
-}
-
-#howtoModalImage {
-    display: block;
-    width: 100% !important;             
-    height: 100% !important;             
-    max-width: 100% !important;         
-    max-height: 100vh !important;
-    object-fit: contain !important;       
-    transform-origin: 50% 50% !important;
-    will-change: transform;
-    pointer-events: auto !important;
-    touch-action: none !important;
 }
 
 .howto-modal-content {
@@ -2878,7 +2863,6 @@ code {
     position: relative;
     top: 50%;
     transform: translateY(-50%);
-    overflow: visible !important;
 }
 
 .howto-modal-close {
@@ -2892,8 +2876,6 @@ code {
     z-index: 10002;
     text-shadow: 0 0 20px var(--primary-cyan);
     transition: all 0.3s ease;
-    touch-action: manipulation !important;
-    pointer-events: auto !important;
 }
 
 .howto-modal-close:hover {
@@ -2939,7 +2921,7 @@ code {
     /* Keep your working touch-action */
     html, body {
         background: #0f0805 !important;
-        touch-action: pan-y pinch-zoom !important;
+        touch-action: pan-y !important;
         -webkit-overflow-scrolling: touch;
         height: -webkit-fill-available;
     }
@@ -3138,7 +3120,7 @@ code {
         padding: 1rem;
     }
     
-
+    /* For the image modal specifically */
     .howto-modal-content {
         max-width: 95%;
         max-height: 90vh;
