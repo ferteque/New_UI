@@ -1658,13 +1658,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!prompt) return;
 
         const checkScroll = () => {
-            const scrollPosition = modal.scrollTop + modal.clientHeight;
+            const scrollBottom = modal.scrollTop + modal.clientHeight;
             const totalHeight = modal.scrollHeight;
-            const isAtBottom = scrollPosition >= (totalHeight - 20);
+            const distToBottom = totalHeight - scrollBottom;
 
-            const contentFits = modal.scrollHeight <= modal.clientHeight;
+            const contentFits = totalHeight <= (modal.clientHeight + 1);
 
-            if (isAtBottom || contentFits) {
+            if (distToBottom < 50 || contentFits) {
                 prompt.style.opacity = '0';
             } else {
                 prompt.style.opacity = '1';
@@ -1678,8 +1678,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
                     if (modal.style.display === 'block') {
                         prompt.style.opacity = '1';
-                        
-                        setTimeout(checkScroll, 100);
+                        setTimeout(checkScroll, 50);
                     }
                 }
             });
