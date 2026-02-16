@@ -2773,10 +2773,6 @@ code {
     display: none;
 }
 
-.natural-flow .modal-body {
-    max-height: none !important;
-}
-
 @media (max-width: 768px) {
     html, body {
         background: #0f0805 !important;
@@ -2788,29 +2784,45 @@ code {
         position: relative; 
     }
 
-    .natural-flow .modal-content {
-        display: block !important;
-        height: auto !important;
-        min-height: auto !important;
-        position: relative !important;
-        top: 20px;
-        bottom: auto;
-        overflow: visible !important;
-        margin-bottom: 40px !important;
+    #playlistModal, 
+    #driveSuccessModal {
+        overflow-y: auto !important; 
+        -webkit-overflow-scrolling: touch;
     }
 
-    .natural-flow .modal-body {
-        flex: none !important;
+    #playlistModal .modal-content, 
+    #driveSuccessModal .modal-content {
+        position: relative !important;
+        height: auto !important;
+        min-height: auto !important;
+        top: 0 !important;
+        bottom: auto !important;
         overflow: visible !important;
+        display: block !important;
+        margin-bottom: 40px !important; 
+    }
+
+    #playlistModal .modal-body, 
+    #driveSuccessModal .modal-body {
+        overflow: visible !important;
+        flex: none !important;
         max-height: none !important;
     }
 
-    .natural-flow .button-container {
+    #playlistModal .button-container, 
+    #driveSuccessModal .button-container {
         position: static !important;
-        box-shadow: none !important;
-        border-top: none !important;
         margin-top: 1rem !important;
         background: transparent !important;
+        box-shadow: none !important;
+        border-top: none !important;
+        padding-bottom: 1rem !important;
+    }
+    
+    #playlistModal .modal-header,
+    #driveSuccessModal .modal-header {
+        position: static !important;
+        border-bottom: 1px solid var(--border-color);
     }
 
     .cyber-bg, .particles, .grid-overlay, .scanlines, .noise-overlay {
