@@ -1649,6 +1649,28 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 500);
         });
     }
+
+    function handleScrollPrompt(modalId) {
+        const modal = document.getElementById(modalId);
+        const prompt = modal.querySelector('.scroll-prompt');
+        
+        if (!modal || !prompt) return;
+
+        modal.addEventListener('scroll', () => {
+            const scrollBottom = modal.scrollTop + modal.clientHeight;
+            const scrollHeight = modal.scrollHeight;
+            
+            if (scrollHeight - scrollBottom < 100) {
+                prompt.style.opacity = '0';
+                prompt.style.transition = 'opacity 0.3s ease';
+            } else {
+                prompt.style.opacity = '0.8';
+            }
+        });
+    }
+
+    handleScrollPrompt('playlistModal');
+    handleScrollPrompt('driveSuccessModal');
 });
 
 

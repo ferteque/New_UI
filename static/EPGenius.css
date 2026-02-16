@@ -2773,6 +2773,32 @@ code {
     display: none;
 }
 
+.scroll-prompt {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+    z-index: 10005;
+    opacity: 0.8;
+    animation: bounce 2s infinite;
+    display: none;
+}
+
+.scroll-prompt span {
+    display: inline-block;
+    color: var(--primary-cyan);
+    font-size: 2rem;
+    text-shadow: 0 0 10px rgba(0,0,0,0.8);
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
 @media (max-width: 768px) {
     html, body {
         background: #0f0805 !important;
@@ -2823,6 +2849,11 @@ code {
     #driveSuccessModal .modal-header {
         position: static !important;
         border-bottom: 1px solid var(--border-color);
+    }
+
+    #playlistModal .scroll-prompt,
+    #driveSuccessModal .scroll-prompt {
+        display: block;
     }
 
     .cyber-bg, .particles, .grid-overlay, .scanlines, .noise-overlay {
