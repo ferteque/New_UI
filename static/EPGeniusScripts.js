@@ -1658,13 +1658,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!prompt) return;
 
         const checkScroll = () => {
-            const isAtBottom = (modal.scrollTop + modal.clientHeight) >= (modal.scrollHeight - 50);
-            const needsScroll = modal.scrollHeight > modal.clientHeight;
+            const scrollPosition = modal.scrollTop + modal.clientHeight;
+            const totalHeight = modal.scrollHeight;
+            const isAtBottom = scrollPosition >= (totalHeight - 20);
 
-            if (isAtBottom || !needsScroll) {
-                prompt.style.opacity = '0'; 
+            const contentFits = modal.scrollHeight <= modal.clientHeight;
+
+            if (isAtBottom || contentFits) {
+                prompt.style.opacity = '0';
             } else {
-                prompt.style.opacity = '1'; 
+                prompt.style.opacity = '1';
             }
         };
 
@@ -1674,6 +1677,8 @@ document.addEventListener('DOMContentLoaded', () => {
             mutations.forEach((mutation) => {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
                     if (modal.style.display === 'block') {
+                        prompt.style.opacity = '1';
+                        
                         setTimeout(checkScroll, 100);
                     }
                 }
