@@ -1652,21 +1652,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleScrollPrompt(modalId) {
         const modal = document.getElementById(modalId);
-        const prompt = modal.querySelector('.scroll-prompt');
-        
-        if (!modal || !prompt) return;
+        if (!modal) return;
 
-        modal.addEventListener('scroll', () => {
-            const scrollBottom = modal.scrollTop + modal.clientHeight;
-            const scrollHeight = modal.scrollHeight;
-            
-            if (scrollHeight - scrollBottom < 100) {
-                prompt.style.opacity = '0';
-                prompt.style.transition = 'opacity 0.3s ease';
+        const prompt = modal.querySelector('.scroll-prompt');
+        if (!prompt) return;
+
+        const checkScroll = () => {
+            const isAtBottom = (modal.scrollTop + modal.clientHeight) >= (modal.scrollHeight - 50);
+            const needsScroll = modal.scrollHeight > modal.clientHeight;
+
+            if (isAtBottom || !needsScroll) {
+                prompt.style.opacity = '0'; 
             } else {
-                prompt.style.opacity = '0.8';
+                prompt.style.opacity = '1'; 
             }
+        };
+
+        modal.addEventListener('scroll', checkScroll);
+
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    if (modal.style.display === 'block') {
+                        setTimeout(checkScroll, 100);
+                    }
+                }
+            });
         });
+
+        observer.observe(modal, { attributes: true });
     }
 
     handleScrollPrompt('playlistModal');

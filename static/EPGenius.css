@@ -2774,23 +2774,30 @@ code {
 }
 
 .scroll-prompt {
-    position: fixed;
-    bottom: 20px;
+    position: fixed;      
+    bottom: 0;
     left: 0;
     width: 100%;
-    text-align: center;
-    pointer-events: none;
-    z-index: 10005;
-    opacity: 0.8;
-    animation: bounce 2s infinite;
-    display: none;
+    height: 120px;       
+    pointer-events: none;  
+    z-index: 99999;      
+    
+    background: linear-gradient(to bottom, transparent 0%, rgba(15, 8, 5, 0.9) 80%);
+    
+    display: flex;
+    align-items: flex-end;  
+    justify-content: center;
+    padding-bottom: 20px;
+    
+    opacity: 0;        
+    transition: opacity 0.3s ease;
 }
 
 .scroll-prompt span {
-    display: inline-block;
     color: var(--primary-cyan);
     font-size: 2rem;
-    text-shadow: 0 0 10px rgba(0,0,0,0.8);
+    animation: bounce 2s infinite;
+    text-shadow: 0 0 15px var(--primary-cyan);
 }
 
 @keyframes bounce {
@@ -2851,9 +2858,8 @@ code {
         border-bottom: 1px solid var(--border-color);
     }
 
-    #playlistModal .scroll-prompt,
-    #driveSuccessModal .scroll-prompt {
-        display: block;
+    .scroll-prompt {
+        display: none !important;
     }
 
     .cyber-bg, .particles, .grid-overlay, .scanlines, .noise-overlay {
